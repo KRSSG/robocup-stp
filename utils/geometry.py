@@ -11,6 +11,11 @@ class Vector2D(Structure):
 			 ("y", c_int) ]
 
 	def __init__(self,x = None,y = None):
+		try:
+			x,y = int(x), int(y)
+		except:
+			pass
+
 		if x is None:
 			self.x = self.y = INF
 		elif type(x) is Vector2D:

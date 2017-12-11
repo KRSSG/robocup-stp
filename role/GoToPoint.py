@@ -1,6 +1,7 @@
 from enum import Enum
 import behavior
 import _GoToPoint
+from utils.math_functions import *
 class GoToPoint(behavior.Behavior):
 	"""docstring for GoToPoint"""
 	##
@@ -17,7 +18,7 @@ class GoToPoint(behavior.Behavior):
 	## @param      point  The point
 	##
 	def __init__(self,kub,point,continuous=False):
-		print "gtp"
+		# print "gtp"
 		#GoToPoint.behavior.Behavior()
 		#g = behavior.Behavior()
 		#print "gtp2"
@@ -40,10 +41,11 @@ class GoToPoint(behavior.Behavior):
 			GoToPoint.State.drive,lambda: self.target_present,'setup')
 
 		self.add_transition(GoToPoint.State.drive,
+			GoToPoint.State.drive,lambda: not self.at_new_point(),'restart')
+
+		self.add_transition(GoToPoint.State.drive,
 			behavior.Behavior.State.completed,lambda:self.at_new_point(),'complete')
 
-		self.add_transition(behavior.Behavior.State.completed,
-			behavior.Behavior.State.start,lambda:not self.at_new_point(),'complete')
 	##
 	## @brief      { function_description }
 	##
@@ -59,8 +61,9 @@ class GoToPoint(behavior.Behavior):
 	##
 	## @return     { description_of_the_return_value }
 	##
-	def at_new_point():
-		return self.new_point.dist(self.target_point) < 1.0
+	def at_new_point(self):
+		print (dist(self.target_point,self.new_point),210)
+		return dist(self.target_point,self.new_point) < 210.0
 
 		
 	def on_enter_setup(self):
@@ -87,18 +90,9 @@ class GoToPoint(behavior.Behavior):
 	## @return     { description_of_the_return_value }
 	##
 	def execute_drive(self):
-		_GoToPoint.run()
-		##
-		##
-		##velo profilling data		
-		# ## for each velo in velo_profling vector
-		# kub.move(vx,vy)
-		# kub.turn(vw)
-		# kub.execute(state)
-		##
-		## 
-		##
-		self.new_point = kub.get_pos()
+		t = _GoToPoint.run()
+		print (t,"fghjhgfdxcgvbjhytdfxcbgv")
+		self.new_point = self.kub.get_pos()
 		
 
 	

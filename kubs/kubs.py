@@ -50,10 +50,9 @@ class kubs:
     ##
     ## @return     { description_of_the_return_value }
     ##
-    def move(self, vx, vy, vw = 0):
+    def move(self, vx, vy):
         self.vx = vx
         self.vy = vy
-        self.vw = vw
 
     ##
     ## @brief      { function_description }
@@ -118,7 +117,7 @@ class kubs:
     ##
     
 
-    def get_pos(self, state):
+    def get_pos(self):
         return self.pos
 
     def bs_callback(self, data):
@@ -148,11 +147,11 @@ class kubs:
         # self.vx = data.homeVel[self.kubs_id].x
         # self.vy = data.homeVel[self.kubs_id].y
 
-        print(str(self.state.ballPos.x))
-        if data.homeDetected[self.kubs_id] == True:
-            print("kubs_id " + str(self.kubs_id) + "Detected")
-        else:
-            print("kubs_id " + str(self.kubs_id) + "Not Detected")
+        #print(str(self.state.ballPos.x))
+        #if data.homeDetected[self.kubs_id] == True:
+            #print("kubs_id " + str(self.kubs_id) + "Detected")
+        #else:
+            #print("kubs_id " + str(self.kubs_id) + "Not Detected")
 
     def kubsBelief(self):
         #rospy.init_node('kubs_node', anonymous=False)
