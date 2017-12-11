@@ -198,6 +198,8 @@ class StateMachine(object):
     # writes a png file of the graphviz output to the specified location
     def write_diagram_png(self):
         g = self.as_graphviz()
+        if not os.path.exists(os.getcwd() + '/Digraph/'):
+            os.mkdir(os.getcwd() + '/Digraph/')
         g.render(os.getcwd() + '/Digraph/' + self.__class__.__name__, cleanup=True)
 
     @property

@@ -155,4 +155,5 @@ class kubs:
             print("kubs_id " + str(self.kubs_id) + "Not Detected")
 
     def kubsBelief(self):
+        #rospy.init_node('kubs_node', anonymous=False)
         rospy.Subscriber('/belief_state',BeliefState,self.bs_callback,queue_size=1000)
