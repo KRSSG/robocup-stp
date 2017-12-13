@@ -11,7 +11,7 @@ from utils.math_functions import *
 
 kub = None
 start_time = None
-GOAL_POINT = None
+GOAL_POINT = Vector2D(-3000,-2000)
 BScall = None
 theta = None
 FLAG_run = True
@@ -49,7 +49,7 @@ def BS_callback(state):
 	kub.move(vx, vy)
 	kub.turn(vw)
 	kub.execute(state)
-	print "kub-goal",dist(kub.get_pos(), GOAL_POINT)
+	#print "kub-goal",dist(kub.get_pos(), GOAL_POINT)
 	#print dist(kub.state.ballPos,GOAL_POINT)
 	# print ((state.ballPos.x,state.ballPos.y),(kub.state.ballPos.x,kub.state.ballPos.y),(GOAL_POINT.x,GOAL_POINT.y))
 	#if BScall is not None:
@@ -59,7 +59,7 @@ def BS_callback(state):
 
 def run():
 	global start_time
-	print str(kub.kubs_id) + str('***********')
+	#print str(kub.kubs_id) + str('***********')
 	rospy.init_node('node_new'+str(kub.kubs_id),anonymous=False)
 	start_time = rospy.Time.now()
 	start_time = 1.0*start_time.secs + 1.0*start_time.nsecs/pow(10,9)	

@@ -22,12 +22,12 @@ FIRST_CALL = 1
 homePos = None
 awayPos = None
 
-def Get_Vel(start, t, kubid_, target, homePos_, awayPos_):
+def Get_Vel(start, t, kub_id, target, homePos_, awayPos_):
     global expectedTraverseTime, REPLAN, v, errorInfo, pso, FIRST_CALL, homePos, awayPos, kubid
     REPLAN = 0
     homePos = homePos_
     awayPos = awayPos_
-    kubid = kubid_
+    kubid = kub_id
 
     curPos = Vector2D(int(homePos[kubid].x),int(homePos[kubid].y))
     distance = sqrt(pow(target.x - homePos[kubid].x,2) + pow(target.y - homePos[kubid].y,2))
@@ -38,7 +38,7 @@ def Get_Vel(start, t, kubid_, target, homePos_, awayPos_):
         findPath(startPt, target)
         FIRST_CALL = 0
 
-    if distance < 3*BOT_BALL_THRESH:
+    if distance < 1.5*BOT_BALL_THRESH:
         return [0,0,0,0]
     # print("ex = ",expectedTraverseTime) 
     # print("t = ",t," start = ",start)
@@ -145,6 +145,8 @@ def findPath(startPoint,end):
     v = Velocity(path,start,startPt)
     v.updateAngle()
     expectedTraverseTime = v.getTime(v.GetPathLength())
+    global time_cal
+    time_cal = expectedTraverseTime
     pso = PSO(5,20,1000,1,1,0.5)
     errorInfo = Error()
     # print("Path Planned")

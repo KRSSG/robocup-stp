@@ -17,7 +17,7 @@ class GoToPoint(behavior.Behavior):
 	## @param      self   The object
 	## @param      point  The point
 	##
-	def __init__(self,kub,point,continuous=False):
+	def __init__(self,kub,point,theta,continuous=False):
 		# print "gtp"
 		#GoToPoint.behavior.Behavior()
 		#g = behavior.Behavior()
@@ -27,6 +27,7 @@ class GoToPoint(behavior.Behavior):
 		#self.state = state
 
 		self.target_point = point
+		self.theta = theta
 
 		self.add_state(GoToPoint.State.setup,
 			behavior.Behavior.State.running)
@@ -62,14 +63,14 @@ class GoToPoint(behavior.Behavior):
 	## @return     { description_of_the_return_value }
 	##
 	def at_new_point(self):
-		print (dist(self.target_point,self.new_point),210)
+		#print (dist(self.target_point,self.new_point),210)
 		return dist(self.target_point,self.new_point) < 210.0
 
 		
 	def on_enter_setup(self):
 		pass
 	def execute_setup(self):
-		_GoToPoint.init(self.kub,self.target_point)
+		_GoToPoint.init(self.kub,self.target_point,self.theta)
 		pass
 		
 	def on_exit_setup(self):
@@ -91,7 +92,6 @@ class GoToPoint(behavior.Behavior):
 	##
 	def execute_drive(self):
 		t = _GoToPoint.run()
-		print (t,"fghjhgfdxcgvbjhytdfxcbgv")
 		self.new_point = self.kub.get_pos()
 		
 

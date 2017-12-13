@@ -13,7 +13,7 @@ def SELECT(sim_param, ssl_param):
 
 
 BOT_MAX                      = SELECT(6, 5)
-
+BOT_ANGLE_THRESH			 = SELECT(0.32,0.32)
 GOAL_DEPTH                   = SELECT(300, 300)
 MOVING_BALL_VELOCITY         = SELECT(40, 30)
 MIN_DIST_FROM_TARGET         = SELECT(30.0, 25.0)
