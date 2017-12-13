@@ -9,6 +9,7 @@ from krssg_ssl_msgs.msg import BeliefState
 from role import  GoToBall, GoToPoint
 from multiprocessing import Process
 from kubs import kubs
+from math import atan2
 pub = rospy.Publisher('/grsim_data',gr_Commands,queue_size=1000)
 
 def g(id_):
@@ -22,22 +23,22 @@ def g(id_):
 	# print
 	# print kub.state.homePos[kub.kubs_id].theta,t
 
-g(0)
+# g(0)
 
-for i in xrange(0):
-	p = Process(target=g,args=(i,))
-	p.start()
+# for i in xrange(0):
+# 	p = Process(target=g,args=(i,))
+# 	p.start()
 
 #g_fsm1 = GoToBall.GoToBall(kub,deg_2_radian(45))
 
 
-#kub1 = kubs.kubs(0,pub)
-# g1_fsm = GoToPoint.GoToPoint(kub1,Vector2D(100,263))
-# g1_fsm.as_graphviz()
-# g1_fsm.write_diagram_png()
+kub1 = kubs.kubs(0,pub)
+g1_fsm = GoToBall.GoToBall(kub1,atan2(kub1.state.ballPos.y,kub1.state.ballPos.x-3000))
+g1_fsm.as_graphviz()
+g1_fsm.write_diagram_png()
 
-#g_fsm1.spin()
-# g1_fsm.spin()
+# g_fsm1.spin()
+g1_fsm.spin()
 #t = threading.Thread(target=g_fsm.spin())
 #t1 = threading.Thread(target=g1_fsm.spin())
 

@@ -117,7 +117,7 @@ class GoToBall(behavior.Behavior):
         pass
 
     def on_enter_near(self):
-        _GoToPoint.init(self.kub,self.kub.state.ballPos)
+        _GoToPoint.init(self.kub,self.kub.state.ballPos,self.theta)
         pass
 
     def on_exit_near(self):
