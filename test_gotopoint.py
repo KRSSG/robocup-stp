@@ -9,7 +9,8 @@ from krssg_ssl_msgs.msg import BeliefState
 from role import  GoToBall, GoToPoint
 from multiprocessing import Process
 from kubs import kubs
-from math import atan2
+from math import atan2,pi
+from utils.math_functions import *
 pub = rospy.Publisher('/grsim_data',gr_Commands,queue_size=1000)
 
 def g(id_):
@@ -33,7 +34,10 @@ def g(id_):
 
 
 kub1 = kubs.kubs(0,pub)
-g1_fsm = GoToBall.GoToBall(kub1,atan2(kub1.state.ballPos.y,kub1.state.ballPos.x-3000))
+# print kub1.state.ballPos.y,kub1.state.ballPos.x
+# while True:
+# 	pass
+g1_fsm = GoToBall.GoToBall(kub1,Vector2D(0,3000))
 g1_fsm.as_graphviz()
 g1_fsm.write_diagram_png()
 

@@ -14,6 +14,7 @@ kub = None
 start_time = None
 start_time_w = None
 GOAL_POINT = Vector2D(-3000,-2000)
+point_to = Vector2D(0,0)
 BScall = None
 theta = None
 FLAG_move = True
@@ -23,11 +24,14 @@ init_angle = 0
 
 FIRST_CALL = True
 
-def init(_kub,_theta):
-    global kub,theta,totalAngle
+def init(_kub,_point_to):
+    global kub,point_to
     kub = _kub
     start_time = None
-    totalAngle = _theta
+    point_to = _point_to
+    # while True:
+    #     print totalAngle
+    #     pass
 
 
 
@@ -40,21 +44,23 @@ def BS_callback(state):
     global GOAL_POINT, start_time,FLAG_move,FLAG_turn,totalAngle,init_angle,FIRST_CALL,start_time_w
 
     if FIRST_CALL:
-        init_angle = state.homePos[kub.kubs_id].theta
+        init_angle = state.homePos[kub.kubs_id].theta*0
         FIRST_CALL = False
 
+    totalAngle = angle_diff(state.ballPos,point_to)
+
+    # print totalAngle,angle_diff(state.ballPos,point_to)
+    # return
 
     BSstate = state
     GOAL_POINT = state.ballPos
     kub.state.ballPos = GOAL_POINT
-    GOAL_POINT = getPointBehindTheBall(GOAL_POINT,totalAngle)
+    # GOAL_POINT = getPointBehindTheBall(GOAL_POINT,totalAngle)
 
         
     t = rospy.Time.now()
     t = t.secs + 1.0*t.nsecs/pow(10,9)
-
-
-
+    # if(move_flag =1  and )
     if(FLAG_move is  True and FLAG_turn is  True ):
         [vx, vy, vw, REPLANNED] = Get_Vel(start_time, t, kub.kubs_id, GOAL_POINT, state.homePos, state.awayPos) 
         vw = Get_Omega(start_time_w, t, kub.kubs_id, totalAngle, state.homePos)
@@ -80,24 +86,29 @@ def BS_callback(state):
     kub.move(vx, vy)
     kub.turn(vw)
     kub.execute(state)
-    print dist(kub.get_pos(), GOAL_POINT),t
+    ##print dist(kub.get_pos(), GOAL_POINT),t
     #if BScall is not None:
     if dist(kub.get_pos(), GOAL_POINT) < 210.0 :
         FLAG_move = False
 
-    print state.homePos[kub.kubs_id].theta,totalAngle,init_angle,BOT_ANGLE_THRESH
-    print abs(abs(state.homePos[kub.kubs_id].theta-init_angle)  - abs(totalAngle))
+    # print
+    # print "curr: ",state.homePos[kub.kubs_id].theta,",tot : ",totalAngle,\
+    # ",init : ",init_angle,",thresh : ",BOT_ANGLE_THRESH
+    # print "diff ",abs((state.homePos[kub.kubs_id].theta-init_angle)  - (totalAngle)),vw
+    # print
 
-    if abs(abs(state.homePos[kub.kubs_id].theta-init_angle)  - abs(totalAngle)) < BOT_ANGLE_THRESH:
+
+    if abs((state.homePos[kub.kubs_id].theta-init_angle)  - (totalAngle)) < BOT_ANGLE_THRESH:
         FLAG_turn = False
 
-    print FLAG_turn,FLAG_move
+   # print "Turn : ",FLAG_turn,", Move : ",FLAG_move
     if not FLAG_move and not FLAG_turn:
         kub.move(0,0)
         kub.turn(0)
+        kub.kick(7)
         kub.execute(state)
-        print "Final showdown"
-        print init_angle,state.homePos[kub.kubs_id].theta,state.homePos[kub.kubs_id].theta-init_angle
+       # print "Final showdown in Move"
+       # print init_angle,state.homePos[kub.kubs_id].theta,state.homePos[kub.kubs_id].theta-init_angle
         rospy.signal_shutdown('node_new'+ str(kub.kubs_id))
     # # print(" t - start = ",t-start_time,GOAL_POINT.x,GOAL_POINT.y)
     # [vx, vy, vw, REPLANNED] = Get_Vel(start_time, t, kub.kubs_id, GOAL_POINT, state.homePos, state.awayPos)   #vx, vy, vw, replanned

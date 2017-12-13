@@ -19,7 +19,7 @@ class GoToBall(behavior.Behavior):
     ## @param      self   The object
     ## @param      point  The point
     ##
-    def __init__(self,kub,theta,continuous=False):
+    def __init__(self,kub,point_to,continuous=False):
         # print "gtp"
         #GoToBall.behavior.Behavior()
         #g = behavior.Behavior()
@@ -28,7 +28,10 @@ class GoToBall(behavior.Behavior):
         self.kub = kub
         #self.state = state
 
-        self.theta = theta
+        self.point_to = point_to
+        # while True:
+        #     print theta,"in gtb"
+        #     pass
 
         self.add_state(GoToBall.State.setup,
             behavior.Behavior.State.running)
@@ -85,8 +88,7 @@ class GoToBall(behavior.Behavior):
         pass
 
     def execute_setup(self):
-        self.target_point = getPointBehindTheBall(self.kub.state.ballPos,self.theta)
-        _Move.init(self.kub,self.theta)
+        _Move.init(self.kub,self.point_to)
         pass
         
     def on_exit_setup(self):
@@ -117,7 +119,7 @@ class GoToBall(behavior.Behavior):
         pass
 
     def on_enter_near(self):
-        _GoToPoint.init(self.kub,self.kub.state.ballPos,self.theta)
+        _GoToPoint.init(self.kub,self.kub.state.ballPos,0.0)
         pass
 
     def on_exit_near(self):

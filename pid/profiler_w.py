@@ -213,6 +213,8 @@ class Omega():
     ## @brief      Gets the Omega.
     ##
     def getOmega(self):
+        if(self.totalAngle < 0):
+            self.Omega = -self.Omega
         return self.Omega
 
     ##

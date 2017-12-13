@@ -28,7 +28,7 @@ def init(_kub,target,theta):
     start_time = None
     GOAL_POINT = point_2d()
     totalAngle = theta*1.1
-    # while True:
+    #  True:
     #     print kub.state.homePos
     #     pass
     # init_angle = kub.state.homePos[kub.kubs_id].theta
