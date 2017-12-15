@@ -1,6 +1,7 @@
 from enum import Enum
 import behavior
 import _GoToPoint
+import rospy
 from utils.math_functions import *
 class GoToPoint(behavior.Behavior):
 	"""docstring for GoToPoint"""
@@ -91,8 +92,11 @@ class GoToPoint(behavior.Behavior):
 	## @return     { description_of_the_return_value }
 	##
 	def execute_drive(self):
-		t = _GoToPoint.run()
+		start_time = rospy.Time.now()
+		start_time = 1.0*start_time.secs + 1.0*start_time.nsecs/pow(10,9)   
+		t = _GoToPoint.execute(start_time)
 		self.new_point = self.kub.get_pos()
+		print self.new_point.x,self.new_point.y
 		
 
 	

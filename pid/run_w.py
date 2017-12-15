@@ -1,42 +1,14 @@
-import sys
-import os
-import rospy
+from utils.config import MAX_BOT_OMEGA,MIN_BOT_OMEGA
 
-from utils.geometry import Vector2D
-from utils.config import *
-from krssg_ssl_msgs.srv import path_plan
-from krssg_ssl_msgs.msg import point_2d
-from profiler_w import *
-from pid import pid
-from pso import PSO
-from error import Error
-
-v = None
-kubid = None
-expectedTraverseTime = None
-pso = None
-errorInfo = Error()
-REPLAN = 0
-FIRST_CALL = 1
-homePos = None
-expectedTraverseTime = None 
-
-def Get_Omega(start, t, kub_id, totalAngle, homePos_):
-    global FIRST_CALL,expectedTraverseTime,v,homePos,kubid
-    REPLAN = 0
-    homePos = homePos_
-    kubid = kub_id
-    currAngle = homePos[kub_id].theta
-    kubid = kub_id
-
-    if FIRST_CALL:
-        v = Omega(totalAngle, start, currAngle)
-        expectedTraverseTime = v.getTime(totalAngle)
-        FIRST_CALL = 0
+def Get_Omega(kub_id, totalAngle, homePos):
+    if totalAngle < 0.001:
+        return 0.0
+    MAX_w = (MAX_BOT_OMEGA+MIN_BOT_OMEGA)/4.0
+    theta_lft = float(totalAngle - homePos[kub_id].theta)
+    vw = (theta_lft/totalAngle)*MAX_w
+    if abs(vw)<3*MIN_BOT_OMEGA:
+        vw = MIN_BOT_OMEGA*(1 if vw>0 else -1)
+    return vw
 
 
     
-    if (t - start < expectedTraverseTime):
-        if v.trapezoid(t - start, currAngle):
-            print v.getOmega(),'get omega '*3
-            return v.getOmega()

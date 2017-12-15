@@ -24,13 +24,13 @@ def normalize_angle(theta):
   if -math.pi < theta < math.pi:
     return theta
   if theta >= math.pi:
-    return theta-math.pi
+    return theta-2*math.pi
   if theta <= -math.pi:
-    return theta + math.pi
+    return theta + 2*math.pi
 
 def getPointBehindTheBall(point ,theta):
-  x = point.x +(2 * BOT_RADIUS) *(math.cos(theta))
-  y = point.y +(2 * BOT_RADIUS) *(math.sin(theta))
+  x = point.x -(1.2 * BOT_RADIUS) *(math.cos(theta))
+  y = point.y -(1.2 * BOT_RADIUS) *(math.sin(theta))
   return Vector2D(int(x), int(y))
 
 def deg_2_radian(theta):
