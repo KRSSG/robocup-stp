@@ -1,7 +1,7 @@
 # Includes all the global parameters as in 'ssl_common/conig.h'
 
 # GR_SIM_COMM = transformationue
-GR_SIM_COMM = True
+GR_SIM_COMM = False
 SSL_COMM = not GR_SIM_COMM
 
 PIXEL_TO_FIELD 				 = 1.00 # No of pixels / mm
@@ -38,10 +38,10 @@ OUR_GOAL_MINY                = SELECT(-360, -500)
 OUR_GOAL_WIDTH               = OUR_GOAL_MAXY - OUR_GOAL_MINY
 # OPP_GOAL_WIDTH               = OPP_GOAL_MAXY - OPP_GOAL_MINY
 CENTER_CIRCLE_DIAMETER       = SELECT(1000,1000)
-DBOX_WIDTH                   = SELECT(500,1000)       # Along X direction
+DBOX_WIDTH                   = SELECT(1000,1000)       # Along X direction
+DBOX_HEIGHT					 = SELECT(1250,1250)	   # Along positive y direction
 DBOX_SMALLER_LENGTH          = SELECT(500,500)         # smaller length of line connecting the two quadrants along Y-axis
 DBOX_LARGER_LENGTH           = SELECT(1350,2500)       # larger length of line connecting the two quadrants along Y-axis
-DBOX_HEIGHT					 = 4*BOT_RADIUS
 DBOX_RADIUS                  = SELECT(425,1000)
 BALL_AT_CORNER_THRESH        = SELECT(20,20)
 
