@@ -83,7 +83,7 @@ class Ui_MainWindow(object):
         QtCore.QMetaObject.connectSlotsByName(MainWindow)
 
     def retranslateUi(self, MainWindow):
-        MainWindow.setWindowTitle(_translate("MainWindow", "MainWindow", None))
+        MainWindow.setWindowTitle(_translate("MainWindow", "KgpKubs-SSL", None))
         self.GoToBall.setText(_translate("MainWindow", "GoToBall", None))
         self.bot_id.setText(_translate("MainWindow", "BotId", None))
         self.comboBox.setItemText(0, _translate("MainWindow", "PRM", None))
