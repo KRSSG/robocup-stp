@@ -235,7 +235,6 @@ BeliefState::BeliefState(const krssg_ssl_msgs::SSL_DetectionFrame::ConstPtr& vms
 	    			tempGoalie = bot_id;
 	    		}
     		}
-    	
 	    	this->our_goalie = tempGoalie;
 
 	    	tempGoalie = 7;
