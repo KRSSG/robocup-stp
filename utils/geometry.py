@@ -12,12 +12,13 @@ class Vector2D(Structure):
 			 ("y", c_float) ]
 
 	def __init__(self,x = None,y = None):
+
 		if x is None:
 			self.x = self.y = INF
 		elif isinstance(x,Pose2D):
-			self.x, self.y = x.x, x.y
+			self.x, self.y = int(x.x), int(x.y)
 		elif isinstance(x,Vector2D):
-			self.x, self.y = x.x, x.y
+			self.x, self.y =int(x.x), int(x.y)
 		else:
 			self.x,self.y=x,y
 

@@ -170,17 +170,6 @@ class TLDefender(Tactic):
                 sGoToPoint.execute(self.sParams, state, self.bot_id, pub)
         elif gameState == TLDefender.State.chill :
             print ("___BALL_NOT_APPROACHING______")
-            # self.sParams.GoToPointP.x = -HALF_FIELD_MAXX+DBOX_WIDTH+BOT_RADIUS
-            # y = ballPos.y
-            # y = min(y,OUR_GOAL_MAXY - BOT_RADIUS)
-            # y = max(y,OUR_GOAL_MINY + BOT_RADIUS)
-            # if y - OUR_GOAL_MINY <= 2*BOT_RADIUS :
-            #     y = y + 4.4*BOT_RADIUS
-            # elif OUR_GOAL_MAXY - y <= 2*BOT_RADIUS :
-            #     y = y - 1.7*BOT_RADIUS
-            # else :
-            #     y = y + 2.4*BOT_RADIUS
-            # self.sParams.GoToPointP.y = y
             pointL,pointR = self.getPoints(state)
             self.sParams.GoToPointP.x = pointL.x
             self.sParams.GoToPointP.y = pointL.y

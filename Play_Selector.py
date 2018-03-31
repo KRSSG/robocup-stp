@@ -29,13 +29,13 @@ cur_goalie = 0
 def select_play(state):
 	global start_time,pub
 	# TO DO Proper play selection
-	#play_testplay=pTestPlay.pTestPlay()
-	#play_cordinatedpass=pCordinatedPass.pCordinatedPass()
+	# play_testplay=pTestPlay.pTestPlay()
+	# play_cordinatedpass=pCordinatedPass.pCordinatedPass()
 	play=DTP_Play.DTP_Play(pub)
 	# start_time = time.clock()
 	# play_testplay.execute()
+	play.execute(state)
 	return play
-	#play_stall.execute()
 	# play_Defence = pDefence.pDefence()
 	# play_Defence.execute()
 
@@ -109,10 +109,10 @@ if __name__=='__main__':
     print "Initializing the node "
     rospy.init_node('play_py_node',anonymous=False)
     pub = rospy.Publisher('/grsim_data', gr_Commands, queue_size=1000)
-    #rospy.Subscriber('/belief_state', BeliefState, bs_callback, queue_size=1000)
-    #rospy.Subscriber('/belief_state', BeliefState, goalKeeper_callback, queue_size=1000)
-    rospy.Subscriber('/belief_state', BeliefState, debug_subscriber, queue_size=1000)
-    #rospy.Subscriber('/belief_state', BeliefState, LDefender_callback, queue_size=1000)
+    # rospy.Subscriber('/belief_state', BeliefState, bs_callback, queue_size=1000)
+    # rospy.Subscriber('/belief_state', BeliefState, goalKeeper_callback, queue_size=1000)
+    # rospy.Subscriber('/belief_state', BeliefState, debug_subscriber, queue_size=1000)
+    rospy.Subscriber('/belief_state', BeliefState, LDefender_callback, queue_size=1000)
     #rospy.Subscriber('/belief_state', BeliefState, RDefender_callback, queue_size=1000)
     #rospy.Subscriber('/belief_state', BeliefState, attacker_callback, queue_size=1000)
     #rospy.Subscriber('/ref_play', Int8, ref_callback, queue_size=1000)

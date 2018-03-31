@@ -420,8 +420,8 @@ int main(int argc, char *argv[])
 	}
 
 	ros::NodeHandle n;
-	ros::Subscriber vision_sub = n.subscribe("/vision", 10000, Callback);
-	::pub = n.advertise<krssg_ssl_msgs::BeliefState>("/belief_state", 10000);
+	ros::Subscriber vision_sub = n.subscribe("/vision", 1000, Callback);
+	::pub = n.advertise<krssg_ssl_msgs::BeliefState>("/belief_state", 1000);
 	ros::spin();
 	return 0;
 }

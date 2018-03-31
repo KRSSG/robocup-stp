@@ -28,9 +28,9 @@ int main(int argc, char **argv)
 	ros::NodeHandle n;
 	
 	ros::Publisher chatter_pub = n.advertise<krssg_ssl_msgs::SSL_DetectionFrame>("vision", 10000);
-	// ros::Rate loop_rate(10);
+	ros::Rate loop_rate(60);
 
-	
+
 	GOOGLE_PROTOBUF_VERIFY_VERSION;
 	int port = use_grsim_vision? 10020: 10006;
 	RoboCupSSLClient client(port);	
@@ -111,7 +111,7 @@ int main(int argc, char **argv)
 			chatter_pub.publish(msg);
 		}
 		ros::spinOnce();
-		// loop_rate.sleep();
+		loop_rate.sleep();
 	}
 
 	return 0;
