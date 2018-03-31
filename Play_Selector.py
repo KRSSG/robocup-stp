@@ -31,7 +31,7 @@ def select_play(state):
 	# TO DO Proper play selection
 	#play_testplay=pTestPlay.pTestPlay()
 	#play_cordinatedpass=pCordinatedPass.pCordinatedPass()
-	# play=DTP_Play.DTP_Play(pub)
+	play=DTP_Play.DTP_Play(pub)
 	# start_time = time.clock()
 	# play_testplay.execute()
 	return play
