@@ -1,5 +1,5 @@
 from geometry import Vector2D
-from config import *
+from utils.config import *
 from math_functions import *
 
 

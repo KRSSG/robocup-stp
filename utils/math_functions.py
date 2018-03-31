@@ -2,7 +2,7 @@ print("importing math function")
 import math
 from ctypes import *
 from geometry import Vector2D
-from config import *
+from utils.config import *
 
 
 class Circle(object):
