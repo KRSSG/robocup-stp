@@ -14,6 +14,33 @@ def SELECT(sim_param, ssl_param):
         print(" Global Constants Intialization Error!")
     return ssl_param
 
+# Geometry constants
+GOAL_DEPTH                   = SELECT(300, 300)
+CENTER_X                     = SELECT(0, 0)
+CENTER_Y                     = SELECT(0, 0)
+HALF_FIELD_MAXX              = SELECT(3000, 4500)
+HALF_FIELD_MAXY              = SELECT(2000, 3000)
+OUR_GOAL_MAXY                = SELECT(360,	500)
+OUR_GOAL_MINY                = SELECT(-360, -500)
+OUR_GOAL_WIDTH               = OUR_GOAL_MAXY - OUR_GOAL_MINY
+CENTER_CIRCLE_DIAMETER       = SELECT(1000,1000)
+CENTER_CIRCLE_RADIUS		 = SELECT(500,500)
+# Configure for 6*4 (9*6 Done)
+DBOX_WIDTH                   = SELECT(2000,2000)	#Along y       # Along X direction
+DBOX_HEIGHT					 = SELECT(1000,1000)	#along x
+OUR_DBOX_MAXY				 = SELECT(1000,1000)
+OUR_DBOX_MINY				 = SELECT(-1000,-1000)
+OUR_DBOX_X 					 =-HALF_FIELD_MAXX + DBOX_HEIGHT
+# Old DBOX Constants
+# DBOX_WIDTH                   = SELECT(1000,1000)       # Along X direction
+# DBOX_HEIGHT					 = SELECT(1250,1250)	   # Along positive y direction
+# DBOX_SMALLER_LENGTH          = SELECT(500,500)         # smaller length of line connecting the two quadrants along Y-axis
+# DBOX_LARGER_LENGTH           = SELECT(1350,2500)       # larger length of line connecting the two quadrants along Y-axis
+# DBOX_RADIUS                  = SELECT(425,1000)
+
+
+
+# Planning Constants
 CLEARANCE_PATH_PLANNER     = SELECT(500, 300)                 #mm
 MID_FIELD_THRESH           = SELECT(10, 150)                  #mm
 BOT_RADIUS                 = SELECT(90, 90)                  #mm
@@ -25,37 +52,18 @@ FREEKICK_RADIUS            = SELECT(25,650) # To set
 FREEBALL_RADIUS            = SELECT(30,700) # To set
 KICKOFF_RADIUS             = SELECT(18,200) # To set
 
-GOAL_DEPTH                   = SELECT(300, 300)
 MOVING_BALL_VELOCITY         = SELECT(40, 30)
 MIN_DIST_FROM_TARGET         = SELECT(30.0, 25.0)
-CENTER_X                     = SELECT(0, 0)
-CENTER_Y                     = SELECT(0, 0)
-HALF_FIELD_MAXX              = SELECT(3000, 4500)
-HALF_FIELD_MAXY              = SELECT(2000, 3000)
-# HALF_FIELD_MAXY              = SELECT(2000, 2050)
-OUR_GOAL_MAXY                = SELECT(360,	500)
-OUR_GOAL_MINY                = SELECT(-360, -500)
-OUR_GOAL_WIDTH               = OUR_GOAL_MAXY - OUR_GOAL_MINY
-# OPP_GOAL_WIDTH               = OPP_GOAL_MAXY - OPP_GOAL_MINY
-CENTER_CIRCLE_DIAMETER       = SELECT(1000,1000)
-DBOX_WIDTH                   = SELECT(1000,1000)       # Along X direction
-DBOX_HEIGHT					 = SELECT(1250,1250)	   # Along positive y direction
-DBOX_SMALLER_LENGTH          = SELECT(500,500)         # smaller length of line connecting the two quadrants along Y-axis
-DBOX_LARGER_LENGTH           = SELECT(1350,2500)       # larger length of line connecting the two quadrants along Y-axis
-DBOX_RADIUS                  = SELECT(425,1000)
 BALL_AT_CORNER_THRESH        = SELECT(20,20)
 
 #Bot Parameteres configuration
 ROTATION_FACTOR            = SELECT(0.05, 0.15)
-
 RFACTOR                    = SELECT(3,   0.3)
 RFACTOR_SMALL              = SELECT(0.6, 0.15)
-
 CLEAR_BALL_THRESH		   = SELECT(150, 200)
 BOT_BALL_THRESH            = SELECT(120, 100)                  #mm
 BOT_BALL_THRESH_FOR_PR     = SELECT(105, 200)                  #mm
 BOT_POINT_THRESH           = SELECT(105, 147)                   #mm
-
 STRIP_WIDTH_X              = BOT_RADIUS*1.5
 STRIP_WIDTH_Y              = BOT_RADIUS*1.5
 MAX_FIELD_DIST             = SELECT(1000, 3500)                #mm
