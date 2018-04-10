@@ -302,19 +302,6 @@ class MainWindow(QtGui.QMainWindow, Ui_MainWindow, QtGui.QWidget):
         self.scene.addLine(our_vertexB[0],our_vertexB[1],our_vertexC[0],our_vertexC[1],pen)
         self.scene.addLine(our_vertexC[0],our_vertexC[1],our_vertexD[0],our_vertexD[1],pen)
 
-        # draw arc on our side
-        # opp_vertexA = BS_TO_GUI(-HALF_FIELD_MAXX - DBOX_WIDTH, DBOX_HEIGHT)
-        # opp_vertexB = BS_TO_GUI(-HALF_FIELD_MAXX - DBOX_WIDTH, -DBOX_HEIGHT + 2*(DBOX_HEIGHT - OUR_GOAL_MAXY))
-        # opp_goalA = BS_TO_GUI(-HALF_FIELD_MAXX + DBOX_WIDTH, OUR_GOAL_MAXY)
-        # opp_goalb = BS_TO_GUI(-HALF_FIELD_MAXX + DBOX_WIDTH, -OUR_GOAL_MAXY)
-        # path.arcMoveTo(opp_vertexA[0],opp_vertexA[1], 2*alongX, 2*alongY, 0)
-        # path.arcTo(opp_vertexA[0],opp_vertexA[1],2*alongX,2*alongY,0,sweepDegrees)
-        # self.scene.addPath(path, pen)
-        # self.scene.addLine(opp_goalA[0], opp_goalA[1], opp_goalb[0], opp_goalb[1], pen)
-        # path.arcMoveTo(opp_vertexB[0],opp_vertexB[1], 2*alongX, 2*alongY, 270)
-        # path.arcTo(opp_vertexB[0],opp_vertexB[1],2*alongX,2*alongY,270,sweepDegrees)
-        # self.scene.addPath(path, pen)
-
         # goal post on opp side
         goal_depth = GOAL_DEPTH*GUI_X/(2*HALF_FIELD_MAXX)
         goal_width = OUR_GOAL_WIDTH*GUI_Y/(2*HALF_FIELD_MAXY)
@@ -328,6 +315,7 @@ class MainWindow(QtGui.QMainWindow, Ui_MainWindow, QtGui.QWidget):
         pointA = BS_TO_GUI(-HALF_FIELD_MAXX - GOAL_DEPTH, OUR_GOAL_MAXY)
         path.addRect(pointA[0], pointA[1], goal_depth, goal_width)
         self.scene.addPath(path, pen)       
+
 
     def show_vel_vector(self):
         global curr_vel
