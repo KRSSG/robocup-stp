@@ -68,8 +68,8 @@ def attacker_callback(state):
 
 def LDefender_callback(state):
 	global pub,LDefender_tac
-	# LDefender_id = 0
-	LDefender_id = 1
+	LDefender_id = 0
+	# LDefender_id = 1
 	ballPos = Vector2D(state.ballPos.x,state.ballPos.y)
 	if LDefender_tac == None :
 		LDefender_tac = TLDefender.TLDefender(LDefender_id,state)

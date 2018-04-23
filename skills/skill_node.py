@@ -15,8 +15,8 @@ def send_command(pub, team, bot_id, v_x, v_y, v_w, kick_power, dribble, chip_pow
 	# Set the command to each bot
 	gr_command.id          = bot_id
 	gr_command.wheelsspeed = 0
-	gr_command.veltangent  = v_y/1000.0
-	gr_command.velnormal   = -v_x/1000.0
+	gr_command.veltangent  = -v_y/1000.0
+	gr_command.velnormal   = +v_x/1000.0
 	gr_command.velangular  = v_w
 	gr_command.kickspeedx  = kick_power
 	gr_command.kickspeedz  = chip_power
@@ -32,7 +32,7 @@ def send_command(pub, team, bot_id, v_x, v_y, v_w, kick_power, dribble, chip_pow
 	# # Log the commands
 	# # print 'botid: {}: [{}]\n'.format(bot_id, final_command.timestamp)
 	# print("sabse niche nahi")
- 	print 'vel_x: {}\nvel_y: {}\nvel_w: {}\n'.format(gr_command.velnormal, gr_command.veltangent, gr_command.velangular)
+ 	#print 'vel_x: {}\nvel_y: {}\nvel_w: {}\n'.format(gr_command.velnormal, gr_command.veltangent, gr_command.velangular)
 	# print 'kick_power: {}\nchip_power: {}\ndribble_speed:{}\n\n'.format(kick_power, chip_power, dribble)
 
 	# Publish the command packet

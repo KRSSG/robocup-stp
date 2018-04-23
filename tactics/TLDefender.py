@@ -119,6 +119,11 @@ class TLDefender(Tactic):
         attacker_pos = Vector2D (int(state.awayPos[attacker_id].x),int(state.awayPos[attacker_id].y))
         gameState = self.getState(state)
 
+        # self.sParams.GoToPointP.x = ballPos.x
+        # self.sParams.GoToPointP.y = ballPos.y
+        # sGoToPoint.execute(self.sParams, state, self.bot_id, pub)
+        # return
+
         if gameState == TLDefender.State.block:
             print ("ATTACKER_HAS_THE_BALL")
             self.sParams.GoToPointP.x = -HALF_FIELD_MAXX+DBOX_WIDTH+BOT_RADIUS
@@ -175,6 +180,7 @@ class TLDefender(Tactic):
             self.sParams.GoToPointP.y = pointL.y
             finalPos = pointL
             self.sParams.GoToPointP.finalSlope = ballPos.angle(finalPos)
+            print(finalPos.x,finalPos.y)
             if distance <= DRIBBLER_BALL_THRESH and ballPos.y > 0:
                 print ("KICK TO POINT")
                 self.sParams.KickToPointP.x = 0  # TO DO decide the point to clear the ball
