@@ -1,4 +1,4 @@
-import socket
+from socket import *
 import sys 
 import thread          
 
@@ -18,8 +18,8 @@ FACTOR_N = 40
 FACTOR_W = 90
 v_4_wheel = [0, 0, 0, 0]
 
-UDP_PORT = 5005
-UDP_IP = ['127.0.0.1']*6 # bot_ip
+UDP_PORT = 54545
+UDP_IP = '255.255.255.255'
 
 print("UDP target port:", UDP_PORT)
 
@@ -39,9 +39,9 @@ def send(bot_index,buf):
     sock = socket.socket(socket.AF_INET, socket.SOCK_DGRAM) # UDP
     sock.sendto(buf, (UDP_IP[bot_index], UDP_PORT))
 
-def gr_Commands_CB(bot_id, velnormal, veltangent, velangular, spinner=False,kickspeedx=0):
+def gr_Commands_CB(bot_id, velnormal, veltangent, velangular, spinner=False,kickspeedx=0,socket = None):
     global buf
-    print(bot_id,velnormal, veltangent, velangular)
+    #print(bot_id,velnormal, veltangent, velangular)
     vel_xyw = [0]*3
     vel_xyw[0] = int(velnormal * FACTOR_T)
     vel_xyw[1] = -1*int(veltangent * FACTOR_N)
@@ -50,7 +50,6 @@ def gr_Commands_CB(bot_id, velnormal, veltangent, velangular, spinner=False,kick
     start = 1 + bot_id*5
     for i in xrange(4):
         buf[i+start] = int(v_4_wheel[i])
-
     if spinner and kickspeedx :
         buf[start+4] = 3
     elif spinner :
@@ -64,18 +63,19 @@ def gr_Commands_CB(bot_id, velnormal, veltangent, velangular, spinner=False,kick
         if buf[i] > 255:
             buf[i] = 0
         buff += chr(int(buf[i])%256)
-    # buff = ' '.join(map(str,buf))
-
-    # send(0,buff)
-    try:
-        for i in xrange(1):
-            thread.start_new_thread(send,(i,buff,))
-    except:
-       print ("Error: unable to start thread")
-
-
-
-    
+    tbuf = ' '.join(map(str,buf))    
+    socket.sendto(buff, (UDP_IP,UDP_PORT ))
+ 
 if __name__ == '__main__':
+    cs = socket(AF_INET, SOCK_DGRAM)
+    cs.setsockopt(SOL_SOCKET, SO_REUSEADDR, 1)
+    cs.setsockopt(SOL_SOCKET, SO_BROADCAST, 1)
     while True:
-        gr_Commands_CB(bot_id=0, velnormal=0, veltangent=-40, velangular=0)
+        gr_Commands_CB(bot_id=0, velnormal=0, veltangent=-40, velangular=0,socket = cs)
+
+    ## Python Client
+    # from socket import *
+    # s=socket(AF_INET, SOCK_DGRAM)
+    # s.bind(('',UDP_PORT))
+    # m=s.recvfrom(1024*32)
+    # print (m[0])

@@ -21,10 +21,15 @@ FACTOR_N = 40
 FACTOR_W = 90
 v_4_wheel = [0, 0, 0, 0]
 
-UDP_PORT = 5005
-UDP_IP = ['127.0.0.1']*6 #bot_ip
+
+UDP_PORT = 54545
+UDP_IP = '255.255.255.255'
 
 print("UDP target port:", UDP_PORT)
+
+sock = socket(AF_INET, SOCK_DGRAM)
+sock.setsockopt(SOL_SOCKET, SO_REUSEADDR, 1)
+sock.setsockopt(SOL_SOCKET, SO_BROADCAST, 1)
 
 def vel_convert(vel_3_wheel):
     vx = vel_3_wheel[0]
@@ -41,12 +46,8 @@ def vel_convert(vel_3_wheel):
             v_4_wheel[i] = 255 + (v_4_wheel[i]*129) / max_vel_wheel
     return v_4_wheel
 
-def send(bot_index,buf):
-	sock = socket.socket(socket.AF_INET, socket.SOCK_DGRAM) # UDP
-	sock.sendto(buf, (UDP_IP[bot_index], UDP_PORT))
-
 def gr_Commands_CB(msg):
-    global buf
+    global buf,sock
     vel_xyw = [0]*3
     vel_xyw[0] = int(msg.robot_commands.velnormal * FACTOR_T)
     vel_xyw[1] = -1*int(msg.robot_commands.veltangent * FACTOR_N)
@@ -69,13 +70,8 @@ def gr_Commands_CB(msg):
         if buf[i] > 255:
             buf[i] = 0
         buff += chr(int(buf[i])%256)
-
-    try:
-    	for i in xrange(6):
-    		thread.start_new_thread(send,(i,buff,))
-    except:
-       print ("Error: unable to start thread")
-
+    tbuf = ' '.join(map(str,buf))    
+    sock.sendto(buff, (UDP_IP,UDP_PORT ))
 
 rospy.init_node('bot_comm_wifi',anonymous=False)
 rospy.Subscriber('/grsim_data',gr_Commands,gr_Commands_CB)
