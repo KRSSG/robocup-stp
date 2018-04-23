@@ -39,11 +39,6 @@ Copyright (C) 2011, Parsian Robotic Center (eew.aut.ac.ir/~parsian/grsim)
 #include "configwidget.h"
 
 #include "config.h"
-#include "grSim_Packet.pb.h"
-#include "sslDebug_Data.pb.h"
-
-using namespace std;
-
 
 #define WALL_COUNT 10
 
@@ -55,7 +50,6 @@ class SendingPacket {
     int t;
 };
 
-
 class SSLWorld : public QObject
 {
     Q_OBJECT
@@ -65,7 +59,7 @@ private:
     dReal last_dt;
     QList<SendingPacket*> sendQueue;
     char packet[200];
-    char *in_buffer;
+    char *in_buffer;    
 public:    
     dReal customDT;
     bool isGLEnabled;
@@ -73,8 +67,13 @@ public:
     virtual ~SSLWorld();
     void glinit();
     void step(dReal dt=-1);
-    SSL_WrapperPacket* generatePacket();
+    SSL_WrapperPacket* generatePacket(int cam_id=0);
+    void addFieldLinesArcs(SSL_GeometryFieldSize *field);
+    Vector2f* allocVector(float x, float y);
+    void addFieldLine(SSL_GeometryFieldSize *field, const std::string &name, float p1_x, float p1_y, float p2_x, float p2_y, float thickness);
+    void addFieldArc(SSL_GeometryFieldSize *field, const string &name, float c_x, float c_y, float radius, float a1, float a2, float thickness);
     void sendVisionBuffer();
+    bool visibleInCam(int id, double x, double y);
     ConfigWidget* cfg;
     CGraphics* g;
     PWorld* p;
@@ -90,7 +89,7 @@ public:
     QUdpSocket *commandSocket;
     QUdpSocket *blueStatusSocket,*yellowStatusSocket;
     bool updatedCursor;
-    Robot* robots[ROBOT_COUNT*2];
+    Robot* robots[MAX_ROBOT_COUNT*2];
     QTime *timer;
     int sendGeomCount;
 public slots:
@@ -101,8 +100,8 @@ signals:
 
 class RobotsFomation {
     public:
-        dReal x[ROBOT_COUNT];
-        dReal y[ROBOT_COUNT];
+        dReal x[MAX_ROBOT_COUNT];
+        dReal y[MAX_ROBOT_COUNT];
         RobotsFomation(int type);
         void setAll(dReal *xx,dReal *yy);
         void loadFromFile(const QString& filename);

@@ -44,19 +44,38 @@ Copyright (C) 2011, Parsian Robotic Center (eew.aut.ac.ir/~parsian/grsim)
 
 using namespace VarTypes;
 
+
+#ifdef HAVE_MACOSX
+
 #define DEF_VALUE(type,Type,name)  \
-            shared_ptr<VarTypes::Var##Type> v_##name; \
+            std::shared_ptr<VarTypes::Var##Type> v_##name; \
             inline type name() {return v_##name->get##Type();}
 
 #define DEF_ENUM(type,name)  \
-            shared_ptr<VarTypes::VarStringEnum> v_##name; \
+            std::shared_ptr<VarTypes::VarStringEnum> v_##name; \
+            type name() {if(v_##name!=nullptr) return v_##name->getString();return * (new type);}
+
+#define DEF_TREE(name)  \
+            std::shared_ptr<VarTypes::VarList> name;
+#define DEF_PTREE(parents, name)  \
+            std::shared_ptr<VarTypes::VarList> parents##_##name;
+
+#else
+
+#define DEF_VALUE(type,Type,name)  \
+            std::tr1::shared_ptr<VarTypes::Var##Type> v_##name; \
+            inline type name() {return v_##name->get##Type();}
+
+#define DEF_ENUM(type,name)  \
+            std::tr1::shared_ptr<VarTypes::VarStringEnum> v_##name; \
             type name() {if(v_##name!=NULL) return v_##name->getString();return * (new type);}
 
 #define DEF_TREE(name)  \
-            shared_ptr<VarTypes::VarList> name;
+            std::tr1::shared_ptr<VarTypes::VarList> name;
 #define DEF_PTREE(parents, name)  \
-            shared_ptr<VarTypes::VarList> parents##_##name;
+            std::tr1::shared_ptr<VarTypes::VarList> parents##_##name;
 
+#endif
 
 
 class RobotSettings {
@@ -107,15 +126,14 @@ public:
   RobotSettings blueSettings;
   RobotSettings yellowSettings;
 
+  /*    Geometry/Game Vartypes   */
   DEF_VALUE(double,Double,Field_Line_Width)
   DEF_VALUE(double,Double,Field_Length)
   DEF_VALUE(double,Double,Field_Width)
   DEF_VALUE(double,Double,Field_Rad)
-  DEF_VALUE(double,Double,Field_Defense_Rad)
-  DEF_VALUE(double,Double,Field_Defense_Stretch)
   DEF_VALUE(double,Double,Field_Free_Kick)
-  DEF_VALUE(double,Double,Field_Penalty_Rad)//TODO: what's this??
-  DEF_VALUE(double,Double,Field_Penalty_Line)
+  DEF_VALUE(double,Double,Field_Penalty_Width)
+  DEF_VALUE(double,Double,Field_Penalty_Depth)
   DEF_VALUE(double,Double,Field_Penalty_Point)
   DEF_VALUE(double,Double,Field_Margin)
   DEF_VALUE(double,Double,Field_Referee_Margin)

@@ -1,4 +1,3 @@
-set(CUSTOM_ROOT_PATH "/home/ssl/usr/local")
 find_path(
    VARTYPES_INCLUDE_DIRS
    NAMES
@@ -8,7 +7,6 @@ find_path(
    /usr/local/include
    /usr/include
    $ENV{ProgramFiles}/vartypes/include
-	${CUSTOM_ROOT_PATH}/include
 )
 
 find_library(
@@ -20,7 +18,6 @@ find_library(
    /usr/local/lib
    /usr/lib
    $ENV{ProgramFiles}/vartypes/lib
-	${CUSTOM_ROOT_PATH}/lib
 )
 
 set(VARTYPES_LIBRARIES ${VARTYPES_LIBRARY})

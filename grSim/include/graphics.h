@@ -25,12 +25,6 @@ Copyright (C) 2011, Parsian Robotic Center (eew.aut.ac.ir/~parsian/grsim)
 #include <QGLWidget>
 #include <QString>
 
-#include <map>
-#include <vector>
-#include <string>
-#include <sslDebug_Data.pb.h>
-
-using namespace std;
 class CGraphics
 {
 private:
@@ -50,8 +44,6 @@ private:
     void setCamera (dReal x, dReal y, dReal z, dReal h, dReal p, dReal r);
     bool graphicDisabled;
 public:
-    map<string, vector<Debug_Line> > debugLines;
-    map<string, vector<Debug_Circle> > debugCircles;
     CGraphics(QGLWidget* _owner);
     ~CGraphics();
     void disableGraphics();
@@ -86,17 +78,15 @@ public:
     void drawSkybox(int t1,int t2,int t3,int t4,int t5,int t6);
     void drawSky ();
     void drawGround();
-    void drawSSLGround(dReal SSL_FIELD_RAD,dReal SSL_FIELD_LENGTH,dReal SSL_FIELD_WIDTH,dReal SSL_FIELD_PENALTY_RADIUS,dReal SSL_FIELD_PENALTY_LINE,dReal SSL_FIELD_PENALTY_POINT, dReal SSL_FIELD_LINE_WIDTH, dReal SSL_FIELD_DEFENSE_STRETCH, dReal SSL_FIELD_DEFENSE_RADIUS, dReal epsilon);
+    void drawSSLGround(dReal SSL_FIELD_RAD,dReal SSL_FIELD_LENGTH,dReal SSL_FIELD_WIDTH,dReal SSL_FIELD_PENALTY_DEPTH,dReal SSL_FIELD_PENALTY_WIDTH,dReal SSL_FIELD_PENALTY_POINT, dReal SSL_FIELD_LINE_WIDTH, dReal epsilon);
 
     void drawBox (const dReal pos[3], const dReal R[12],const dReal sides[3]);
     void drawSphere (const dReal pos[3], const dReal R[12],dReal radius);
     void drawCylinder (const dReal pos[3], const dReal R[12],dReal length, dReal radius);
     void drawCylinder_TopTextured (const dReal pos[3], const dReal R[12],dReal length, dReal radius,int tex_id,bool robot=false);
     void drawCapsule (const dReal pos[3], const dReal R[12],dReal length, dReal radius);
-    void drawLine (const dReal pos1[3], const dReal pos2[3], const dReal lw, float color = 1);
+    void drawLine (const dReal pos1[3], const dReal pos2[3]);
     void drawCircle(dReal x0,dReal y0,dReal z0,dReal r);
-    void drawHollowCircle(dReal x0,dReal y0,dReal z0,dReal r, float color = 1);
-
 
 };
 

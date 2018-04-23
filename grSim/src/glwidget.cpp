@@ -25,6 +25,8 @@ Copyright (C) 2011, Parsian Robotic Center (eew.aut.ac.ir/~parsian/grsim)
 #include "logger.h"
 #include <QLabel>
 
+#include <iostream>
+
 GLWidget::GLWidget(QWidget *parent,ConfigWidget* _cfg)
     : QGLWidget(parent)
 {
@@ -32,12 +34,11 @@ GLWidget::GLWidget(QWidget *parent,ConfigWidget* _cfg)
     state = 0;
     first_time = true;
     cfg = _cfg;
-    forms[0] = new RobotsFomation(-1);  //outside
-    forms[1] = new RobotsFomation(-2);  //outside
+    forms[1] = new RobotsFomation(-1);  //outside yellow
     forms[2] = new RobotsFomation(1);  //inside type 1
     forms[3] = new RobotsFomation(2);  //inside type 2
     forms[4] = new RobotsFomation(3);  //inside type 1
-    forms[5] = new RobotsFomation(4);  //inside type 2
+    //forms[5] = new RobotsFomation(4);  //inside type 2
     ssl = new SSLWorld(this,cfg,forms[2],forms[2]);
     Current_robot = 0;
     Current_team = 0;
@@ -50,10 +51,14 @@ GLWidget::GLWidget(QWidget *parent,ConfigWidget* _cfg)
     blueRobotsMenu->addAction(tr("Put all inside with formation 2"));
     blueRobotsMenu->addAction(tr("Put all outside"));
     blueRobotsMenu->addAction(tr("Put all out of field"));
+    blueRobotsMenu->addAction(tr("Turn all off"));
+    blueRobotsMenu->addAction(tr("Turn all on"));
     yellowRobotsMenu->addAction(tr("Put all inside with formation 1"));
     yellowRobotsMenu->addAction(tr("Put all inside with formation 2"));
     yellowRobotsMenu->addAction(tr("Put all outside"));
     yellowRobotsMenu->addAction(tr("Put all out of field"));
+    yellowRobotsMenu->addAction(tr("Turn all off"));
+    yellowRobotsMenu->addAction(tr("Turn all on"));
     robpopup = new QMenu(this);
     moveRobotAct = new QAction(tr("&Locate robot"),this);
     selectRobotAct = new QAction(tr("&Select robot"),this);
@@ -108,6 +113,9 @@ GLWidget::GLWidget(QWidget *parent,ConfigWidget* _cfg)
     alt = false;
     kickingball = false;
     kickpower = 3.0;
+    altTrigger = false;
+    chipAngle = M_PI/4;
+    chiping = false;
 }
 
 GLWidget::~GLWidget()
@@ -120,6 +128,14 @@ void GLWidget::moveRobot()
     ssl->cursor_radius = cfg->robotSettings.RobotRadius;
     state = 1;
     moving_robot_id = clicked_robot;
+}
+
+void GLWidget::unselectRobot()
+{
+    ssl->show3DCursor = false;
+    ssl->cursor_radius = cfg->robotSettings.RobotRadius;
+    state = 0;
+    moving_robot_id= robotIndex(Current_robot,Current_team);
 }
 
 void GLWidget::selectRobot()
@@ -145,7 +161,7 @@ void GLWidget::switchRobotOnOff()
     int k = robotIndex(Current_robot, Current_team);
     if (Current_robot!=-1)
     {
-        if (ssl->robots[k]->on==true)
+        if (ssl->robots[k]->on)
         {
             ssl->robots[k]->on = false;
             onOffRobotAct->setText("Turn &on");
@@ -220,9 +236,23 @@ void GLWidget::mousePressEvent(QMouseEvent *event)
                 y *= kickpower;
                 dBodySetLinearVel(ssl->ball->body,x,y,0);
                 dBodySetAngularVel(ssl->ball->body,-y/cfg->BallRadius(),x/cfg->BallRadius(),0);
+            }
+            else if (chiping) {
+                dReal x,y,z;
+                ssl->ball->getBodyPosition(x,y,z);
+                x = ssl->cursor_x - x;
+                y = ssl->cursor_y - y;
+                dReal lxy = hypot(x,y);
+                x /= lxy;
+                y /= lxy;
+                x *= kickpower;
+                y *= kickpower;
+                z = kickpower*tan(chipAngle);
 
-}
-          
+                dBodySetLinearVel(ssl->ball->body,x,y,z);
+                dBodySetAngularVel(ssl->ball->body,-y/cfg->BallRadius(),x/cfg->BallRadius(),z);    
+            }
+        
         }
     }
     if (event->buttons() & Qt::RightButton)
@@ -314,11 +344,9 @@ void GLWidget::initializeGL ()
 
 void GLWidget::step()
 {
-    static double lastBallSpeed=-1;
     const dReal* ballV = dBodyGetLinearVel(ssl->ball->body);
     double ballSpeed = ballV[0]*ballV[0] + ballV[1]*ballV[1] + ballV[2]*ballV[2];
     ballSpeed  = sqrt(ballSpeed);
-    lastBallSpeed = ballSpeed;
     rendertimer.restart();
     m_fps = frames /(time.elapsed()/1000.0);
     if (!(frames % ((int)(ceil(cfg->DesiredFPS()))))) {
@@ -364,7 +392,7 @@ void GLWidget::paintGL()
     }
     step();    
     QFont font;
-    for (int i=0;i<ROBOT_COUNT*2;i++)
+    for (int i=0;i< ROBOT_COUNT*2;i++)
     {
         dReal xx,yy;
         ssl->robots[i]->getXY(xx,yy);
@@ -413,8 +441,12 @@ void GLWidget::keyReleaseEvent(QKeyEvent* event)
 {
     if (event->key() == Qt::Key_Control) ctrl = false;
     if (event->key() == Qt::Key_Alt) {
+        if (!ssl->show3DCursor)
+            moveCurrentRobot();
+        else {
+            unselectRobot();
+        }
         alt = false;
-        moveCurrentRobot();
     }
 }
 
@@ -422,13 +454,15 @@ void GLWidget::keyPressEvent(QKeyEvent *event)
 {
     if (event->key() == Qt::Key_Control) ctrl = true;
     if (event->key() == Qt::Key_Alt) alt = true;
-    char cmd = event->key();
+    char cmd = static_cast<char>(event->key());
     if (fullScreen) {
         if (event->key()==Qt::Key_F2) emit toggleFullScreen(false);
     }
-    const dReal S = 0.30;
-    const dReal BallForce = 0.2;
+    const dReal S = 1.00;
+    const dReal BallForce = 2.0;
     int R = robotIndex(Current_robot,Current_team);
+    if (R < 0) return;
+
     switch (cmd) {
     case 't': case 'T': ssl->robots[R]->incSpeed(0,-S);ssl->robots[R]->incSpeed(1,S);ssl->robots[R]->incSpeed(2,-S);ssl->robots[R]->incSpeed(3,S);break;
     case 'g': case 'G': ssl->robots[R]->incSpeed(0,S);ssl->robots[R]->incSpeed(1,-S);ssl->robots[R]->incSpeed(2,S);ssl->robots[R]->incSpeed(3,-S);break;
@@ -438,18 +472,34 @@ void GLWidget::keyPressEvent(QKeyEvent *event)
     case 's': case 'S':dBodyAddForce(ssl->ball->body,0,-BallForce,0);break;
     case 'd': case 'D':dBodyAddForce(ssl->ball->body, BallForce,0,0);break;
     case 'a': case 'A':dBodyAddForce(ssl->ball->body,-BallForce,0,0);break;
-    case 'k':case 'K': ssl->robots[R]->kicker->kick(4,0);break;
-    case 'l':case 'L': ssl->robots[R]->kicker->kick(2,2);break;
-    case 'j':case 'J': ssl->robots[R]->kicker->toggleRoller();break;
-    case 'i':case 'I': dBodySetLinearVel(ssl->ball->body,2.0,0,0);dBodySetAngularVel(ssl->ball->body,0,2.0/cfg->BallRadius(),0);break;
+    case 'k': case 'K': ssl->robots[R]->kicker->kick(8,0);break;
+    case 'l': case 'L': ssl->robots[R]->kicker->kick(3,3);break;
+    case 'j': case 'J': ssl->robots[R]->kicker->toggleRoller();break;
+    case 'i': case 'I': dBodySetLinearVel(ssl->ball->body,2.0,0,0);dBodySetAngularVel(ssl->ball->body,0,2.0/cfg->BallRadius(),0);break;
     case ';':
-        if (kickingball==false)
+        if (!kickingball)
         {
             kickingball = true; logStatus(QString("Kick mode On"),QColor("blue"));
+            chiping = false;
         }
         else
         {
             kickingball = false; logStatus(QString("Kick mode Off"),QColor("red"));
+            chiping = false;
+        }
+        break;
+    case '\'':
+        if (!chiping)
+        {
+            logStatus(QString("Chip mode On"),QColor("blue"));
+            chiping = true;
+            kickingball = false;
+        }
+        else
+        {
+            logStatus(QString("Chip mode Off"),QColor("red"));
+            chiping = false;
+            kickingball = false;
         }
         break;
     case ']': kickpower += 0.1; logStatus(QString("Kick power = %1").arg(kickpower),QColor("orange"));break;
@@ -461,6 +511,7 @@ void GLWidget::keyPressEvent(QKeyEvent *event)
         dBodySetLinearVel(ssl->ball->body,0,0,0);
         dBodySetAngularVel(ssl->ball->body,0,0,0);
         break;
+        default:break;
     }
 }
 
@@ -483,9 +534,31 @@ void GLWidget::reform(int team,const QString& act)
 {
     if (act==tr("Put all inside with formation 1")) forms[2]->resetRobots(ssl->robots,team);
     if (act==tr("Put all inside with formation 2")) forms[3]->resetRobots(ssl->robots,team);
-    if (act==tr("Put all outside") && team==0) forms[0]->resetRobots(ssl->robots,team);
-    if (act==tr("Put all outside") && team==1) forms[1]->resetRobots(ssl->robots,team);
-    if (act==tr("Put all out of field")) forms[4]->resetRobots(ssl->robots,team);    
+    if (act==tr("Put all outside")) forms[1]->resetRobots(ssl->robots,team);
+    if (act==tr("Put all out of field")) forms[4]->resetRobots(ssl->robots,team);
+
+    if(act==tr("Turn all off")) {
+        for(int i=0; i<ROBOT_COUNT; i++) {
+            int k = robotIndex(i, team);
+            if(ssl->robots[k]->on) {
+                ssl->robots[k]->on = false;
+                onOffRobotAct->setText("Turn &on");
+                emit robotTurnedOnOff(k, false);
+            }
+        }
+    }
+
+    if(act==tr("Turn all on")) {
+        for(int i=0; i<ROBOT_COUNT; i++) {
+            int k = robotIndex(i, team);
+            if(!ssl->robots[k]->on) {
+                ssl->robots[k]->on = true;
+                onOffRobotAct->setText("Turn &off");
+                emit robotTurnedOnOff(k, true);
+            }
+        }
+    }
+
 }
 
 void GLWidget::moveBallHere()
