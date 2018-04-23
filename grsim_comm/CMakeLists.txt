@@ -10,6 +10,7 @@ find_package(catkin REQUIRED COMPONENTS
   std_msgs
   message_generation
   krssg_ssl_msgs
+  ssl_common
 )
 
 ## System dependencies are found with CMake's conventions
@@ -168,7 +169,7 @@ include_directories(
 ## Add folders to be run by python nosetests
 # catkin_add_nosetests(test)
 
-set(CMAKE_AUTOMOC ON)
+# set(CMAKE_AUTOMOC ON)
 set(CMAKE_INCLUDE_CURRENT_DIR ON)
 
 #set(libs)
@@ -235,4 +236,3 @@ add_dependencies(debug_test grsim_comm_generate_messages_cpp)
 
 
 #####################################################################################################
-

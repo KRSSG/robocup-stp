@@ -32,11 +32,11 @@ OUR_DBOX_MAXY				 = SELECT(1000,1000)
 OUR_DBOX_MINY				 = SELECT(-1000,-1000)
 OUR_DBOX_X 					 =-HALF_FIELD_MAXX + DBOX_HEIGHT
 # Old DBOX Constants
-# DBOX_WIDTH                   = SELECT(1000,1000)       # Along X direction
-# DBOX_HEIGHT					 = SELECT(1250,1250)	   # Along positive y direction
-# DBOX_SMALLER_LENGTH          = SELECT(500,500)         # smaller length of line connecting the two quadrants along Y-axis
-# DBOX_LARGER_LENGTH           = SELECT(1350,2500)       # larger length of line connecting the two quadrants along Y-axis
-# DBOX_RADIUS                  = SELECT(425,1000)
+DBOX_WIDTH                   = SELECT(1000,1000)       # Along X direction
+DBOX_HEIGHT					 = SELECT(1250,1250)	   # Along positive y direction
+DBOX_SMALLER_LENGTH          = SELECT(500,500)         # smaller length of line connecting the two quadrants along Y-axis
+DBOX_LARGER_LENGTH           = SELECT(1350,2500)       # larger length of line connecting the two quadrants along Y-axis
+DBOX_RADIUS                  = SELECT(425,1000)
 
 
 

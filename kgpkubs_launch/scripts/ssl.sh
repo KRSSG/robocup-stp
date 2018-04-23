@@ -41,7 +41,7 @@ pr_launcher "grsim_comm"    "grsim_comm.launch"
 #############################################
 #####               PYTHON              #####
 #############################################
-# CATKIN_DIR="${HOME}/robocup"
-# cd ${CATKIN_DIR}/src
-# python plays_py/scripts/plays/Play_Selector.py &
-# python referee-box/scripts/udp_recieve.py
+CATKIN_DIR="${HOME}/RobocupSSL"
+cd ${CATKIN_DIR}/src
+python plays_py/scripts/plays/Play_Selector.py &
+python referee-box/scripts/udp_recieve.py

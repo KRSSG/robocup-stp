@@ -3,6 +3,12 @@ cmake_minimum_required(VERSION 2.8)
 
 ## Project branding, version and package mantainer
 project(grSim)
+
+find_package(catkin REQUIRED COMPONENTS
+  roscpp
+  rospy
+  std_msgs
+)
 set(VERSION "1.0.0a2")
 #set(VENDOR "Parsian")
 set(MAINTAINER "Mani Monajjemi <mani.monajjemi@gmail.com>")
@@ -13,9 +19,10 @@ string(TOLOWER ${CMAKE_PROJECT_NAME} CMAKE_PROJECT_NAME_LOWER)
 set(CMAKE_MODULE_PATH ${PROJECT_SOURCE_DIR}/cmake/modules)
 include(${PROJECT_SOURCE_DIR}/cmake/Utils.cmake)
 standard_config()
-standard_paths(${PROJECT_SOURCE_DIR} bin lib)
+# standard_paths(${PROJECT_SOURCE_DIR} bin lib)
 
-
+catkin_package(
+    )
 # definitions for knowing the OS from the code
 if(MSVC)
     add_definitions(-DHAVE_MSVC)
@@ -33,13 +40,9 @@ if(UNIX)
     endif()
 endif()
 
-# set explicitly the c++ standard to use
-set (CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -std=c++03")
 
 # add src dir to included directories
-include_directories(${PROJECT_SOURCE_DIR}/include)
-include_directories(${PROJECT_SOURCE_DIR}/include/net)
-include_directories(${PROJECT_SOURCE_DIR}/include/physics)
+include_directories(src)
 
 
 ## Handling depenendcies
@@ -67,19 +70,11 @@ include_directories(${ODE_INCLUDE_DIRS})
 list(APPEND libs ${ODE_LIBRARIES})
 #TODO: make this an option
 option(DOUBLE_PRECISION "Use double precision? If not single precision will be used." ON)
-  if(DOUBLE_PRECISION)
-    if(APPLE)
-      add_definitions(-DdIDEDOUBLE)
-    else()
-      add_definitions(-DdDOUBLE)
-    endif()
-  else()
-    if(APPLE)
-      add_definitions(-DdIDESINGLE)
-    else()
-      add_definitions(-DdSINGLE)
-    endif()
-  endif()
+if(DOUBLE_PRECISION)
+    add_definitions(-DdDOUBLE)
+else()
+    add_definitions(-DdSINGLE)
+endif()
 
 # VarTypes
 find_package(VarTypes REQUIRED)
@@ -96,6 +91,7 @@ protobuf_generate_cpp(PROTO_CPP PROTO_H
     src/proto/messages_robocup_ssl_geometry.proto
     src/proto/messages_robocup_ssl_wrapper.proto
     src/proto/messages_robocup_ssl_refbox_log.proto
+    src/proto/sslDebug_Data.proto
     src/proto/grSim_Replacement.proto
     src/proto/grSim_Commands.proto
     src/proto/grSim_Packet.proto
@@ -135,28 +131,28 @@ set(SOURCES
 )
 
 set(HEADERS
-    include/mainwindow.h
-    include/glwidget.h
-    include/graphics.h
-    include/physics/pworld.h
-    include/physics/pobject.h
-    include/physics/pball.h
-    include/physics/pground.h
-    include/physics/pfixedbox.h
-    include/physics/pcylinder.h
-    include/physics/pbox.h
-    include/physics/pray.h
-    include/net/robocup_ssl_server.h
-    include/net/robocup_ssl_client.h
-    include/sslworld.h
-    include/robot.h
-    include/configwidget.h
-    include/statuswidget.h
-    include/logger.h
-    include/robotwidget.h
-    include/getpositionwidget.h
-    include/common.h
-    include/config.h
+    src/mainwindow.h
+    src/glwidget.h
+    src/graphics.h
+    src/physics/pworld.h
+    src/physics/pobject.h
+    src/physics/pball.h
+    src/physics/pground.h
+    src/physics/pfixedbox.h
+    src/physics/pcylinder.h
+    src/physics/pbox.h
+    src/physics/pray.h
+    src/net/robocup_ssl_server.h
+    src/net/robocup_ssl_client.h
+    src/sslworld.h
+    src/robot.h
+    src/configwidget.h
+    src/statuswidget.h
+    src/logger.h
+    src/robotwidget.h
+    src/getpositionwidget.h
+    src/common.h
+    src/config.h
 )
 
 # files to be compiled
@@ -227,23 +223,23 @@ elseif(WIN32)
     set(ARCH "win32")
     set(CPACK_GENERATOR ZIP NSIS)
 endif()
-set(CPACK_OUTPUT_FILE_PREFIX ${PROJECT_SOURCE_DIR}/dist)
-set(CPACK_PACKAGE_CONTACT ${MAINTAINER})
-if(VENDOR)
-    set(CPACK_PACKAGE_VENDOR ${VENDOR})
-    string(TOLOWER ${CPACK_PACKAGE_VENDOR} FLAVOR)
-endif()
-set(CPACK_RESOURCE_FILE_LICENSE "${CMAKE_BINARY_DIR}/LICENSE.txt")
-set(CPACK_RESOURCE_FILE_README "${CMAKE_BINARY_DIR}/README.txt")
-#set(CPACK_RESOURCE_FILE_WELCOME "${CMAKE_SOURCE_DIR}/WELCOME.txt")
-set(CPACK_PACKAGE_VERSION ${VERSION})
-# Debian based specific
-set(CPACK_DEBIAN_PACKAGE_DEPENDS "libode1 (>=0.11), vartypes (>=0.7.0), libqt4-network (>=4.8.0), libqt4-core, libqt4-gui, libqt4-opengl")
-if(FLAVOR)
-    set(CPACK_PACKAGE_FILE_NAME "${CMAKE_PROJECT_NAME_LOWER}_${CPACK_PACKAGE_VERSION}-${FLAVOR}_${ARCH}")
-else()
-    set(CPACK_PACKAGE_FILE_NAME "${CMAKE_PROJECT_NAME_LOWER}_${CPACK_PACKAGE_VERSION}_${ARCH}")
-endif()
-include(CPack)
+# set(CPACK_OUTPUT_FILE_PREFIX ${PROJECT_SOURCE_DIR}/dist)
+# set(CPACK_PACKAGE_CONTACT ${MAINTAINER})
+# if(VENDOR)
+#     set(CPACK_PACKAGE_VENDOR ${VENDOR})
+#     string(TOLOWER ${CPACK_PACKAGE_VENDOR} FLAVOR)
+# endif()
+# set(CPACK_RESOURCE_FILE_LICENSE "${CMAKE_BINARY_DIR}/LICENSE.txt")
+# set(CPACK_RESOURCE_FILE_README "${CMAKE_BINARY_DIR}/README.txt")
+# #set(CPACK_RESOURCE_FILE_WELCOME "${CMAKE_SOURCE_DIR}/WELCOME.txt")
+# set(CPACK_PACKAGE_VERSION ${VERSION})
+# # Debian based specific
+# set(CPACK_DEBIAN_PACKAGE_DEPENDS "libode1 (>=0.11), vartypes (>=0.7.0), libqt4-network (>=4.8.0), libqt4-core, libqt4-gui, libqt4-opengl")
+# if(FLAVOR)
+#     set(CPACK_PACKAGE_FILE_NAME "${CMAKE_PROJECT_NAME_LOWER}_${CPACK_PACKAGE_VERSION}-${FLAVOR}_${ARCH}")
+# else()
+#     set(CPACK_PACKAGE_FILE_NAME "${CMAKE_PROJECT_NAME_LOWER}_${CPACK_PACKAGE_VERSION}_${ARCH}")
+# endif()
+# include(CPack)
 
 

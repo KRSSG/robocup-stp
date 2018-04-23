@@ -20,7 +20,7 @@ find_package(catkin REQUIRED COMPONENTS
   std_msgs
   genmsg
 
-  QUIET COMPONENTS
+#  QUIET COMPONENTS
 #  OMPL
 )
 

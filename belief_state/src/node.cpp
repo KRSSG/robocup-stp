@@ -252,15 +252,28 @@ krssg_ssl_msgs::BeliefState filtering(const krssg_ssl_msgs::BeliefState vmsg){
 const int Q_SIZE = 3;
 void Callback(const krssg_ssl_msgs::SSL_DetectionFrame::ConstPtr& vmsg) 
 {
+
+  cout << "#################################\n";
+  cout << vmsg->balls.size() ;
+  cout << "\n#################################\n";
+
   static krssg_ssl_msgs::SSL_DetectionFrame vmsg_temp; 
   if((vmsg->robots_yellow.size()==0 && vmsg->robots_blue.size()==0))
   {
-    cout<<"bad frame bot!!!!!!!!!!!!!!!!!!! "<<endl;
+    // cout<<"bad frame bot!!!!!!!!!!!!!!!!!!! "<<endl;
     vmsg_temp.frame_number=vmsg->frame_number+1; 
+    if(vmsg->balls.size()==0)
+    {
+      // cout<<"bad frame ball!!!!!!!!!!!!!!!!!!! "<<endl;
+    }
+    else
+    {
+      vmsg_temp.balls=vmsg->balls;    
+    }
   }
   else
   {
-    cout<<"proceeding"<<endl;
+    // cout<<"proceeding"<<endl;
     vmsg_temp.frame_number=vmsg->frame_number; 
     vmsg_temp.t_capture=vmsg->t_capture;     
     vmsg_temp.t_sent=vmsg->t_sent;        
@@ -269,7 +282,7 @@ void Callback(const krssg_ssl_msgs::SSL_DetectionFrame::ConstPtr& vmsg)
     vmsg_temp.robots_blue=vmsg->robots_blue;   
     if(vmsg->balls.size()==0)
     {
-      cout<<"bad frame ball!!!!!!!!!!!!!!!!!!! "<<endl;
+      // cout<<"bad frame ball!!!!!!!!!!!!!!!!!!! "<<endl;
     }
     else
     {
@@ -300,8 +313,12 @@ void Callback(const krssg_ssl_msgs::SSL_DetectionFrame::ConstPtr& vmsg)
 
 
   cout<<1111112<<endl;
-
+  cout<<vmsg_temp.balls.size()<<" $$$$$$"<<endl;
   if (vmsg_temp.balls.size() > 0) {
+    cout << "#####################################";
+    cout << "BALL  DETECTED" << endl;
+    cout << "#####################################";
+
     assert(velQ.size() != 0);
     Pose2D oldPos = velQ.front().first;
     ros::Time oldTime = velQ.front().second;
@@ -327,6 +344,10 @@ void Callback(const krssg_ssl_msgs::SSL_DetectionFrame::ConstPtr& vmsg)
     msg.ballVel.y = (msg.ballPos.y - oldPos.y)/(curTime-oldTime).toSec();
     velQ.push(make_pair(msg.ballPos, curTime));
   } else {
+
+    cout << "#####################################";
+    cout << "Ball not detected" << endl;
+    cout << "#####################################";
     msg.ballDetected = 0;
   }
   
@@ -429,15 +450,15 @@ void Callback(const krssg_ssl_msgs::SSL_DetectionFrame::ConstPtr& vmsg)
   // PRINT(msg);
   // cout<<"filtered msg ------------------"<<endl;
   cout<<1111119<<endl;
-  PRINT(filtered_msg);
+ PRINT(filtered_msg);
   cout<<1111120<<endl;
   pub.publish(filtered_msg);
 
   cout<<1111121<<endl;
 
   float angle = Vector2D<int>::angle(Vector2D<int>(filtered_msg.ballPos.x, filtered_msg.ballPos.y), Vector2D<int>(filtered_msg.homePos[1].x, filtered_msg.homePos[1].y));
-  cout<<"angle ::::::::::::####################"<<angle<<endl;
-  cout<<"homePos.theta ::::::::::::####################"<<filtered_msg.homePos[1].theta<<endl;
+  // cout<<"angle ::::::::::::####################"<<angle<<endl;
+  // cout<<"homePos.theta ::::::::::::####################"<<filtered_msg.homePos[1].theta<<endl;
   
   cout<<1111122<<endl;
  // cout<<"P 6\n"<<endl;

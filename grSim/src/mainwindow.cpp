@@ -32,11 +32,6 @@ Copyright (C) 2011, Parsian Robotic Center (eew.aut.ac.ir/~parsian/grsim)
 #include <QDir>
 #include <QClipboard>
 
-#ifdef QT5
-#include <QStatusBar>
-#include <QMessageBox>
-#endif
-
 #include "mainwindow.h"
 #include "logger.h"
 
@@ -64,11 +59,7 @@ MainWindow::MainWindow(QWidget *parent)
     initLogger((void*)printer);
 
     /* Init Workspace */
-#ifdef QT5
-    workspace = new QMdiArea(this);
-#else
     workspace = new QWorkspace(this);
-#endif
     setCentralWidget(workspace);    
 
     /* Widgets */
@@ -173,13 +164,7 @@ MainWindow::MainWindow(QWidget *parent)
     addDockWidget(Qt::LeftDockWidgetArea,dockconfig);
     addDockWidget(Qt::BottomDockWidgetArea, statusWidget);
     addDockWidget(Qt::LeftDockWidgetArea, robotwidget);
-
-#ifdef QT5
-    workspace->addSubWindow(glwidget, Qt::CustomizeWindowHint | Qt::WindowTitleHint | Qt::WindowSystemMenuHint | Qt::WindowMinimizeButtonHint | Qt::WindowMaximizeButtonHint);
-#else
-   workspace->addWindow(glwidget, Qt::CustomizeWindowHint | Qt::WindowTitleHint | Qt::WindowSystemMenuHint | Qt::WindowMinimizeButtonHint | Qt::WindowMaximizeButtonHint);
-#endif    
-
+    workspace->addWindow(glwidget, Qt::CustomizeWindowHint | Qt::WindowTitleHint | Qt::WindowSystemMenuHint | Qt::WindowMinimizeButtonHint | Qt::WindowMaximizeButtonHint);    
     glwidget->setWindowState(Qt::WindowMaximized);
 
     timer = new QTimer(this);
@@ -208,35 +193,27 @@ MainWindow::MainWindow(QWidget *parent)
     QObject::connect(glwidget->ssl, SIGNAL(fpsChanged(int)), this, SLOT(customFPS(int)));
     QObject::connect(aboutMenu, SIGNAL(triggered()), this, SLOT(showAbout()));
     //config related signals
-    QObject::connect(configwidget->v_BallRadius.get(), SIGNAL(wasEdited(VarPtr)), this, SLOT(restartSimulator()));
     QObject::connect(configwidget->v_BallMass.get(), SIGNAL(wasEdited(VarPtr)), this, SLOT(changeBallMass()));
-    QObject::connect(configwidget->v_BallFriction.get(), SIGNAL(wasEdited(VarPtr)), this, SLOT(changeBallGroundSurface()));
-    QObject::connect(configwidget->v_BallSlip.get(), SIGNAL(wasEdited(VarPtr)), this, SLOT(changeBallGroundSurface()));
     QObject::connect(configwidget->v_BallBounce.get(), SIGNAL(wasEdited(VarPtr)), this, SLOT(changeBallGroundSurface()));
     QObject::connect(configwidget->v_BallBounceVel.get(), SIGNAL(wasEdited(VarPtr)), this, SLOT(changeBallGroundSurface()));
-    QObject::connect(configwidget->v_BallLinearDamp.get(), SIGNAL(wasEdited(VarPtr)), this, SLOT(changeBallDamping()));
+    QObject::connect(configwidget->v_BallFriction.get(), SIGNAL(wasEdited(VarPtr)), this, SLOT(changeBallGroundSurface()));
+    QObject::connect(configwidget->v_BallSlip.get(), SIGNAL(wasEdited(VarPtr)), this, SLOT(changeBallGroundSurface()));
     QObject::connect(configwidget->v_BallAngularDamp.get(), SIGNAL(wasEdited(VarPtr)), this, SLOT(changeBallDamping()));
+    QObject::connect(configwidget->v_BallLinearDamp.get(), SIGNAL(wasEdited(VarPtr)), this, SLOT(changeBallDamping()));
     QObject::connect(configwidget->v_Gravity.get(),  SIGNAL(wasEdited(VarPtr)), this, SLOT(changeGravity()));
 
     //geometry config vars
     QObject::connect(configwidget->v_DesiredFPS.get(), SIGNAL(wasEdited(VarPtr)), this, SLOT(changeTimer()));
-    QObject::connect(configwidget->v_Field_Line_Width.get(), SIGNAL(wasEdited(VarPtr)), this, SLOT(restartSimulator()));
+    QObject::connect(configwidget->v_BallRadius.get(), SIGNAL(wasEdited(VarPtr)), this, SLOT(restartSimulator()));
     QObject::connect(configwidget->v_Field_Length.get(), SIGNAL(wasEdited(VarPtr)), this, SLOT(restartSimulator()));
-    QObject::connect(configwidget->v_Field_Width.get(), SIGNAL(wasEdited(VarPtr)), this, SLOT(restartSimulator()));
-    QObject::connect(configwidget->v_Field_Rad.get(), SIGNAL(wasEdited(VarPtr)), this, SLOT(restartSimulator()));
-    QObject::connect(configwidget->v_Field_Free_Kick.get(), SIGNAL(wasEdited(VarPtr)), this, SLOT(restartSimulator()));
-    QObject::connect(configwidget->v_Field_Penalty_Width.get(), SIGNAL(wasEdited(VarPtr)), this, SLOT(restartSimulator()));
-    QObject::connect(configwidget->v_Field_Penalty_Depth.get(), SIGNAL(wasEdited(VarPtr)), this, SLOT(restartSimulator()));
-    QObject::connect(configwidget->v_Field_Penalty_Point.get(), SIGNAL(wasEdited(VarPtr)), this, SLOT(restartSimulator()));
     QObject::connect(configwidget->v_Field_Margin.get(), SIGNAL(wasEdited(VarPtr)), this, SLOT(restartSimulator()));
-    QObject::connect(configwidget->v_Field_Referee_Margin.get(), SIGNAL(wasEdited(VarPtr)), this, SLOT(restartSimulator()));
-    QObject::connect(configwidget->v_Wall_Thickness.get(), SIGNAL(wasEdited(VarPtr)), this, SLOT(restartSimulator()));
-    QObject::connect(configwidget->v_Goal_Thickness.get(), SIGNAL(wasEdited(VarPtr)), this, SLOT(restartSimulator()));
-    QObject::connect(configwidget->v_Goal_Depth.get(), SIGNAL(wasEdited(VarPtr)), this, SLOT(restartSimulator()));
-    QObject::connect(configwidget->v_Goal_Width.get(), SIGNAL(wasEdited(VarPtr)), this, SLOT(restartSimulator()));
-    QObject::connect(configwidget->v_Goal_Height.get(), SIGNAL(wasEdited(VarPtr)), this, SLOT(restartSimulator()));
-    QObject::connect(configwidget->v_YellowTeam.get(), SIGNAL(wasEdited(VarPtr)), this, SLOT(restartSimulator()));
+    QObject::connect(configwidget->v_Field_Width.get(), SIGNAL(wasEdited(VarPtr)), this, SLOT(restartSimulator()));
+    QObject::connect(configwidget->v_Field_Penalty_Line.get(), SIGNAL(wasEdited(VarPtr)), this, SLOT(restartSimulator()));
+    QObject::connect(configwidget->v_Field_Penalty_Point.get(), SIGNAL(wasEdited(VarPtr)), this, SLOT(restartSimulator()));
+    QObject::connect(configwidget->v_Field_Penalty_Rad.get(), SIGNAL(wasEdited(VarPtr)), this, SLOT(restartSimulator()));
+    QObject::connect(configwidget->v_Field_Rad.get(), SIGNAL(wasEdited(VarPtr)), this, SLOT(restartSimulator()));
     QObject::connect(configwidget->v_BlueTeam.get(), SIGNAL(wasEdited(VarPtr)), this, SLOT(restartSimulator()));
+    QObject::connect(configwidget->v_YellowTeam.get(), SIGNAL(wasEdited(VarPtr)), this, SLOT(restartSimulator()));
 
     //network
     QObject::connect(configwidget->v_VisionMulticastAddr.get(), SIGNAL(wasEdited(VarPtr)), this, SLOT(reconnectVisionSocket()));
@@ -427,12 +404,8 @@ void MainWindow::toggleFullScreen(bool a)
         fullScreenAct->setChecked(true);
     }
     else {
-        view->close(); 
-#ifdef QT5
-        workspace->addSubWindow(glwidget, Qt::CustomizeWindowHint | Qt::WindowTitleHint | Qt::WindowSystemMenuHint | Qt::WindowMinimizeButtonHint | Qt::WindowMaximizeButtonHint);
-#else
+        view->close();        
         workspace->addWindow(glwidget, Qt::CustomizeWindowHint | Qt::WindowTitleHint | Qt::WindowSystemMenuHint | Qt::WindowMinimizeButtonHint | Qt::WindowMaximizeButtonHint);
-#endif
         glwidget->show();
         glwidget->resize(lastSize);
         glwidget->fullScreen = false;
@@ -529,7 +502,3 @@ void MainWindow::recvActions()
     glwidget->ssl->recvActions();
 }
 
-void MainWindow::setIsGlEnabled(bool value)
-{
-  glwidget->ssl->isGLEnabled = value;
-}

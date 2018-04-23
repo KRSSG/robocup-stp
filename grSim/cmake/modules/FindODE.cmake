@@ -1,3 +1,4 @@
+set(CUSTOM_ROOT_PATH "/home/ssl/usr/local")
 find_path(
    ODE_INCLUDE_DIRS
    NAMES
@@ -7,6 +8,7 @@ find_path(
    /usr/local/include
    /usr/include
    $ENV{ProgramFiles}/ode/include
+	${CUSTOM_ROOT_PATH}/include
 )
 
 find_library(
@@ -18,6 +20,7 @@ find_library(
    /usr/local/lib
    /usr/lib
    $ENV{ProgramFiles}/ode/lib
+	${CUSTOM_ROOT_PATH}/lib
 )
 
 find_library(
@@ -29,6 +32,7 @@ find_library(
    /usr/local/lib
    /usr/lib
    $ENV{ProgramFiles}/ode/lib
+	${CUSTOM_ROOT_PATH}/lib
 )
 
 if(ODE_LIBRARY_DEBUG AND NOT ODE_LIBRARY_RELEASE)
