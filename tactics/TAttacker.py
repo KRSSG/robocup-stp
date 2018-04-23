@@ -433,7 +433,7 @@ class TAttacker(Tactic):
                     
                     distance = ballPos.dist(receiverbot)
 
-                    point =Vector2D(int(ballPos.x + distance*cos(angle2)),int(ballPos.y + distance*sin(angle2)))
+                    point =Vector2D(int(ballPos.x - distance*cos(angle2)),int(ballPos.y - distance*sin(angle2)))
 
                     # print(self.oh_my_bot)
                     # ob =Vector2D()
@@ -445,8 +445,9 @@ class TAttacker(Tactic):
                     # finalSlope1 = ballPos.angle(botPosition)
                     # anglediff = state.homePos[self.bot_id].theta - ballPos.angle(Vector2D(botPosition))
                     # turnAngleLeft1 = ob.normalizeAngle(finalSlope1 - state.homePos[self.bot_id].theta) 
-                    if dist > BOT_BALL_THRESH :
+                    if dist > BOT_BALL_THRESH+10:
 
+                        print('sGoToBall',dist,BOT_BALL_THRESH)
                         sGoToBall.execute(self.sParams, state,self.bot_id, pub)
                         return 
                     # elif math.fabs(turnAngleLeft1) > SATISFIABLE_THETA/2 : # SATISFIABLE_THETA in config file
@@ -464,8 +465,8 @@ class TAttacker(Tactic):
                     #     print(argument)
                     #     return
                     else:
-                        self.sParams.KickToPointP.x = state.homePos[self.oh_my_bot].x       
-                        self.sParams.KickToPointP.y = state.homePos[self.oh_my_bot].y
+                        self.sParams.KickToPointP.x = 3000       
+                        self.sParams.KickToPointP.y = 0
                         # self.sParams.KickToPointP.x = point.x       
                         # self.sParams.KickToPointP.y = point.y
                         # for i in xrange(10):

@@ -74,7 +74,7 @@ def execute(param,state,bot_id, pub,dribbler = False):
    
     dist = pointPos.dist(botPos)
     maxDisToTurn = dist -  DRIBBLER_BALL_THRESH
-    angleToTurn = pointPos.normalizeAngle((pointPos.angle(botPos))-(state.homePos[bot_id].theta))
+    angleToTurn = pointPos.normalizeAngle(-math.pi+(pointPos.angle(botPos))-(state.homePos[bot_id].theta))
 
     minReachTime = maxDisToTurn / MAX_BOT_SPEED
     maxReachTime = maxDisToTurn / MIN_BOT_SPEED
@@ -100,8 +100,8 @@ def execute(param,state,bot_id, pub,dribbler = False):
 
     vec = Vector2D()
     motionAngle = nextWP.angle(botPos)
-    theta  = motionAngle - state.homePos[bot_id].theta
-    theta  = vec.normalizeAngle(theta)
+    theta  = -state.homePos[bot_id].theta + motionAngle 
+    theta  = vec.normalizeAngle(theta+math.pi)
     if dist < DRIBBLER_BALL_THRESH:
         if dist < 1*BOT_BALL_THRESH:
             skill_node.send_command(pub, state.isteamyellow, bot_id, 0, 0, omega, 0, True)

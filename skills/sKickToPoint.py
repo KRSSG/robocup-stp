@@ -24,7 +24,7 @@ def execute(param, state, bot_id, pub):
     ballBotAngle  = ob.normalizeAngle(ballPos.angle(botPos)-state.homePos[bot_id].theta)
     dist = ballPos.dist(botPos)
 
-    if dist > BOT_BALL_THRESH :
+    if dist > BOT_BALL_THRESH+10 :
         print("before kick (GoToBall) dist remaining : ",dist-BOT_BALL_THRESH, " : ", BOT_BALL_THRESH)
         param.GoToPointP.x = state.ballPos.x
         param.GoToPointP.y = state.ballPos.y

@@ -7,6 +7,7 @@ from skills import skills_union
 from skills import sKick
 from skills import sKickToPoint
 from skills import sGoToPoint
+from skills import sGoToBall
 from skills import sGoalie
 from skills import sStop
 from tactic import Tactic
@@ -30,13 +31,16 @@ class TDTP(Tactic):
         angleUp = angle + delta
         angleDown = angle - delta
 
+
         if dist >= 2.0: # DRIBBLER_BALL_THRESH:
             sParams = skills_union.SParam()
-            sParams.GoToPointP.x = state.ballPos.x
+            sParams.GoToPointP.x = state.ballPos.x 
             sParams.GoToPointP.y = state.ballPos.y
             sParams.GoToPointP.finalslope = ballPos.angle(botPos)
             sParams.GoToPointP.finalVelocity = 0
             sGoToPoint.execute(sParams, state, self.bot_id, pub)
+        else:
+            pass
 
     def updateParams(self, state):
 		# No parameter to update here

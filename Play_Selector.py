@@ -12,7 +12,7 @@ from tactics import TPosition
 from tactics import TPrimaryDefender
 from tactics import TLDefender
 from tactics import TRDefender
-from tactics import TDTP
+from tactics import TDTP,TAttacker
 
 from plays import pStall
 from plays import DTP_Play
@@ -45,7 +45,7 @@ def ref_callback(play_id):
 
 def goalKeeper_callback(state):
 	global pub,goalie_tac,cur_goalie
-	state.our_goalie = 2
+	state.our_goalie = 0
 	cur_goalie = state.our_goalie
 	if goalie_tac == None :
 		cur_goalie = state.our_goalie
@@ -53,23 +53,30 @@ def goalKeeper_callback(state):
 	goalie_tac.execute(state,pub)
 	print ("goalie : ",cur_goalie)
 
+# def attacker_callback(state):
+# 	global pub
+# 	attacker_id = 5
+# 	param = skills_union.SParam()
+# 	param.DribbleTurnP.x = 0
+# 	param.DribbleTurnP.y = 0
+# 	param.DribbleTurnP.max_velocity = 500
+# 	param.DribbleTurnP.turn_radius = 300
+# 	cur_tactic = TDTP.TDTP(attacker_id,state,param)
+# 	cur_tactic.execute(state,pub)
+# 	print ("attacker : ",attacker_id)
+
 def attacker_callback(state):
 	global pub
 	attacker_id = 5
 	param = skills_union.SParam()
-	param.DribbleTurnP.x = 0
-	param.DribbleTurnP.y = 0
-	param.DribbleTurnP.max_velocity = 500
-	param.DribbleTurnP.turn_radius = 300
-	cur_tactic = TDTP.TDTP(attacker_id,state,param)
+	cur_tactic = TAttacker.TAttacker(attacker_id,state,param)
 	cur_tactic.execute(state,pub)
 	print ("attacker : ",attacker_id)
 
-
 def LDefender_callback(state):
 	global pub,LDefender_tac
-	LDefender_id = 0
-	# LDefender_id = 1
+	# LDefender_id = 0
+	LDefender_id = 1
 	ballPos = Vector2D(state.ballPos.x,state.ballPos.y)
 	if LDefender_tac == None :
 		LDefender_tac = TLDefender.TLDefender(LDefender_id,state)
@@ -77,8 +84,8 @@ def LDefender_callback(state):
 
 def RDefender_callback(state):
 	global pub,RDefender_tac
-	RDefender_id = 0
-	# RDefender_id = 2
+	# RDefender_id = 1
+	RDefender_id = 2
 	ballPos = Vector2D(state.ballPos.x,state.ballPos.y)
 	if RDefender_tac == None :
 		RDefender_tac = TRDefender.TRDefender(RDefender_id,state)
@@ -112,8 +119,8 @@ if __name__=='__main__':
     # rospy.Subscriber('/belief_state', BeliefState, bs_callback, queue_size=1000)
     # rospy.Subscriber('/belief_state', BeliefState, goalKeeper_callback, queue_size=1000)
     # rospy.Subscriber('/belief_state', BeliefState, debug_subscriber, queue_size=1000)
-    rospy.Subscriber('/belief_state', BeliefState, LDefender_callback, queue_size=1000)
-    #rospy.Subscriber('/belief_state', BeliefState, RDefender_callback, queue_size=1000)
-    #rospy.Subscriber('/belief_state', BeliefState, attacker_callback, queue_size=1000)
+    # rospy.Subscriber('/belief_state', BeliefState, LDefender_callback, queue_size=1000)
+    # rospy.Subscriber('/belief_state', BeliefState, RDefender_callback, queue_size=1000)
+    rospy.Subscriber('/belief_state', BeliefState, attacker_callback, queue_size=1000)
     #rospy.Subscriber('/ref_play', Int8, ref_callback, queue_size=1000)
     rospy.spin()

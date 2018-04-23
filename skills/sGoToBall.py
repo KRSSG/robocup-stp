@@ -45,7 +45,7 @@ def execute(param,state,bot_id, pub):
     ballPos = Vector2D(int(state.ballPos.x), int(state.ballPos.y))
     dist = ballPos.dist(botPos)
     maxDisToTurn = dist -  DRIBBLER_BALL_THRESH
-    angleToTurn = ballPos.normalizeAngle((ballPos.angle(botPos))-(state.homePos[bot_id].theta))
+    angleToTurn = ballPos.normalizeAngle(-math.pi+(ballPos.angle(botPos))-(state.homePos[bot_id].theta))
 
     minReachTime = maxDisToTurn / MAX_BOT_SPEED
     maxReachTime = maxDisToTurn / MIN_BOT_SPEED
@@ -71,7 +71,7 @@ def execute(param,state,bot_id, pub):
 
     vec = Vector2D()
     motionAngle = nextWP.angle(botPos)
-    theta  = motionAngle - state.homePos[bot_id].theta
+    theta  =  -state.homePos[bot_id].theta + motionAngle 
    
     if dist < DRIBBLER_BALL_THRESH:
         if dist < 1*BOT_BALL_THRESH:
