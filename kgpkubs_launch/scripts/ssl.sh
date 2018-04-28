@@ -1,7 +1,7 @@
 #!/bin/bash
 # Start SSL functionality in screen sessions
-# to kill all sessions: killall -15 screen
-# killall screen
+killall -15 screen
+#killall screen
 
 
 DIR="$( cd "$( dirname "${BASH_SOURCE[0]}" )" && pwd )"

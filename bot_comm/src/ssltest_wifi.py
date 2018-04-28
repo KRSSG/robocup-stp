@@ -63,16 +63,34 @@ def gr_Commands_CB(bot_id, velnormal, veltangent, velangular, spinner=False,kick
         if buf[i] > 255:
             buf[i] = 0
         buff += chr(int(buf[i])%256)
-    tbuf = ' '.join(map(str,buf))    
+    tbuf = ' '.join(map(str,buf)) 
+    print(tbuf)   
     socket.sendto(buff, (UDP_IP,UDP_PORT ))
  
 if __name__ == '__main__':
+    import argparse
+
+    parser = argparse.ArgumentParser(add_help=True)
+
+    parser.add_argument('--id','-i', default=0)
+    parser.add_argument('--vx','-x', default=0)
+    parser.add_argument('--vy','-y', default=-40)
+    parser.add_argument('--vw','-w', default=0)
+    parser.add_argument('--range','-r',type=str,default = "none")
+    
+    args = parser.parse_args()
+
     cs = socket(AF_INET, SOCK_DGRAM)
     cs.setsockopt(SOL_SOCKET, SO_REUSEADDR, 1)
     cs.setsockopt(SOL_SOCKET, SO_BROADCAST, 1)
-    while True:
-        gr_Commands_CB(bot_id=0, velnormal=0, veltangent=-40, velangular=0,socket = cs)
 
+    while True:
+        if "none" in args.range:
+            gr_Commands_CB(bot_id=args.id, velnormal=args.vy, veltangent=args.vx, velangular=args.vw,socket = cs)
+        else:
+            bots = map(int,args.range.split('-'))
+            for i in range(bots[0],bots[1]):
+                gr_Commands_CB(bot_id=i, velnormal=args.vy, veltangent=args.vx, velangular=args.vw,socket = cs)
     ## Python Client
     # from socket import *
     # s=socket(AF_INET, SOCK_DGRAM)
