@@ -9,6 +9,7 @@ from skills import sGoToBall
 from skills import sGoToPoint
 from skills import sFaceToBall
 from skills import sKickToPoint
+from skills import skills_union
 import numpy as np
 
 class TTestIt(Tactic):
@@ -23,17 +24,17 @@ class TTestIt(Tactic):
 
         #GO_TO_BALL
 
-        #sGoToBall.execute(self.sParam, state, self.bot_id, pub)
+        sGoToBall.execute(self.sParam, state, self.bot_id, pub)
 
         #FACE_TO_BALL
         #sFaceToBall.execute(self.sParam, state, self.bot_id, pub)
 
 
-        import sTurnToPoint
-        self.sParam.TurnToPointP.x = state.ballPos.x
-        self.sParam.TurnToPointP.y = state.ballPos.y
-        self.sParam.TurnToPointP.max_omega = MAX_BOT_OMEGA
-        sTurnToPoint.execute(self.sParam, state, self.bot_id, pub)
+        # import sTurnToPoint
+        # self.sParam.TurnToPointP.x = state.ballPos.x
+        # self.sParam.TurnToPointP.y = state.ballPos.y
+        # self.sParam.TurnToPointP.max_omega = MAX_BOT_OMEGA
+        # sTurnToPoint.execute(self.sParam, state, self.bot_id, pub)
         #Turn_To_Angle
         # import sTurnToAngle
         # self.sParam.TurnToAngleP.finalslope=0
@@ -41,7 +42,7 @@ class TTestIt(Tactic):
         # sTurnToAngle.execute(self.sParam, state, self.bot_id, pub)
 
         #GO_TO_POINT
-        ballPos=Vector2D(int(state.ballPos.x), int(state.ballPos.y))
+        # ballPos=Vector2D(int(state.ballPos.x), int(state.ballPos.y))
         # dest_bot_id=0
         # destination=Vector2D()
         # destination.x=int(state.homePos[dest_bot_id].x)

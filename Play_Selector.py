@@ -13,6 +13,7 @@ from tactics import TPrimaryDefender
 from tactics import TLDefender
 from tactics import TRDefender
 from tactics import TDTP,TAttacker
+from tactics import TTestIt
 
 from plays import pStall
 from plays import DTP_Play
@@ -111,8 +112,10 @@ def bs_callback(state):
 		# Basically corresponding TPosition except goalie
 
 def debug_subscriber(state):
-	ballPos = Vector2D(state.ballPos.x,state.ballPos.y)
-	print("Ball Pos : (",ballPos.x,",",ballPos.y)
+	global pub
+	attacker_id = 0
+	cur_tactic = TTestIt.TTestIt(attacker_id,state)
+	cur_tactic.execute(state,pub)
 
 if __name__=='__main__':
     global pub
@@ -121,8 +124,8 @@ if __name__=='__main__':
     pub = rospy.Publisher('/grsim_data', gr_Commands, queue_size=1000)
     # rospy.Subscriber('/belief_state', BeliefState, bs_callback, queue_size=1000)
     # rospy.Subscriber('/belief_state', BeliefState, goalKeeper_callback, queue_size=1000)
-    # rospy.Subscriber('/belief_state', BeliefState, debug_subscriber, queue_size=1000)
-    rospy.Subscriber('/belief_state', BeliefState, LDefender_callback, queue_size=1000)
+    rospy.Subscriber('/belief_state', BeliefState, debug_subscriber, queue_size=1000)
+    # rospy.Subscriber('/belief_state', BeliefState, LDefender_callback, queue_size=1000)
     # rospy.Subscriber('/belief_state', BeliefState, RDefender_callback, queue_size=1000)
     # rospy.Subscriber('/belief_state', BeliefState, attacker_callback, queue_size=1000)
     #rospy.Subscriber('/ref_play', Int8, ref_callback, queue_size=1000)
