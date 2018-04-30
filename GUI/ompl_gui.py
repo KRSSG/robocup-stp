@@ -381,7 +381,7 @@ class MainWindow(QtGui.QMainWindow, Ui_MainWindow, QtGui.QWidget):
         for point in points_home:
 
             io = QtGui.QGraphicsTextItem()
-            io.setDefaultTextColor(QtCore.Qt.black)
+            io.setDefaultTextColor(QtCore.Qt.white)
             io.setPos(point[0]-self.obstacleRadius, point[1]-self.obstacleRadius*1.5);
             io.setPlainText(str(i));
             path =QtGui.QPainterPath()
@@ -390,14 +390,14 @@ class MainWindow(QtGui.QMainWindow, Ui_MainWindow, QtGui.QWidget):
             vertex = [point[0]- self.obstacleRadius, point[1] - self.obstacleRadius]
             path.arcMoveTo(vertex[0], vertex[1],2*self.obstacleRadius,2*self.obstacleRadius, 315 + angle)
             path.arcTo(vertex[0], vertex[1], 2*self.obstacleRadius, 2*self.obstacleRadius, 45 + angle, sweepDegrees)
-            self.scene.addPath(path, yellow_pen, brush_yellow)
+            self.scene.addPath(path, blue_pen, brush_blue)
             self.scene.addItem(io)
             i=i+1
         i=0
         # show opp bots
         for point in points_opp:
             io = QtGui.QGraphicsTextItem()
-            io.setDefaultTextColor(QtCore.Qt.white)
+            io.setDefaultTextColor(QtCore.Qt.black)
             io.setPos(point[0]-self.obstacleRadius, point[1]-self.obstacleRadius*1.5);
             io.setPlainText(str(i));
             path =QtGui.QPainterPath()
@@ -406,7 +406,7 @@ class MainWindow(QtGui.QMainWindow, Ui_MainWindow, QtGui.QWidget):
             vertex = [point[0]- self.obstacleRadius, point[1] - self.obstacleRadius]
             path.arcMoveTo(vertex[0], vertex[1],2*self.obstacleRadius,2*self.obstacleRadius, 315 + angle)
             path.arcTo(vertex[0], vertex[1], 2*self.obstacleRadius, 2*self.obstacleRadius, 45 + angle, sweepDegrees)
-            self.scene.addPath(path, blue_pen, brush_blue)
+            self.scene.addPath(path, yellow_pen, brush_yellow)
             i=i+1
             self.scene.addItem(io) 
         self.draw_path()  

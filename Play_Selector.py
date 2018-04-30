@@ -78,6 +78,9 @@ def LDefender_callback(state):
 	# LDefender_id = 0
 	LDefender_id = 1
 	ballPos = Vector2D(state.ballPos.x,state.ballPos.y)
+	botpos = Vector2D(state.homePos[0].x,state.homePos[0].y)
+	print("dist ",ballPos.dist(botpos))
+	return
 	if LDefender_tac == None :
 		LDefender_tac = TLDefender.TLDefender(LDefender_id,state)
 	LDefender_tac.execute(state,pub)
