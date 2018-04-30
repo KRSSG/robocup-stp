@@ -75,6 +75,12 @@ class MoveWithDribblerP(Structure):
 	("v_y", c_float), 
 	("v_t", c_float)]
 
+class MotionTestP(Structure):
+	_fields_ = [("speed", c_float), 
+	("omega", c_float), 
+	("motionAngle", c_float),
+	("dribble", c_bool)]
+
 """
 Create union of all the above classes
 """
@@ -93,4 +99,5 @@ class SParam(Union):
 	("DribbleTurnP", DribbleTurnP),
 	("GoToPointP", GoToPointP),
 	("MoveWithDribblerP", MoveWithDribblerP),
-	("MoveOnArcP", MoveOnArcP)]
+	("MoveOnArcP", MoveOnArcP),
+	("MotionTestP", MotionTestP)]

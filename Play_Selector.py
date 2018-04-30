@@ -54,17 +54,6 @@ def goalKeeper_callback(state):
 	goalie_tac.execute(state,pub)
 	print ("goalie : ",cur_goalie)
 
-# def attacker_callback(state):
-# 	global pub
-# 	attacker_id = 5
-# 	param = skills_union.SParam()
-# 	param.DribbleTurnP.x = 0
-# 	param.DribbleTurnP.y = 0
-# 	param.DribbleTurnP.max_velocity = 500
-# 	param.DribbleTurnP.turn_radius = 300
-# 	cur_tactic = TDTP.TDTP(attacker_id,state,param)
-# 	cur_tactic.execute(state,pub)
-# 	print ("attacker : ",attacker_id)
 
 def attacker_callback(state):
 	global pub
@@ -81,7 +70,7 @@ def LDefender_callback(state):
 	ballPos = Vector2D(state.ballPos.x,state.ballPos.y)
 	botpos = Vector2D(state.homePos[0].x,state.homePos[0].y)
 	print("dist ",ballPos.dist(botpos))
-	return
+	# return
 	if LDefender_tac == None :
 		LDefender_tac = TLDefender.TLDefender(LDefender_id,state)
 	LDefender_tac.execute(state,pub)
@@ -112,6 +101,7 @@ def bs_callback(state):
 		# Basically corresponding TPosition except goalie
 
 def debug_subscriber(state):
+	print("New Call Back")
 	global pub
 	attacker_id = 0
 	cur_tactic = TTestIt.TTestIt(attacker_id,state)
@@ -124,8 +114,8 @@ if __name__=='__main__':
     pub = rospy.Publisher('/grsim_data', gr_Commands, queue_size=1000)
     # rospy.Subscriber('/belief_state', BeliefState, bs_callback, queue_size=1000)
     # rospy.Subscriber('/belief_state', BeliefState, goalKeeper_callback, queue_size=1000)
-    rospy.Subscriber('/belief_state', BeliefState, debug_subscriber, queue_size=1000)
-    # rospy.Subscriber('/belief_state', BeliefState, LDefender_callback, queue_size=1000)
+    # rospy.Subscriber('/belief_state', BeliefState, debug_subscriber, queue_size=1000)
+    rospy.Subscriber('/belief_state', BeliefState, LDefender_callback, queue_size=1000)
     # rospy.Subscriber('/belief_state', BeliefState, RDefender_callback, queue_size=1000)
     # rospy.Subscriber('/belief_state', BeliefState, attacker_callback, queue_size=1000)
     #rospy.Subscriber('/ref_play', Int8, ref_callback, queue_size=1000)

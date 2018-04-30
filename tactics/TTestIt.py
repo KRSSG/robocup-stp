@@ -10,7 +10,9 @@ from skills import sGoToPoint
 from skills import sFaceToBall
 from skills import sKickToPoint
 from skills import skills_union
+from skills import motionTest
 import numpy as np
+import math
 
 class TTestIt(Tactic):
     def __init__(self, bot_id, state, param=None):
@@ -23,7 +25,9 @@ class TTestIt(Tactic):
     def execute(self, state, pub):
 
         #GO_TO_BALL
-
+        # self.sParam.speed = MAX_BOT_SPEED
+        # self.sParam.omega = 1
+        # self.sParam.motionAngle = math.pi/4
         sGoToBall.execute(self.sParam, state, self.bot_id, pub)
 
         #FACE_TO_BALL

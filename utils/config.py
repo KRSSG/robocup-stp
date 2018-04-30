@@ -1,7 +1,7 @@
 # Includes all the global parameters as in 'ssl_common/conig.h'
 
 # GR_SIM_COMM = transformationue
-GR_SIM_COMM = False
+GR_SIM_COMM = True
 SSL_COMM = not GR_SIM_COMM
 
 PIXEL_TO_FIELD 				 = 1.00 # No of pixels / mm
@@ -20,22 +20,21 @@ CENTER_X                     = SELECT(0, 0)
 CENTER_Y                     = SELECT(0, 0)
 HALF_FIELD_MAXX              = SELECT(3000, 4500)
 HALF_FIELD_MAXY              = SELECT(2000, 3000)
-OUR_GOAL_MAXY                = SELECT(360,	500)
-OUR_GOAL_MINY                = SELECT(-360, -500)
+OUR_GOAL_MAXY                = SELECT(350,	500)
+OUR_GOAL_MINY                = SELECT(-350, -500)
 OUR_GOAL_WIDTH               = OUR_GOAL_MAXY - OUR_GOAL_MINY
 CENTER_CIRCLE_DIAMETER       = SELECT(1000,1000)
 CENTER_CIRCLE_RADIUS		 = SELECT(500,500)
-# Configure for 6*4 (9*6 Done)
-DBOX_WIDTH                   = SELECT(2000,2000)	#Along y       # Along X direction
-DBOX_HEIGHT					 = SELECT(1000,1000)	#along x
-OUR_DBOX_MAXY				 = SELECT(1000,1000)
-OUR_DBOX_MINY				 = SELECT(-1000,-1000)
+DBOX_WIDTH                   = SELECT(1400,2000)	#Along y       
+DBOX_HEIGHT					 = SELECT(700,1000)	    #Along x      
+OUR_DBOX_MAXY				 = SELECT(700,1000)
+OUR_DBOX_MINY				 = SELECT(-700,-1000)
 OUR_DBOX_X 					 =-HALF_FIELD_MAXX + DBOX_HEIGHT
 # Old DBOX Constants
-DBOX_WIDTH                   = SELECT(1000,1000)       # Along X direction
-DBOX_HEIGHT					 = SELECT(1250,1250)	   # Along positive y direction
+DBOX_WIDTH_OLD                   = SELECT(1000,1000)       # Along X direction
+DBOX_HEIGHT_OLD					 = SELECT(1250,1250)	   # Along positive y direction
 DBOX_SMALLER_LENGTH          = SELECT(500,500)         # smaller length of line connecting the two quadrants along Y-axis
-DBOX_LARGER_LENGTH           = SELECT(1350,2500)       # larger length of line connecting the two quadrants along Y-axis
+DBOX_LARGER_LENGTH_OLD           = SELECT(1350,2500)       # larger length of line connecting the two quadrants along Y-axis
 DBOX_RADIUS                  = SELECT(425,1000)
 
 
@@ -71,7 +70,7 @@ MAX_WHEEL_SPEED            = SELECT(2000, 100)                 #mm/s
 MAX_BOT_LINEAR_ACC         = SELECT(1000, 100)                 #mm/s/s
 MAX_BOT_LINEAR_VEL_CHANGE  = SELECT(10, 3)
 
-FF = 2.0
+FF = 1.0
 #MAX_BOT_ACCELERATION       = SELECT(900, 900) as per sudo
 MAX_BOT_ACCELERATION       = SELECT(600, 600)
 MAX_BOT_SPEED              = SELECT(1800*FF, 1800.0*FF)           #mm
