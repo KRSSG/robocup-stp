@@ -1,0 +1,66 @@
+syntax = "proto2";
+
+message SSL_Referee_Game_Event {
+
+    enum GameEventType {
+        
+        UNKNOWN = 0;
+
+        
+        CUSTOM = 1;
+
+        NUMBER_OF_PLAYERS = 2;
+
+        BALL_LEFT_FIELD = 3;
+
+        GOAL = 4;
+
+        KICK_TIMEOUT = 5;
+
+        NO_PROGRESS_IN_GAME = 6;
+
+        BOT_COLLISION = 7;
+
+        MULTIPLE_DEFENDER = 8;
+
+        MULTIPLE_DEFENDER_PARTIALLY = 9;
+
+        ATTACKER_IN_DEFENSE_AREA = 10;
+
+        ICING = 11;
+
+        BALL_SPEED = 12;
+
+        ROBOT_STOP_SPEED = 13;
+
+        BALL_DRIBBLING = 14;
+
+        ATTACKER_TOUCH_KEEPER = 15;
+
+        DOUBLE_TOUCH = 16;
+
+        ATTACKER_TO_DEFENCE_AREA = 17;
+
+        DEFENDER_TO_KICK_POINT_DISTANCE = 18;
+
+        BALL_HOLDING = 19;
+
+        INDIRECT_GOAL = 20;
+
+        BALL_PLACEMENT_FAILED = 21;
+
+        CHIP_ON_GOAL = 22;
+    }
+    required GameEventType gameEventType = 1;
+    enum Team {
+        TEAM_UNKNOWN = 0;
+        TEAM_YELLOW = 1;
+        TEAM_BLUE = 2;
+    }
+    message Originator {
+        required Team team = 1;
+        optional uint32 botId = 2;
+    }
+    optional Originator originator = 2;
+    optional string message = 3;
+}
