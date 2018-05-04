@@ -1,0 +1,11 @@
+build/
+client/testclient
+rcon-client/rconclient
+scoreboard/scoreboard
+*.o
+*.pb.cc
+*.pb.h
+referee.log
+referee.sav
+sslrefbox
+tags
