@@ -65,6 +65,10 @@ add_message_files(
    point_2d.msg
    debug_msg.msg
    obstacle.msg
+   Originator.msg
+   game_event.msg
+   Referee.msg
+
  )
 
 ## Generate services in the 'srv' folder
