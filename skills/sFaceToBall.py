@@ -16,6 +16,7 @@ def debug(param, state, bot_id):
     print 'Current bot pos: {}, {}'.format(state.homePos[bot_id].x, state.homePos[bot_id].y)
     print 'Current ball pos: {}, {}'.format(state.ballPos.x, state.ballPos.y)
     print 'Target alignment: {}'.format(botPos.angle(ballPos))
+    print 'Bot Orientation: {}'.format(state.homePos[bot_id].theta)
     print '#'*50
 
 def execute(param, state, bot_id, pub):
@@ -34,6 +35,8 @@ def execute(param, state, bot_id, pub):
         else:
             omega = MIN_BOT_OMEGA
 
+    if turnAngleLeft == 0:
+        omega = 0
 
     v_x = omega * BOT_BALL_THRESH * 1.5
     dist = ballPos.dist(botPos)
