@@ -43,7 +43,7 @@ class GoalKeepingP(Structure):
 class TurnToAngleP(Structure):
 	_fields_ = [("x", c_float), 
 	("y", c_float), 
-	("finalslope", c_float), 
+	("finalSlope", c_float), 
 	("radius", c_float)]
 
 class TurnToPointP(Structure):
