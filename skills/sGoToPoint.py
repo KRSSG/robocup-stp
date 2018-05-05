@@ -37,6 +37,7 @@ def debug(param, state, bot_id):
 	print 'Align: {}'.format(align)
 	if align:
 		print 'Finalslope: {}'.format(finalSlope)
+		print 'Bot Orientation {}'.format(state.homePos[bot_id].theta)
 	print 'Distance: {}'.format(dist)
 	print '#'*50
 
@@ -91,7 +92,13 @@ def execute(param,state,bot_id, pub,dribbler = False):
    
 	dist = pointPos.dist(botPos)
 	maxDisToTurn = dist -  DRIBBLER_BALL_THRESH
-	angleToTurn = pointPos.normalizeAngle(-math.pi+(pointPos.angle(botPos))-(state.homePos[bot_id].theta))
+	angleToTurn = 0 
+	ballPos = Vector2D(state.ballPos.x, state.ballPos.y)
+	if param.GoToPointP.align == True:
+		angleToTurn = pointPos.normalizeAngle(param.GoToPointP.finalSlope - state.homePos[bot_id].theta)
+	else:
+		angleToTurn = pointPos.normalizeAngle(botPos.angle(ballPos) - state.homePos[bot_id].theta)
+	# angleToTurn = pointPos.normalizeAngle(-math.pi+(pointPos.angle(botPos))-(state.homePos[bot_id].theta))
 
 	minReachTime = maxDisToTurn / MAX_BOT_SPEED
 	maxReachTime = maxDisToTurn / MIN_BOT_SPEED
@@ -102,12 +109,16 @@ def execute(param,state,bot_id, pub,dribbler = False):
 	speed = 0.0
 	omega = angleToTurn * MAX_BOT_OMEGA / (2 * math.pi)
 
-	if omega < MIN_BOT_OMEGA and omega > -MIN_BOT_OMEGA:
-		if omega < 0:
-			omega = -MIN_BOT_OMEGA
-		else:
-			omega = MIN_BOT_OMEGA
+	if angleToTurn:
+		if omega < MIN_BOT_OMEGA and omega > -MIN_BOT_OMEGA:
+			if omega < 0:
+				omega = -MIN_BOT_OMEGA
+			else:
+				omega = MIN_BOT_OMEGA
 
+	else:
+		omega = 0.0
+		
    
 	speed= 2*maxDisToTurn*MAX_BOT_SPEED/(HALF_FIELD_MAXX)
 	if (speed)< 2*MIN_BOT_SPEED:
@@ -116,9 +127,6 @@ def execute(param,state,bot_id, pub,dribbler = False):
 		speed=MAX_BOT_SPEED    
 
 	vec = Vector2D()
-	motionAngle = botPos.angle(nextWP)
-	theta  = -state.homePos[bot_id].theta + motionAngle 
-	theta  = state.homePos[bot_id].theta - motionAngle
 	motionAngle = nextWP.angle(botPos)
 	theta  =  -state.homePos[bot_id].theta + motionAngle
 	if dist < DRIBBLER_BALL_THRESH:
