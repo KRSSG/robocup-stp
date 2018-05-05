@@ -3,7 +3,6 @@
 
 #include "robocup_ssl_client.h"
 #include <sstream>
-#include <krssg_ssl_msgs/SSL_DetectionFrame.h>
 #include <krssg_ssl_msgs/Referee.h>
 #include <krssg_ssl_msgs/team_info.h>
 
