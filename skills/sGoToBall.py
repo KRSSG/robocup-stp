@@ -7,8 +7,21 @@ from navigation_py.obstacle import Obstacle
 from utils.geometry import *
 from math import exp
 POINTPREDICTIONFACTOR = 2
+
+
+def debug(param, state, bot_id):
+    botPos = Vector2D(state.homePos[bot_id].x, state.homePos[bot_id].y)
+    ballPos = Vector2D(state.ballPos.x, state.ballPos.y)
+    dist = botPos.dist(ballPos)
+    print '#'*50
+    print 'In sGoToBall'
+    print 'Current bot pos: {}, {}'.format(state.homePos[bot_id].x, state.homePos[bot_id].y)
+    print 'Current ball pose: {}, {}'.format(ballPos.x, ballPos.y)
+    print 'Distance: {}'.format(dist)
+    print '#'*50
+
 def execute(param,state,bot_id, pub):
-    # print("gar mra bhosdike")
+    debug(param, state, bot_id)
     obs = Vector_Obstacle()
     for i in range(0,len(state.homeDetected)):
         if state.homeDetected[i] and i != bot_id:
