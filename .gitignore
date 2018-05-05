@@ -1,3 +1,5 @@
 *.catkin_generated
 *.pyc
 *~
+plays_py/
+skills_py/
