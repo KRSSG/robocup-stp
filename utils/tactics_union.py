@@ -81,8 +81,8 @@ class IntercptP(Structure):
 	("where", c_int)]
 
 class DribbleTurnPassP(Structure):
-	_fields_ = [("x", c_int), 
-	("y", c_int)]
+	_fields_ = [("x", c_float), 
+	("y", c_float)]
 
 
 

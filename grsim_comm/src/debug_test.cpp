@@ -14,7 +14,7 @@
 #include <QtNetwork>
 #include <std_msgs/Int64MultiArray.h>
 #include <stdlib.h>
-#include "../../ssl_common/include/ssl_common/geometry.hpp"
+#include "ssl_common/geometry.hpp"
 
 
 
@@ -38,19 +38,19 @@ void Callback(const std_msgs::Int64MultiArray::ConstPtr& msg)
 //  Debug_Circle *circle = packet.mutable_debuginfo()->add_circle();
   vector<Debug_Line> *line_full;
   Debug_Line *line= (packet.mutable_debuginfo()->add_line());
-  
+
   line->set_x1(msg->data[0]);
   line->set_y1(msg->data[1]);
   line->set_x2(prevX);
   line->set_y2(prevY);
   line->set_color(col);
-  
+
   line_full->push_back(*line);
 
   if((msg->data[0]-prevX)*(msg->data[0]-prevX)+(msg->data[1]-prevY)*(msg->data[1]-prevY)>100){
     l.push_back(make_pair(Vector2D<int>(msg->data[0],msg->data[1]),Vector2D<int>(prevX,prevY)));
 //    ROS_INFO("New line added: x: %lld y: %lld xp: %lld yp: %lld",msg->data[0],msg->data[1],prevX,prevY);
-   ROS_INFO("%lld, %lld, %lld, %lld",msg->data[0],msg->data[1],prevX,prevY);
+   ROS_INFO("%ld, %ld, %lld, %lld",msg->data[0],msg->data[1],prevX,prevY);
     f << msg->data[0] << "," << msg->data[1] << "," << prevX << "," << prevY << "\n";
     f.close();
     prevX = msg->data[0];
@@ -71,7 +71,7 @@ void Callback(const std_msgs::Int64MultiArray::ConstPtr& msg)
   circle->set_radius(100.);
   circle->set_color(0);*/
 
-  
+
   // col = rand()*100;
 
   QByteArray dgram;
@@ -91,7 +91,7 @@ void CallbackGC(const std_msgs::Int64MultiArray::ConstPtr& msg){
 
     if((msg->data[0]-prevX)*(msg->data[0]-prevX)+(msg->data[1]-prevY)*(msg->data[1]-prevY)>100){
     l.push_back(make_pair(Vector2D<int>(msg->data[0],msg->data[1]),Vector2D<int>(prevX,prevY)));
-    ROS_INFO("%lld, %lld, %lld, %lld",msg->data[0],msg->data[1],prevX,prevY);
+    ROS_INFO("%ld, %ld, %lld, %lld",msg->data[0],msg->data[1],prevX,prevY);
     f << msg->data[0] << "," << msg->data[1] << "," << prevX << "," << prevY << "\n";
     f.close();
     prevX = msg->data[0];

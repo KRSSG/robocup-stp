@@ -70,7 +70,9 @@ const int MAX_FIELD_DIST               = SELECT(1000, 3500);                // m
 const float MAX_WHEEL_SPEED            = SELECT(2000, 100);                 //mm/s
 const float MAX_BOT_LINEAR_ACC         = SELECT(1000, 100);                // mm/s/s
 const float MAX_BOT_LINEAR_VEL_CHANGE  = SELECT(10, 3);
-#define FF 1.0
+
+#define FF 2.0
+
 const float MAX_BOT_SPEED              = SELECT(1800*FF, 80.0*FF);                 // mm
 const float MAX_BALL_SPEED              = SELECT(3600, 160.0);                 // mm/s
 const float MIN_BOT_SPEED              = SELECT(3, 30);                     // mm/s

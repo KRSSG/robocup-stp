@@ -1,1 +1,9 @@
+<<<<<<< HEAD
 *.pyc
+=======
+*.catkin_generated
+*.pyc
+*~
+plays_py/
+skills_py/
+>>>>>>> 0740ea14890de92876dd752d3ca200b6423e053b

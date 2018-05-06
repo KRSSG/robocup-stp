@@ -61,22 +61,21 @@ add_message_files(
    sslDebug_Line.msg
    sslDebug_Circle.msg
    sslDebug_Data.msg
-   point_2d.msg
-   planner_path.msg
-   point_SF.msg
    team_info.msg
+   point_2d.msg
    debug_msg.msg
    obstacle.msg
-   pid_message.msg
-   replan.msg
+   Originator.msg
+   game_event.msg
+   Referee.msg
+
  )
 
 ## Generate services in the 'srv' folder
- add_service_files(
-   FILES
-   path_plan.srv
-#   Service2.srv
- )
+add_service_files(
+  FILES
+  path_data.srv
+)
 
 ## Generate actions in the 'action' folder
 # add_action_files(
@@ -86,7 +85,7 @@ add_message_files(
 # )
 
 ## Generate added messages and services with any dependencies listed here
-generate_messages(DEPENDENCIES   geometry_msgs   std_msgs)
+generate_messages(DEPENDENCIES   geometry_msgs   std_msgs )
 
 ################################################
 ## Declare ROS dynamic reconfigure parameters ##
