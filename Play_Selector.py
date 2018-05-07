@@ -8,6 +8,7 @@ from std_msgs.msg import Int8
 from utils.geometry import Vector2D
 from utils.config import *
 from tactics import TGoalie
+from tactics import TestTac
 from tactics import TPosition
 from tactics import TPrimaryDefender
 from tactics import TLDefender
@@ -84,6 +85,17 @@ def RDefender_callback(state):
 		RDefender_tac = TRDefender.TRDefender(RDefender_id,state)
 	RDefender_tac.execute(state,pub)
 
+def planner_callback(state):
+	print(" incoming planner_callback")
+	global pub
+	bot_id = 0
+	ballPos = Vector2D(state.ballPos.x, state.ballPos.y)
+	botpos = Vector2D(state.homePos[bot_id].x,state.homePos[bot_id].y)
+	print("dist is ",ballPos.dist(botpos))
+	new = TestTac.TestTac(bot_id,state)
+	new.execute(state,pub)
+	print(" outgoing planner_callback")
+
 def bs_callback(state):
 	global cur_play,start_time
 	state.our_goalie = 0
@@ -115,7 +127,8 @@ if __name__=='__main__':
     # rospy.Subscriber('/belief_state', BeliefState, bs_callback, queue_size=1000)
     # rospy.Subscriber('/belief_state', BeliefState, goalKeeper_callback, queue_size=1000)
     # rospy.Subscriber('/belief_state', BeliefState, debug_subscriber, queue_size=1000)
-    rospy.Subscriber('/belief_state', BeliefState, LDefender_callback, queue_size=1000)
+    # rospy.Subscriber('/belief_state', BeliefState, LDefender_callback, queue_size=1000)
+    rospy.Subscriber('/belief_state', BeliefState, planner_callback, queue_size=1000)
     # rospy.Subscriber('/belief_state', BeliefState, RDefender_callback, queue_size=1000)
     # rospy.Subscriber('/belief_state', BeliefState, attacker_callback, queue_size=1000)
     #rospy.Subscriber('/ref_play', Int8, ref_callback, queue_size=1000)

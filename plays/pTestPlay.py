@@ -3,7 +3,7 @@ import sys
 sys.path.append('../utils/')
 sys.path.append('../')
 sys.path.insert(0,'../../')
-sys.path.insert(0,'tactics_py/scripts/')
+from tactics import *
 
 from utils import tactics_union
 from krssg_ssl_msgs.msg import BeliefState
