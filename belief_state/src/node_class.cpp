@@ -16,8 +16,8 @@
 #include <fstream>
 
 const int BALL_AT_CORNER_THRESH	= 20; 
-const int HALF_FIELD_MAXX		= 3000; 
-const int HALF_FIELD_MAXY		= 2000;
+const int HALF_FIELD_MAXX		= 4500; 
+const int HALF_FIELD_MAXY		= 3000;
 const float MAX_DRIBBLE_R		= 3;
 const int DBOX_WIDTH			= 600;
 const int DBOX_HEIGHT			= 600;
@@ -58,6 +58,7 @@ class BeliefState {
 	//Technical
 	bool isteamyellow;
 	int frame_number;
+	int camera_id;
 	double t_capture, t_sent;
 
 	//Positions
@@ -93,10 +94,10 @@ public:
 };
 
 bool isValidMsg(const krssg_ssl_msgs::SSL_DetectionFrame::ConstPtr& vmsg){
-	if(vmsg->robots_yellow.size() == 0 && vmsg->robots_blue.size()==0)
-		return false;
-	if(vmsg->balls.size() == 0)
-		return false;
+	// if(vmsg->robots_yellow.size() == 0 && vmsg->robots_blue.size()==0)
+	// 	return false;
+	// if(vmsg->balls.size() == 0)
+	// 	return false;
 	return true;
 }
 
@@ -112,6 +113,7 @@ void BeliefState::copy(const BeliefState& bs){
 	this->isteamyellow = bs.isteamyellow;
 	this->frame_number = bs.frame_number;
 	this->t_capture = bs.t_capture;
+	this->camera_id = bs.camera_id;
 	this->time = ros::Time::now();
 	this->t_sent = bs.t_sent;
 	this->ballPos = bs.ballPos;
@@ -152,6 +154,7 @@ BeliefState::BeliefState(const krssg_ssl_msgs::SSL_DetectionFrame::ConstPtr& vms
 		this->time = ros::Time::now();
 		this->frame_number = vmsg->frame_number;
 		this->t_capture = vmsg->t_capture;
+		this->camera_id = vmsg->camera_id;
 		this->t_sent = vmsg->t_sent;
 		this->isteamyellow = ::isteamyellow;
 
@@ -210,17 +213,17 @@ BeliefState::BeliefState(const krssg_ssl_msgs::SSL_DetectionFrame::ConstPtr& vms
 
     			//HOMEPOS FILTERING
     			if(prev_msgQ.size() == MAX_QUEUE_SZ){
-				this->homePos[i].x *= FILTER[MAX_QUEUE_SZ - 1];
-				this->homePos[i].y *= FILTER[MAX_QUEUE_SZ - 1];
-				int count = -1;
-				for(list<BeliefState>::iterator it = prev_msgQ.begin(); it != prev_msgQ.end(); it++){
-					if(it != prev_msgQ.begin()){
-						this->homePos[i].x += it->homePos[i].x*FILTER[count];
-						this->homePos[i].y += it->homePos[i].y*FILTER[count];
+					this->homePos[i].x *= FILTER[MAX_QUEUE_SZ - 1];
+					this->homePos[i].y *= FILTER[MAX_QUEUE_SZ - 1];
+					int count = -1;
+					for(list<BeliefState>::iterator it = prev_msgQ.begin(); it != prev_msgQ.end(); it++){
+						if(it != prev_msgQ.begin()){
+							this->homePos[i].x += it->homePos[i].x*FILTER[count];
+							this->homePos[i].y += it->homePos[i].y*FILTER[count];
+						}
+						count ++;
 					}
-					count ++;
 				}
-			}
 
     			float dist = sqrt(pow((homePos[i].x - this->ballPos.x),2) + pow((homePos[i].y - this->ballPos.y) , 2));
    			if(dist < distance_from_ball){
@@ -253,17 +256,17 @@ BeliefState::BeliefState(const krssg_ssl_msgs::SSL_DetectionFrame::ConstPtr& vms
 
 	    		//AWAYPOS FILTERING
 	    		if(prev_msgQ.size() == MAX_QUEUE_SZ){
-				this->awayPos[i].x *= FILTER[MAX_QUEUE_SZ - 1];
-				this->awayPos[i].y *= FILTER[MAX_QUEUE_SZ - 1];
-				int count = -1;
-				for(list<BeliefState>::iterator it = prev_msgQ.begin(); it != prev_msgQ.end(); it++){
-					if(it != prev_msgQ.begin()){
-						this->awayPos[i].x += it->awayPos[i].x*FILTER[count];
-						this->awayPos[i].y += it->awayPos[i].y*FILTER[count];
+					this->awayPos[i].x *= FILTER[MAX_QUEUE_SZ - 1];
+					this->awayPos[i].y *= FILTER[MAX_QUEUE_SZ - 1];
+					int count = -1;
+					for(list<BeliefState>::iterator it = prev_msgQ.begin(); it != prev_msgQ.end(); it++){
+						if(it != prev_msgQ.begin()){
+							this->awayPos[i].x += it->awayPos[i].x*FILTER[count];
+							this->awayPos[i].y += it->awayPos[i].y*FILTER[count];
+						}
+						count ++;
 					}
-					count ++;
 				}
-			}
 
 	    		float dist = sqrt(((awayPos[i].x - this->ballPos.x)*(awayPos[i].x - this->ballPos.x)) + ((awayPos[i].y - this->ballPos.y)*(awayPos[i].y - this->ballPos.y)));
 
@@ -335,6 +338,7 @@ void BeliefState::initialise(){
 	this->frame_number = 0;
 	this->t_capture = 0.0;
 	this->t_sent = 0.0;
+	this->camera_id = 0;
 
 	this->ballPos = Pose2D();
 	this->awayPos = vector<Pose2D>(6,Pose2D());
@@ -360,6 +364,7 @@ void BeliefState::print(){
 	cout<<"isteamyellow: "<<isteamyellow<<endl;
 	cout<<"frame_number: "<<frame_number<<endl;
 	cout<<"t_capture: "<<t_capture<<" t_sent: "<<t_sent<<endl;
+	cout<<"Camera id: "<<this->camera_id<<endl;
 	cout<<"ballPos:"<<endl;
 	::print(ballPos);
 	cout<<"awayPos:"<<endl;
