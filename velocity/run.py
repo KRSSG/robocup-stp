@@ -31,7 +31,9 @@ def distance_(a, b):
     return sqrt(dx*dx+dy*dy)
 
 def Get_Vel(start, t, kub_id, target, homePos_, awayPos_,avoid_ball=False):
-    # print("Get_Vel:     t - start = ",t-start)       
+
+    # Return vx,vy,vw,replan,remainingDistance
+
     global expectedTraverseTime, REPLAN, v, errorInfo, pso, FIRST_CALL, homePos, awayPos, kubid, prev_target
     REPLAN = 0
     homePos = homePos_

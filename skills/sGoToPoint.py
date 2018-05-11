@@ -58,13 +58,9 @@ def execute(param, state, bot_id, pub, dribller=False):
     t = rospy.Time.now()
     t = t.secs + 1.0*t.nsecs/pow(10,9)
     start_time = float(os.environ.get('bot'+str(bot_id)))
-    print(" t - start = ",t-start_time)
     [vx, vy, vw, REPLANNED, maxDisToTurn] = Get_Vel(start_time, t, bot_id, pointPos, state.homePos, state.awayPos)    #vx, vy, vw, replanned
-    print("-------------------REPLANNED = ",REPLANNED)
     if(REPLANNED):
         reset(bot_id)
-    print("vx = ",vx)
-    print("vy = ",vy)
     botPos = Vector2D(int(state.homePos[bot_id].x), int(state.homePos[bot_id].y))
     v = Vector2D()
     distan = botPos.dist(pointPos)
