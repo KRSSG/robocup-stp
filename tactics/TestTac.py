@@ -35,10 +35,9 @@ class TestTac(Tactic):
         ballVel = Vector2D(int(state.ballVel.x) , int(state.ballVel.y))
         distance = botPos.dist(ballPos)
         
-        self.sParams.GoToPointP.x = ballPos.x
-        self.sParams.GoToPointP.y = ballPos.y
+        self.sParams.GoToPointP.x = 1000
+        self.sParams.GoToPointP.y = 200
         sGoToPoint.execute(self.sParams, state, self.bot_id, pub)
-        return
 
        
 
