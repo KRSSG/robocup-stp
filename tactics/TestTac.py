@@ -38,7 +38,6 @@ class TestTac(Tactic):
         self.sParams.GoToPointP.x = ballPos.x
         self.sParams.GoToPointP.y = ballPos.y
         sGoToPoint.execute(self.sParams, state, self.bot_id, pub)
-        return
 
        
 
