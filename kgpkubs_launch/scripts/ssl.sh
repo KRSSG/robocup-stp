@@ -31,6 +31,7 @@ pr_launcher "vision"    "vision.launch"
 pr_launcher "belief_state"      "belief_state.launch"
 pr_launcher "referee_comm"    "referee_comm.launch"
 pr_launcher "grsim_comm"    "grsim_comm.launch"
+pr_launcher "ompl_planner"    "ompl_planner.launch"
 #pr_launcher "bot_comm"         "bot_comm.launch"
 #############################################
 #####               CPP                 #####
