@@ -2,6 +2,7 @@
 
 bool               isteamyellow
 uint32             frame_number
+uint8			   camera_id
 float64            t_capture
 float64            t_sent
 geometry_msgs/Pose2D  ballPos
