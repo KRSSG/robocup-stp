@@ -81,6 +81,10 @@ gr_BallReplacement.msg
 sslDebug_Data.msg
 gr_RobotReplacement.msg
 target_triangle.msg
+Referee.msg
+obstacle.msg
+   Originator.msg
+   game_event.msg
  )
 
 
