@@ -117,7 +117,7 @@ class TGoalie(Tactic):
             y = min(y,OUR_GOAL_MAXY - BOT_RADIUS)
             y = max(y,OUR_GOAL_MINY + BOT_RADIUS)
             self.sParams.GoToPointP.y = y
-            self.sParams.GoToPointP.finalSlope = ballPos.angle(botPos)
+            self.sParams.GoToPointP.finalSlope = ballPos.angle(botPos)+pi
             sGoalie.execute(self.sParams, state, self.bot_id, pub)
         elif gameState == TGoalie.State.clear:
             print (" ___CLEAR_THE_BALL________")

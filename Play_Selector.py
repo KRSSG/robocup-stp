@@ -125,7 +125,7 @@ if __name__=='__main__':
     rospy.init_node('play_py_node',anonymous=False)
     pub = rospy.Publisher('/grsim_data', gr_Commands, queue_size=1000)
     # rospy.Subscriber('/belief_state', BeliefState, bs_callback, queue_size=1000)
-    # rospy.Subscriber('/belief_state', BeliefState, goalKeeper_callback, queue_size=1000)
+    rospy.Subscriber('/belief_state', BeliefState, goalKeeper_callback, queue_size=1000)
     # rospy.Subscriber('/belief_state', BeliefState, debug_subscriber, queue_size=1000)
     # rospy.Subscriber('/belief_state', BeliefState, LDefender_callback, queue_size=1000)
     rospy.Subscriber('/belief_state', BeliefState, planner_callback, queue_size=1000)

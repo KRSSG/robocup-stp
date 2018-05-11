@@ -18,8 +18,8 @@ def SELECT(sim_param, ssl_param):
 GOAL_DEPTH                   = SELECT(300, 300)
 CENTER_X                     = SELECT(0, 0)
 CENTER_Y                     = SELECT(0, 0)
-HALF_FIELD_MAXX              = SELECT(3000, 4500)
-HALF_FIELD_MAXY              = SELECT(2000, 3000)
+HALF_FIELD_MAXX              = SELECT(4500, 4500)
+HALF_FIELD_MAXY              = SELECT(3000, 3000)
 OUR_GOAL_MAXY                = SELECT(350,	500)
 OUR_GOAL_MINY                = SELECT(-350, -500)
 OUR_GOAL_WIDTH               = OUR_GOAL_MAXY - OUR_GOAL_MINY
