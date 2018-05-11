@@ -45,37 +45,64 @@ find_package(catkin REQUIRED COMPONENTS
 
 ## Generate messages in the 'msg' folder
 add_message_files(
-   FILES
-   gr_Commands.msg
-   gr_Packet.msg
-   gr_Replacement.msg
-   gr_RobotReplacement.msg
-   gr_Robot_Command.msg
-   gr_BallReplacement.msg
-   SSL_DetectionFrame.msg
-   SSL_DetectionRobot.msg
-   SSL_DetectionBall.msg
-   BeliefState.msg
-   TacticPacket.msg
-   SSL_Refbox.msg
-   sslDebug_Line.msg
-   sslDebug_Circle.msg
-   sslDebug_Data.msg
-   team_info.msg
-   point_2d.msg
-   debug_msg.msg
-   obstacle.msg
-   Originator.msg
-   game_event.msg
-   Referee.msg
-
+      FILES
+      BeliefState.msg
+      point_2d.msg
+      Vector2f.msg
+      team_info.msg
+      gr_Robot_Command.msg
+      SSL_WrapperPacket.msg
+      SSL_GeometryData.msg
+      replan.msg
+      sslDebug_Line.msg
+      SSL_DetectionBall.msg
+      debug_msg.msg
+      obstacle.msg
+      TacticPacket.msg
+      SSL_FieldCircularArc.msg
+      point_SF.msg
+      planner_path.msg
+#      plannner.ms
+      pid_tune.msg
+      IR_data.msg
+      gr_Commands.msg
+      pid_message.msg
+      sslDebug_Circle.msg
+      SSL_DetectionRobot.msg
+      SSL_DetectionFrame.msg
+      SSL_FieldLineSegment.msg
+      gr_Replacement.msg
+      SSL_Refbox.msg
+      gr_Packet.msg
+      profilerOutput.msg
+      SSL_GeometryCameraCalibration.msg
+      SSL_GeometryFieldSize.msg
+      gr_BallReplacement.msg
+      sslDebug_Data.msg
+      gr_RobotReplacement.msg
+      target_triangle.msg
+      Referee.msg
+      obstacle.msg
+      Originator.msg
+      game_event.msg
  )
 
+
+
 ## Generate services in the 'srv' folder
-add_service_files(
-  FILES
-  path_data.srv
-)
+ add_service_files(
+   FILES
+   path_plan.srv
+#   Service2.srv
+ )
+
+
+## Generate services in the 'srv' folder
+# add_service_files(
+#   FILES
+#   Service1.srv
+#   Service2.srv
+# )
 
 ## Generate actions in the 'action' folder
 # add_action_files(
@@ -85,7 +112,7 @@ add_service_files(
 # )
 
 ## Generate added messages and services with any dependencies listed here
-generate_messages(DEPENDENCIES   geometry_msgs   std_msgs )
+generate_messages(DEPENDENCIES   geometry_msgs   std_msgs)
 
 ################################################
 ## Declare ROS dynamic reconfigure parameters ##
