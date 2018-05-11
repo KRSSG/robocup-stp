@@ -19,17 +19,16 @@ int main(int argc, char **argv)
 
 	cout<<"Intialised Node\n";
 	ros::init(argc, argv, "referee_node");
-	ros::NodeHandle n;
-	
+	ros::NodeHandle n;	
 	ros::Publisher chatter_pub = n.advertise<krssg_ssl_msgs::Referee>("ref_data", 10000);
 	// ros::Rate loop_rate(10);
 
-	
 	GOOGLE_PROTOBUF_VERIFY_VERSION;
 	int port = 10003;
 	RoboCupSSLClient client(port);	
 	client.open(true);
 	printf("Connected to referee-box.\n");
+	
 	SSL_Referee packet;
 	while(ros::ok()) {
 		if (client.receive(packet)) {
@@ -40,46 +39,50 @@ int main(int argc, char **argv)
 			krssg_ssl_msgs::game_event gameEvent;
 
 			msg.packet_timestamp = packet.packet_timestamp();
-			msg.stage = packet.stage();
-			msg.stage_time_left = packet.stage_time_left();
-			msg.command = packet.command();
-			msg.command_counter = packet.command_counter();
-			msg.command_timestamp = packet.stage();
+			msg.stage            = packet.stage();
+			msg.stage_time_left  = packet.stage_time_left();
+			msg.command          = packet.command();
+			msg.command_counter  = packet.command_counter();
+			msg.command_timestamp= packet.stage();
 
-			yellow.name = packet.yellow().name();
-			yellow.score = packet.yellow().score();
-			yellow.red_cards = packet.yellow().red_cards();
+			yellow.name          = packet.yellow().name();
+			yellow.score         = packet.yellow().score();
+			yellow.red_cards     = packet.yellow().red_cards();
+			
 			int yellow_card_times_size = packet.yellow().yellow_card_times_size();
 			for (int i = 0; i < yellow_card_times_size; ++i)
 			{
 				yellow.yellow_card_times.push_back(packet.yellow().yellow_card_times(i));
 			}
-			yellow.yellow_cards = packet.yellow().yellow_cards();
-			yellow.timeouts = packet.yellow().timeouts();
-			yellow.timeout_time = packet.yellow().timeout_time();
-			yellow.goalie = packet.yellow().goalie();
+
+			yellow.yellow_cards   = packet.yellow().yellow_cards();
+			yellow.timeouts       = packet.yellow().timeouts();
+			yellow.timeout_time   = packet.yellow().timeout_time();
+			yellow.goalie         = packet.yellow().goalie();
 			
-			blue.name = packet.blue().name();
-			blue.score = packet.blue().score();
-			blue.red_cards = packet.blue().red_cards();
-			yellow_card_times_size = packet.blue().yellow_card_times_size();
+			blue.name             = packet.blue().name();
+			blue.score            = packet.blue().score();
+			blue.red_cards        = packet.blue().red_cards();
+			yellow_card_times_size= packet.blue().yellow_card_times_size();
+			
 			for (int i = 0; i < yellow_card_times_size; ++i)
 			{
 				blue.yellow_card_times.push_back(packet.blue().yellow_card_times(i));
 			}
-			blue.yellow_cards = packet.blue().yellow_cards();
-			blue.timeouts = packet.blue().timeouts();
-			blue.timeout_time = packet.blue().timeout_time();
-			blue.goalie = packet.blue().goalie();
+
+			blue.yellow_cards= packet.blue().yellow_cards();
+			blue.timeouts    = packet.blue().timeouts();
+			blue.timeout_time= packet.blue().timeout_time();
+			blue.goalie      = packet.blue().goalie();
 			
-			msg.yellow = yellow;
-			msg.blue = blue;
+			msg.yellow       = yellow;
+			msg.blue         = blue;
 
 			if (packet.has_designated_position())
 			{
-				designated_position.x = packet.designated_position().x();
-				designated_position.y = packet.designated_position().y();
-				msg.designated_position = designated_position;
+				designated_position.x  = packet.designated_position().x();
+				designated_position.y  = packet.designated_position().y();
+				msg.designated_position= designated_position;
 			}
 
 			// msg.blueTeamOnPositiveHalf = packet.blueTeamOnPositiveHalf();
