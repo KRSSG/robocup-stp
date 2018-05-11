@@ -8,8 +8,6 @@ from krssg_ssl_msgs.msg import gr_Commands
 from krssg_ssl_msgs.msg import gr_Robot_Command
 from krssg_ssl_msgs.msg import point_SF
 from utils.config import *
-import memcache
-shared = memcache.Client(['127.0.0.1:11211'], debug = False)
 import sys
 
 bot_id = int(sys.argv[1])
@@ -22,7 +20,6 @@ GOAL_POINT.y = 1200
 REPLANNED = 0
 homePos = None
 awayPos = None
-BState = shared.get('state')
 
 def reset():
 	global start_time
