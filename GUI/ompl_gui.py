@@ -10,6 +10,7 @@ from interfacePath import Ui_MainWindow
 from krssg_ssl_msgs.msg import BeliefState
 from krssg_ssl_msgs.msg import point_2d
 from krssg_ssl_msgs.msg import gr_Commands
+from krssg_ssl_msgs.msg import planner_path
 import multiprocessing
 MAJOR_AXIS_FACTOR = 10
 MINOR_AXIS_FACTOR = 2
@@ -357,6 +358,7 @@ class MainWindow(QtGui.QMainWindow, Ui_MainWindow, QtGui.QWidget):
         transform = QtGui.QTransform()
        
         self.scene.clear()
+        self.draw_path()  
 
         self.graphicsView.setScene(self.scene)
         brush_yellow = QtGui.QBrush(QtCore.Qt.yellow)
@@ -409,7 +411,6 @@ class MainWindow(QtGui.QMainWindow, Ui_MainWindow, QtGui.QWidget):
             self.scene.addPath(path, yellow_pen, brush_yellow)
             i=i+1
             self.scene.addItem(io) 
-        self.draw_path()  
 
     def draw_path(self):
         # print("IN DRAW PATH__"*100)
@@ -434,7 +435,7 @@ class MainWindow(QtGui.QMainWindow, Ui_MainWindow, QtGui.QWidget):
             path.lineTo(i[0],i[1])
            
         path.lineTo(vrtx[size_-1][0], vrtx[size_-1][1])   
-        self.scene.addPath(path)
+        self.scene.addPath(path, self.pen)
 
 app=QtGui.QApplication(sys.argv)
 w=MainWindow()
@@ -442,7 +443,7 @@ def main():
     rospy.init_node('display1', anonymous=False)
     rospy.Subscriber("/belief_state", BeliefState , Callback_BS);
     rospy.Subscriber("/grsim_data", gr_Commands , Callback_VelProfile);
-    # rospy.Subscriber("/path_planner_ompl", planner_path, debug_path)
+    rospy.Subscriber("/path_planner_ompl", planner_path, debug_path)
     
     w.show()
     app.exec_()
