@@ -102,9 +102,9 @@ class Velocity():
 	##
 	## @brief      Total length of path
 	##
-	def GetPathLength(self):
+	def GetPathLength(self, startIndex=1):
 		length = 0
-		for i in xrange(1,len(self.path)):
+		for i in xrange(startIndex,len(self.path)):
 			length += self.path[i].dist(self.path[i-1])
 		return length
 

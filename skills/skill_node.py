@@ -15,8 +15,8 @@ def send_command(pub, team, bot_id, v_x, v_y, v_w, kick_power, dribble, chip_pow
 	# Set the command to each bot
 	gr_command.id          = bot_id
 	gr_command.wheelsspeed = 0
-	gr_command.veltangent  = -v_y/1000.0
-	gr_command.velnormal   = +v_x/1000.0
+	gr_command.veltangent  = v_x/1000.0
+	gr_command.velnormal   = v_y/1000.0
 	gr_command.velangular  = v_w
 	gr_command.kickspeedx  = kick_power
 	gr_command.kickspeedz  = chip_power
