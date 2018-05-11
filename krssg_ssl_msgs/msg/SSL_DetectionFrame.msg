@@ -1,6 +1,3 @@
-# SSL_DetectionFrame.msg
-
-
 uint32             frame_number 
 float64            t_capture     
 float64            t_sent        

@@ -6,3 +6,5 @@ float32 velnormal
 float32 velangular
 bool spinner
 bool wheelsspeed
+#float64 nextExpectedX
+#float64 nextExpectedY
