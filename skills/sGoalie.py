@@ -41,76 +41,16 @@ def execute(param, state, bot_id, pub,dribbler = False):
     t = rospy.Time.now()
     t = t.secs + 1.0*t.nsecs/pow(10,9)
     start_time = float(os.environ.get('bot'+str(bot_id)))
+
     [vx, vy, vw, REPLANNED, remainingPath] = Get_Vel(start_time, t, bot_id, state.ballPos, state.homePos, state.awayPos)    #vx, vy, vw, replanned, remainingPath
     if(REPLANNED):
         reset(bot_id)
+    print("vx = ",vx)
+    print("vy = ",vy)
+    # print("kubs_id = ",kub.kubs_id)
+
     try:    
         skill_node.send_command(pub, False, bot_id, vx, vy, vw, 0,0)
     except Exception as e:
         print("In except",e)
         pass
-   #  obs = Vector_Obstacle()
-   #  for i in range(0,len(state.homeDetected)):
-   #      if state.homeDetected[i] and i != bot_id:
-   #          o = Obstacle()     
-   #          o.x=state.homePos[i].x
-   #          o.y=state.homePos[i].y
-   #          o.radius=2.5*BOT_RADIUS
-   #          obs.push_back(o)
-
-   #  for j in range(0,len(state.awayDetected)):
-   #      if state.awayDetected[j]:
-   #          o = Obstacle()
-   #          o.x=state.awayPos[j].x
-   #          o.y=state.awayPos[j].y
-   #          o.radius=2.5*BOT_RADIUS
-   #          obs.push_back(o)
-
-
-   #  pointPos = Vector2D()
-   #  pointPos.x = int(param.GoToPointP.x)
-   #  pointPos.y = int(param.GoToPointP.y)
-   #  point = Vector2D()
-   #  nextWP = pointPos
-   #  nextNWP = Vector2D()
-
-   #  # pathplanner = MergeSCurve()
-
-
-   #  botPos = Vector2D(int(state.homePos[bot_id].x), int(state.homePos[bot_id].y))
-   
-   # # pathplanner.plan(botPos,pointPos,nextWP,nextNWP,obs,len(obs),bot_id, True)
-   #  v = Vector2D()
-   #  distan = botPos.dist(pointPos)
-   #  maxDisToTurn = distan 
-   #  angleToTurn = v.normalizeAngle((param.GoToPointP.finalSlope)-(state.homePos[bot_id].theta))
-
-
-   #  minReachTime = maxDisToTurn / MAX_BOT_OMEGA
-   #  maxReachTime = maxDisToTurn / MIN_BOT_OMEGA
-
-   #  minTurnTime = angleToTurn / MAX_BOT_OMEGA
-   #  maxTurnTime = angleToTurn / MIN_BOT_OMEGA
-
-   #  speed = 0.0
-   #  omega = 2*angleToTurn * MAX_BOT_OMEGA / (2 * math.pi)                 
-
-   #  speed= 4*maxDisToTurn*MAX_BOT_SPEED/(HALF_FIELD_MAXX)
-   #  if (speed)< 2*MIN_BOT_SPEED:
-   #      speed=2*MIN_BOT_SPEED
-   #  if  (speed >= MAX_BOT_SPEED/2.0):
-   #      speed=MAX_BOT_SPEED    
-   #  # omega = 0
-  
-   #  vec = Vector2D()
-
-
-   #  motionAngle = nextWP.angle(botPos)
-   #  theta  = motionAngle - state.homePos[bot_id].theta
-
-   #  if distan >= 20 * BALL_RADIUS :
-   #      speed = MAX_BOT_SPEED
-
-   #  skill_node.send_command(pub, state.isteamyellow, bot_id, speed * math.sin(-theta), speed * math.cos(-theta), omega, 0, dribbler)
-
-

@@ -11,6 +11,7 @@ from skills import sStop
 from skills import sKick
 from skills import sKickToPoint
 from skills import sGoToPoint
+from skills import sGoToBall
 from tactic import Tactic
 from skills import sTurnToPoint
 from skills import sGoalie

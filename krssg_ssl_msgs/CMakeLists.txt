@@ -45,47 +45,49 @@ find_package(catkin REQUIRED COMPONENTS
 
 ## Generate messages in the 'msg' folder
 add_message_files(
-      FILES
-      BeliefState.msg
-      point_2d.msg
-      Vector2f.msg
-      team_info.msg
-      gr_Robot_Command.msg
-      SSL_WrapperPacket.msg
-      SSL_GeometryData.msg
-      replan.msg
-      sslDebug_Line.msg
-      SSL_DetectionBall.msg
-      debug_msg.msg
-      obstacle.msg
-      TacticPacket.msg
-      SSL_FieldCircularArc.msg
-      point_SF.msg
-      planner_path.msg
-#      plannner.ms
-      pid_tune.msg
-      IR_data.msg
-      gr_Commands.msg
-      pid_message.msg
-      sslDebug_Circle.msg
-      SSL_DetectionRobot.msg
-      SSL_DetectionFrame.msg
-      SSL_FieldLineSegment.msg
-      gr_Replacement.msg
-      SSL_Refbox.msg
-      gr_Packet.msg
-      profilerOutput.msg
-      SSL_GeometryCameraCalibration.msg
-      SSL_GeometryFieldSize.msg
-      gr_BallReplacement.msg
-      sslDebug_Data.msg
-      gr_RobotReplacement.msg
-      target_triangle.msg
-      Referee.msg
-      obstacle.msg
-      Originator.msg
-      game_event.msg
+
+   FILES
+BeliefState.msg
+point_2d.msg
+Vector2f.msg
+team_info.msg
+gr_Robot_Command.msg
+SSL_WrapperPacket.msg
+SSL_GeometryData.msg
+replan.msg
+sslDebug_Line.msg
+SSL_DetectionBall.msg
+debug_msg.msg
+obstacle.msg
+TacticPacket.msg
+SSL_FieldCircularArc.msg
+point_SF.msg
+planner_path.msg
+plannner.msg
+pid_tune.msg
+IR_data.msg
+gr_Commands.msg
+pid_message.msg
+sslDebug_Circle.msg
+SSL_DetectionRobot.msg
+SSL_DetectionFrame.msg
+SSL_FieldLineSegment.msg
+gr_Replacement.msg
+SSL_Refbox.msg
+gr_Packet.msg
+profilerOutput.msg
+SSL_GeometryCameraCalibration.msg
+SSL_GeometryFieldSize.msg
+gr_BallReplacement.msg
+sslDebug_Data.msg
+gr_RobotReplacement.msg
+target_triangle.msg
+Referee.msg
+obstacle.msg
+   Originator.msg
+   game_event.msg
  )
+
 
 
 

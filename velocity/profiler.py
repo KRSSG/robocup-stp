@@ -102,6 +102,7 @@ class Velocity():
 	##
 	## @brief      Total length of path
 	##
+
 	def GetPathLength(self, startIndex=1):
 		length = 0
 		for i in xrange(startIndex,len(self.path)):

@@ -34,6 +34,7 @@ def Get_Vel(start, t, kub_id, target, homePos_, awayPos_,avoid_ball=False):
 
     # Return vx,vy,vw,replan,remainingDistance
 
+
     global expectedTraverseTime, REPLAN, v, errorInfo, pso, FIRST_CALL, homePos, awayPos, kubid, prev_target
     REPLAN = 0
     homePos = homePos_
@@ -60,6 +61,8 @@ def Get_Vel(start, t, kub_id, target, homePos_, awayPos_,avoid_ball=False):
     # print("ex = ",expectedTraverseTime) 
     # print("t = ",t," start = ",start)
     remainingDistance = 0
+    # print("ex = ",expectedTraverseTime) 
+    # print("t = ",t," start = ",start)
     if (t - start< expectedTraverseTime):
         if v.trapezoid(t - start,curPos):
             index = v.GetExpectedPositionIndex()
@@ -114,6 +117,7 @@ def Get_Vel(start, t, kub_id, target, homePos_, awayPos_,avoid_ball=False):
             startPt.y = homePos[kubid].y
             findPath(startPt,target, avoid_ball)
             return [0,0,0, REPLAN,0]  
+
     else:
         errorInfo.errorX = eX
         errorInfo.errorY = eY
@@ -121,7 +125,11 @@ def Get_Vel(start, t, kub_id, target, homePos_, awayPos_,avoid_ball=False):
         botAngle = homePos[kubid].theta
         vXBot = vX*cos(botAngle) + vY*sin(botAngle)
         vYBot = -vX*sin(botAngle) + vY*cos(botAngle)
+
         return [vXBot, vYBot, 0, REPLAN,remainingDistance]            
+
+        return [vXBot, vYBot, 0, REPLAN]            
+
     # print("end getVelocity")    
         
 def shouldReplan():
