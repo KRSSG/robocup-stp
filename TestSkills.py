@@ -59,13 +59,16 @@ def skills_GoToBall(state,bot_id,slope = None):
 
 def skill_callback(state):
     global pub
-    bot_id = 0
+    global bot
+    bot_id = bot
     skills_GoToBall(state,bot_id,math.pi)
 
-def main():
+def main(number):
+    global bot
+    bot=number
     global pub
     print "Initializing the node "
-    rospy.init_node('play_py_node',anonymous=False)
+    #rospy.init_node('play_py_node',anonymous=False)
     start_time = rospy.Time.now()
     start_time = 1.0*start_time.secs + 1.0*start_time.nsecs/pow(10,9)
 
@@ -80,5 +83,5 @@ def main():
     rospy.spin()
 
 if __name__=='__main__':
-    # rospy.init_node('skill_py_node',anonymous=False)
+    rospy.init_node('skill_py_node',anonymous=False)
     main()

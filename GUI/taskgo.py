@@ -11,6 +11,7 @@ from krssg_ssl_msgs.msg import BeliefState
 from krssg_ssl_msgs.msg import point_2d
 from krssg_ssl_msgs.msg import gr_Commands
 from krssg_ssl_msgs.msg import planner_path
+from krssg_ssl_msgs.msg import GUI_call
 
 from task import Ui_MainWindow
 from taskcsgo import GUI_link
@@ -32,6 +33,8 @@ vel_theta=0
 vel_mag=0
 ballPos = [0,0]
 BState = None
+flag=0
+GUI_pub= rospy.Publisher('/gui_call', GUI_call, queue_size=1000)
 
 def BS_TO_GUI(x, y):
     #GUI -> 600X400
@@ -97,6 +100,9 @@ class MainWindow(QtGui.QMainWindow, Ui_MainWindow, QtGui.QWidget, GUI_link):
         self.skillStartButton.clicked.connect(self.skill_start)
         self.playStartButton.clicked.connect(self.play_start)
         self.startPlaySelectorButton.clicked.connect(self.play_selector_start)
+        self.skillResetButton.clicked.connect(self.reset_all)
+        self.killPlaySelectorButton.clicked.connect(self.reset_all)
+        #self.killPlaySelectorButton.clicked.connect(self.)
         #exitButton
         self.exitButton.clicked.connect(self.close_application)
 
@@ -104,11 +110,32 @@ class MainWindow(QtGui.QMainWindow, Ui_MainWindow, QtGui.QWidget, GUI_link):
         self.timer.timeout.connect(self.updateImage)
         self.timer.start(30)
         self.run_play_selector = None
+        self.run_skill_selector = None
+
+        self.graphicsView.mousePressEvent = self.pixelselect
+
+    def reset_all(self):
+        print "reset working"
+        if (not self.run_play_selector==None):
+            self.run_play_selector.join()
+        if (not self.run_skill_selector==None):
+            self.run_skill_selector.join()
+            print "Inside IF"*20
+        print "Inside End"
+
+    def pixelselect(self,event):
+        self.ballx=event.x()
+        self.bally=event.y()        
+
 
 
     def end_all_process(self):    
         if (not self.run_play_selector==None):
             self.run_play_selector.terminate()
+        if (not self.run_skill_selector==None):
+            self.run_skill_selector.terminate()
+            print "Inside IF"*20
+        print "Inside End"
 
 
         
@@ -230,7 +257,24 @@ class MainWindow(QtGui.QMainWindow, Ui_MainWindow, QtGui.QWidget, GUI_link):
         self.run_play_selector.start()
         # pass   
     def skill_start(self):
-        self.skill_triggered()
+
+        msg=GUI_call()
+        msg.button = "skill_test"
+        if (self.skillchoice == "goToBall"):
+            msg.params = str(self.skillchoice) +" "+ str(self.bot) + " "
+        else:
+            msg.params = str(self.skillchoice)+" "+ str(self.bot) + " " + str(self.ballx) + " "+str(self.bally)
+        GUI_pub.publish(msg)
+
+        #global flag
+        #print "SKILL START"
+        
+            #self.end_all_process()
+        #self.run_skill_selector = threading.Thread(target=self.skill_triggered)
+        #self.run_skill_selector.start()
+        #flag=1
+
+        
     def play_start(self):
         self.play_triggered()
 

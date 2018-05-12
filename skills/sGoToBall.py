@@ -17,6 +17,7 @@ from krssg_ssl_msgs.msg import gr_Robot_Command
 from krssg_ssl_msgs.msg import point_SF
 from utils.config import *
 
+
 POINTPREDICTIONFACTOR = 2
 
 def reset(bot_id):
@@ -35,7 +36,7 @@ def debug(param, state, bot_id):
     finalSlope = param.GoToPointP.finalSlope
     dist = botPos.dist(destination)
     print '#'*50
-    print 'In sGoToPoint'
+    print 'In sGoToBall'
     print 'Current bot pos: {}, {}'.format(state.homePos[bot_id].x, state.homePos[bot_id].y)
     print 'Target pos: {}, {}'.format(destination.x, destination.y)
     print 'Align: {}'.format(align)
@@ -47,7 +48,7 @@ def debug(param, state, bot_id):
 
 
 def execute(param, state, bot_id, pub,dribller = False):
-
+    # debug(param, state, bot_id)
     pointPos = Vector2D()
     pointPos.x = int(state.ballPos.x)
     pointPos.y = int(state.ballPos.y)
@@ -76,7 +77,7 @@ def execute(param, state, bot_id, pub,dribller = False):
     start_time = float(os.environ.get('bot'+str(bot_id)))
 
     if distan <= DRIBBLER_BALL_THRESH :
-        print("in DRIBBLER_BALL_THRESH")
+        # print("in DRIBBLER_BALL_THRESH")
         [vx, vy, vw, REPLANNED,maxDisToTurn] = Get_Vel(start_time, t, bot_id, state.ballPos, state.homePos, state.awayPos,avoid_ball=False)    #vx, vy, vw, replanned
         omega = 2*angleToTurn * MAX_BOT_OMEGA / (2 * math.pi)                 
         if omega < MIN_BOT_OMEGA and omega > -MIN_BOT_OMEGA:
@@ -91,7 +92,9 @@ def execute(param, state, bot_id, pub,dribller = False):
         else:
             skill_node.send_command(pub, state.isteamyellow, bot_id, vx, vy, omega, 0, dribller)
     else:
+        # print("out DRIBBLER_BALL_THRESH")
         [vx, vy, vw, REPLANNED,maxDisToTurn] = Get_Vel(start_time, t, bot_id, targetPoint, state.homePos, state.awayPos,avoid_ball=True)    #vx, vy, vw, replanned
+        # print("out out DRIBBLER_BALL_THRESH")
         omega = 2*angleToTurn * MAX_BOT_OMEGA / (2 * math.pi)                 
         if omega < MIN_BOT_OMEGA and omega > -MIN_BOT_OMEGA:
             if omega < 0:

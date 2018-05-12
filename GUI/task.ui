@@ -264,7 +264,7 @@ background-color: rgb(0, 85, 0);</string>
      <string>Start Play Selector</string>
     </property>
    </widget>
-   <widget class="QPushButton" name="pushButton_2">
+   <widget class="QPushButton" name="killPlaySelectorButton">
     <property name="geometry">
      <rect>
       <x>240</x>

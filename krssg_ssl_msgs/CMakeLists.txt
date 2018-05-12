@@ -86,6 +86,7 @@ Referee.msg
 obstacle.msg
    Originator.msg
    game_event.msg
+   GUI_call.msg
  )
 
 
