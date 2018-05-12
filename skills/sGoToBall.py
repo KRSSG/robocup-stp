@@ -76,7 +76,7 @@ def execute(param, state, bot_id, pub,dribller = False):
     start_time = float(os.environ.get('bot'+str(bot_id)))
 
     if distan <= DRIBBLER_BALL_THRESH :
-        print("in DRIBBLER_BALL_THRESH")
+        # print("in DRIBBLER_BALL_THRESH")
         [vx, vy, vw, REPLANNED,maxDisToTurn] = Get_Vel(start_time, t, bot_id, state.ballPos, state.homePos, state.awayPos,avoid_ball=False)    #vx, vy, vw, replanned
         omega = 2*angleToTurn * MAX_BOT_OMEGA / (2 * math.pi)                 
         if omega < MIN_BOT_OMEGA and omega > -MIN_BOT_OMEGA:
