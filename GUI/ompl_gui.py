@@ -20,6 +20,11 @@ VEL_ANGLE = 0
 from utils.config import *
 from utils.functions import *
 
+
+
+import PlaySelector
+
+
 points_home = []
 points_home_theta = []
 points_opp=[]
@@ -147,6 +152,7 @@ class MainWindow(QtGui.QMainWindow, Ui_MainWindow, QtGui.QWidget):
         self.GoToBall.clicked.connect(self.goToBall)
         self.GoToBallFsm.clicked.connect(self.goToBallFsm)
         self.GoInTriangle.clicked.connect(self.Move_in_Triangle)
+        self.StartButton.clicked.connect(self.PlaySelectorController)
         self.timer=QtCore.QTimer(self)
         self.timer.timeout.connect(self.updateImage)
         self.timer.start(30)
@@ -155,6 +161,7 @@ class MainWindow(QtGui.QMainWindow, Ui_MainWindow, QtGui.QWidget):
         self.tri_pr2 = None
         self.tri_pr3 = None
         self.tri_controller = None 
+        self.run_play_selector = None
 
     
     def end_all_process(self):
@@ -168,6 +175,8 @@ class MainWindow(QtGui.QMainWindow, Ui_MainWindow, QtGui.QWidget):
             self.tri_pr3.terminate()
         if(not self.tri_controller==None):
             self.tri_controller.terminate()    
+        if (not self.run_play_selector==None):
+            self.run_play_selector.terminate()
 
     def goToBall(self):
         msg=point_SF()
@@ -212,13 +221,22 @@ class MainWindow(QtGui.QMainWindow, Ui_MainWindow, QtGui.QWidget):
     def Move_in_Triangle(self):
         self.end_all_process()
         self.tri_controller = multiprocessing.Process(target=self.triangle_controller)
-        self.tri_pr1 =  multiprocessing.Process(target=self.move_bot_1)
         self.tri_pr2 =  multiprocessing.Process(target=self.move_bot_2)
         self.tri_pr3 =  multiprocessing.Process(target=self.move_bot_3)
         self.tri_controller.start()
         self.tri_pr1.start()
         self.tri_pr2.start()
-        self.tri_pr3.start()           
+        self.tri_pr3.start()   
+
+
+    def PlaySelectorController(self):
+
+        self.end_all_process()
+        self.run_play_selector = threading.Thread(target=self.StartPlaySelector)
+        self.run_play_selector.start()
+        # pass
+    def StartPlaySelector(self):
+        PlaySelector.main()        
 
     def triangle_controller(self):
         try:

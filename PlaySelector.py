@@ -87,7 +87,7 @@ def RDefender_callback(state):
     RDefender_tac.execute(state,pub)
 
 def planner_callback(state):
-    print(" incoming planner_callback")
+    print("incoming planner_callback")
     global pub
     bot_id = 0
     ballPos = Vector2D(state.ballPos.x, state.ballPos.y)
@@ -119,12 +119,11 @@ def debug_subscriber(state):
     attacker_id = 0
     cur_tactic = TTestIt.TTestIt(attacker_id,state)
     cur_tactic.execute(state,pub)
-
-if __name__=='__main__':
+def main():
     global pub
     print "Initializing the node "
     shared = memcache.Client(['127.0.0.1:11211'],debug=False)
-    rospy.init_node('play_py_node',anonymous=False)
+    # rospy.init_node('play_py_node',anonymous=False)
     start_time = rospy.Time.now()
     start_time = 1.0*start_time.secs + 1.0*start_time.nsecs/pow(10,9)
 
@@ -143,3 +142,7 @@ if __name__=='__main__':
     # rospy.Subscriber('/belief_state', BeliefState, attacker_callback, queue_size=1000)
     #rospy.Subscriber('/ref_play', Int8, ref_callback, queue_size=1000)
     rospy.spin()
+
+if __name__=='__main__':
+    rospy.init_node('play_py_node',anonymous=False)
+    main()
