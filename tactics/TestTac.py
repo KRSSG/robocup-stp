@@ -11,6 +11,7 @@ from skills import sStop
 from skills import sKick
 from skills import sKickToPoint
 from skills import sGoToPoint
+from skills import sGoToBall
 from tactic import Tactic
 from skills import sTurnToPoint
 from skills import sGoalie
@@ -35,9 +36,9 @@ class TestTac(Tactic):
         ballVel = Vector2D(int(state.ballVel.x) , int(state.ballVel.y))
         distance = botPos.dist(ballPos)
         
-        self.sParams.GoToPointP.x = ballPos.x
-        self.sParams.GoToPointP.y = ballPos.y
-        sGoToPoint.execute(self.sParams, state, self.bot_id, pub)
+        # self.sParams.GoToPointP.x = ballPos.x
+        # self.sParams.GoToPointP.y = ballPos.y
+        sGoToBall.execute(self.sParams, state, self.bot_id, pub)
 
        
 
