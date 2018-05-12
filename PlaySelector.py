@@ -121,7 +121,6 @@ def debug_subscriber(state):
 def main():
     global pub
     print "Initializing the node "
-    shared = memcache.Client(['127.0.0.1:11211'],debug=False)
     # rospy.init_node('play_py_node',anonymous=False)
     start_time = rospy.Time.now()
     start_time = 1.0*start_time.secs + 1.0*start_time.nsecs/pow(10,9)
