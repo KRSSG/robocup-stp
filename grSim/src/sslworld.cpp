@@ -819,8 +819,8 @@ void RobotsFomation::setAll(dReal* xx,dReal *yy)
 {
     for (int i=0;i<ROBOT_COUNT;i++)
     {
-        x[i] = xx[i]*2.0/3;
-        y[i] = yy[i]*2.0/3;
+        x[i] = xx[i];
+        y[i] = yy[i];
     }
 }
 
