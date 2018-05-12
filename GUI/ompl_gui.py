@@ -5,13 +5,12 @@ import threading
 from thread import start_new_thread
 import os
 import numpy as np
-from math import cos, sin, atan2
+from math import cos, sin, atan2, sqrt
 from interfacePath import Ui_MainWindow
 from krssg_ssl_msgs.msg import BeliefState
 from krssg_ssl_msgs.msg import point_2d
-from krssg_ssl_msgs.msg import planner_path
-from krssg_ssl_msgs.msg import point_SF
 from krssg_ssl_msgs.msg import gr_Commands
+from krssg_ssl_msgs.msg import planner_path
 import multiprocessing
 MAJOR_AXIS_FACTOR = 10
 MINOR_AXIS_FACTOR = 2
@@ -19,10 +18,12 @@ PI = 3.141592653589793
 radius  = 10
 VEL_ANGLE = 0
 from utils.config import *
+from utils.functions import *
 
 points_home = []
 points_home_theta = []
 points_opp=[]
+points_opp_theta = []
 FIELD_MAXX = HALF_FIELD_MAXX    #4000 in GrSim
 FIELD_MAXY = HALF_FIELD_MAXY    #3000 in GrSim
 BOT_ID = None
@@ -36,7 +37,7 @@ BState = None
 def BS_TO_GUI(x, y):
     #GUI -> 600X400
     x1 = (x + FIELD_MAXX)*GUI_X/(2*FIELD_MAXX)
-    y1 = (y + FIELD_MAXY)*GUI_Y/(2*FIELD_MAXY)
+    y1 = (-y + FIELD_MAXY)*GUI_Y/(2*FIELD_MAXY)
 
 
     return [x1, y1]
@@ -52,8 +53,8 @@ curr_vel = [10,0]
 VEL_UNIT = 5
 BOT_ID = 0
 
-pub = rospy.Publisher('gui_params', point_SF)
-kubs_pub = rospy.Publisher('/grsim_data',gr_Commands,queue_size=1000)
+# pub = rospy.Publisher('gui_params', point_SF)
+# kubs_pub = rospy.Publisher('/grsim_data',gr_Commands,queue_size=1000)
 
 path_received=0
 
@@ -106,19 +107,22 @@ def Callback_VelProfile(msg):
         VEL_ANGLE = vel_theta    
 
 def Callback_BS(msg):
-    global points_home, points_home_theta, points_opp, ballPos
+    global points_home, points_home_theta, points_opp, ballPos, points_opp_theta
     # print "777"
     BState = msg
     ballPos = BS_TO_GUI(msg.ballPos.x, msg.ballPos.y)
     points_home = []
     points_home_theta = []
     points_opp=[]
+    points_opp_theta = []
     # print(BS_TO_GUI(-HALF_FIELD_MAXX,0))
     for i in msg.homePos:
+        # print "{} {}".format(i.x,i.y)
         points_home.append(BS_TO_GUI(i.x, i.y))
         points_home_theta.append(i.theta)  
     for i in msg.awayPos:
         points_opp.append(BS_TO_GUI(i.x, i.y))
+        points_opp_theta.append(i.theta)
 
 
 class MainWindow(QtGui.QMainWindow, Ui_MainWindow, QtGui.QWidget):
@@ -138,7 +142,8 @@ class MainWindow(QtGui.QMainWindow, Ui_MainWindow, QtGui.QWidget):
         self.mark_s = QtGui.QPen(QtCore.Qt.red)
         self.mark_e = QtGui.QPen(QtCore.Qt.blue)
         self.mark_ball = QtGui.QPen(QtCore.Qt.yellow)
-        
+        self.boundary = QtGui.QPen(QtCore.Qt.white)
+
         self.GoToBall.clicked.connect(self.goToBall)
         self.GoToBallFsm.clicked.connect(self.goToBallFsm)
         self.GoInTriangle.clicked.connect(self.Move_in_Triangle)
@@ -265,16 +270,54 @@ class MainWindow(QtGui.QMainWindow, Ui_MainWindow, QtGui.QWidget):
             print e
             pass
     
-    def drawBoundary(self):
+    def drawBoundary(self, pen, brush):
+        # print "Drawing"
         x1,y1 = BS_TO_GUI(HALF_FIELD_MAXX, HALF_FIELD_MAXY)
         x2,y2 = BS_TO_GUI(-HALF_FIELD_MAXX, -HALF_FIELD_MAXY)
-        self.scene.addLine(x1,y1, x1, y2)
-        self.scene.addLine(x1, y2, x2, y2)
-        self.scene.addLine(x2,y1, x1,y1)
-        self.scene.addLine(x2,y2,x2,y1)
-        self.scene.addLine(x1/2,y1,x1/2,y2)
-        self.scene.addEllipse((x1/2)-50,(y1/2)-50,100,100)
-       
+        self.scene.addLine(x1,y1, x1, y2, pen)
+        self.scene.addLine(x1, y2, x2, y2, pen)
+        self.scene.addLine(x2,y1, x1,y1, pen)
+        self.scene.addLine(x2,y2,x2,y1, pen)
+        self.scene.addLine(x1/2,y1,x1/2,y2, pen)
+        self.scene.addEllipse((x1/2)-50,(y2/2)-50,100,100, pen)
+        path = QtGui.QPainterPath()
+        alongX = DBOX_WIDTH*GUI_X/(2*HALF_FIELD_MAXX)
+        alongY = (DBOX_HEIGHT - OUR_GOAL_MAXY)*GUI_Y/(2*HALF_FIELD_MAXY)
+        sweepDegrees = 90
+        # Draw DBOX
+        # Opp side
+        opp_vertexA = BS_TO_GUI(HALF_FIELD_MAXX,OUR_DBOX_MAXY)
+        opp_vertexB = BS_TO_GUI(-OUR_DBOX_X,OUR_DBOX_MAXY)
+        opp_vertexC = BS_TO_GUI(-OUR_DBOX_X,OUR_DBOX_MINY)
+        opp_vertexD = BS_TO_GUI(HALF_FIELD_MAXX,OUR_DBOX_MINY)
+        self.scene.addLine(opp_vertexA[0],opp_vertexA[1],opp_vertexB[0],opp_vertexB[1],pen)
+        self.scene.addLine(opp_vertexB[0],opp_vertexB[1],opp_vertexC[0],opp_vertexC[1],pen)
+        self.scene.addLine(opp_vertexC[0],opp_vertexC[1],opp_vertexD[0],opp_vertexD[1],pen)
+
+        # Our Side
+        our_vertexA = BS_TO_GUI(-HALF_FIELD_MAXX,OUR_DBOX_MAXY)
+        our_vertexB = BS_TO_GUI(OUR_DBOX_X,OUR_DBOX_MAXY)
+        our_vertexC = BS_TO_GUI(OUR_DBOX_X,OUR_DBOX_MINY)
+        our_vertexD = BS_TO_GUI(-HALF_FIELD_MAXX,OUR_DBOX_MINY)
+        self.scene.addLine(our_vertexA[0],our_vertexA[1],our_vertexB[0],our_vertexB[1],pen)
+        self.scene.addLine(our_vertexB[0],our_vertexB[1],our_vertexC[0],our_vertexC[1],pen)
+        self.scene.addLine(our_vertexC[0],our_vertexC[1],our_vertexD[0],our_vertexD[1],pen)
+
+        # goal post on opp side
+        goal_depth = GOAL_DEPTH*GUI_X/(2*HALF_FIELD_MAXX)
+        goal_width = OUR_GOAL_WIDTH*GUI_Y/(2*HALF_FIELD_MAXY)
+        pointA = BS_TO_GUI(HALF_FIELD_MAXX, OUR_GOAL_MAXY)
+        path.addRect(pointA[0], pointA[1], goal_depth, goal_width)
+        self.scene.addPath(path, pen)
+
+        # goal post on our side
+        goal_depth = GOAL_DEPTH*GUI_X/(2*HALF_FIELD_MAXX)
+        goal_width = OUR_GOAL_WIDTH*GUI_Y/(2*HALF_FIELD_MAXY)
+        pointA = BS_TO_GUI(-HALF_FIELD_MAXX - GOAL_DEPTH, OUR_GOAL_MAXY)
+        path.addRect(pointA[0], pointA[1], goal_depth, goal_width)
+        self.scene.addPath(path, pen)       
+
+
     def show_vel_vector(self):
         global curr_vel
         # print("curr_vel ", curr_vel)
@@ -315,37 +358,59 @@ class MainWindow(QtGui.QMainWindow, Ui_MainWindow, QtGui.QWidget):
         transform = QtGui.QTransform()
        
         self.scene.clear()
+        self.draw_path()  
 
         self.graphicsView.setScene(self.scene)
         brush_yellow = QtGui.QBrush(QtCore.Qt.yellow)
         brush_blue= QtGui.QBrush(QtCore.Qt.blue)
         brush_red = QtGui.QBrush(QtCore.Qt.red)
-        self.drawBoundary()
+        brush_white = QtGui.QBrush(QtCore.Qt.white)
+        brush_darkred = QtGui.QBrush(QtCore.Qt.darkRed)
+        blue_pen = QtGui.QPen(QtCore.Qt.blue)
+        yellow_pen =QtGui.QPen(QtCore.Qt.yellow)
+        darkred_pen = QtGui.QPen(QtCore.Qt.darkRed)
+        self.drawBoundary(self.boundary, brush_white)
 
         if(len(points_home)==0):
             print("SIZE OF POS_HOME = 0 ")
             return
         i = 0
-        self.scene.addEllipse(ballPos[0], ballPos[1],self.obstacleRadius/2,self.obstacleRadius/2 , self.mark_ball, brush_yellow)
+        # show ball
+        ball_dimension = 6
+        self.scene.addEllipse(ballPos[0]- ball_dimension/2, ballPos[1] - ball_dimension/2,ball_dimension,ball_dimension , darkred_pen, brush_darkred)
+
+        # show home bots
         for point in points_home:
 
             io = QtGui.QGraphicsTextItem()
-            io.setDefaultTextColor(QtCore.Qt.black)
-            io.setPos(point[0]-self.obstacleRadius, point[1]-self.obstacleRadius);
+            io.setDefaultTextColor(QtCore.Qt.white)
+            io.setPos(point[0]-self.obstacleRadius, point[1]-self.obstacleRadius*1.5);
             io.setPlainText(str(i));
-            i=i+1
-            self.scene.addEllipse(point[0]-self.obstacleRadius, point[1]-self.obstacleRadius,2*self.obstacleRadius,2*self.obstacleRadius , self.mark_e, brush_blue)
+            path =QtGui.QPainterPath()
+            sweepDegrees = 270
+            angle = radian_2_deg(points_home_theta[i])
+            vertex = [point[0]- self.obstacleRadius, point[1] - self.obstacleRadius]
+            path.arcMoveTo(vertex[0], vertex[1],2*self.obstacleRadius,2*self.obstacleRadius, 315 + angle)
+            path.arcTo(vertex[0], vertex[1], 2*self.obstacleRadius, 2*self.obstacleRadius, 45 + angle, sweepDegrees)
+            self.scene.addPath(path, blue_pen, brush_blue)
             self.scene.addItem(io)
+            i=i+1
         i=0
+        # show opp bots
         for point in points_opp:
             io = QtGui.QGraphicsTextItem()
             io.setDefaultTextColor(QtCore.Qt.black)
-            io.setPos(point[0]-self.obstacleRadius, point[1]-self.obstacleRadius);
+            io.setPos(point[0]-self.obstacleRadius, point[1]-self.obstacleRadius*1.5);
             io.setPlainText(str(i));
+            path =QtGui.QPainterPath()
+            sweepDegrees = 270
+            angle = radian_2_deg(points_opp_theta[i])
+            vertex = [point[0]- self.obstacleRadius, point[1] - self.obstacleRadius]
+            path.arcMoveTo(vertex[0], vertex[1],2*self.obstacleRadius,2*self.obstacleRadius, 315 + angle)
+            path.arcTo(vertex[0], vertex[1], 2*self.obstacleRadius, 2*self.obstacleRadius, 45 + angle, sweepDegrees)
+            self.scene.addPath(path, yellow_pen, brush_yellow)
             i=i+1
-            self.scene.addEllipse(point[0]-self.obstacleRadius, point[1]-self.obstacleRadius,2*self.obstacleRadius,2*self.obstacleRadius , self.mark_s, brush_red)
             self.scene.addItem(io) 
-        self.draw_path()  
 
     def draw_path(self):
         # print("IN DRAW PATH__"*100)
@@ -370,7 +435,7 @@ class MainWindow(QtGui.QMainWindow, Ui_MainWindow, QtGui.QWidget):
             path.lineTo(i[0],i[1])
            
         path.lineTo(vrtx[size_-1][0], vrtx[size_-1][1])   
-        self.scene.addPath(path)
+        self.scene.addPath(path, self.pen)
 
 app=QtGui.QApplication(sys.argv)
 w=MainWindow()
