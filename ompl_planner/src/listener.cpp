@@ -129,19 +129,24 @@ bool path(krssg_ssl_msgs::path_plan::Request &req,
   if (avoid_ball)
     v.push_back(ballPos);
 
-
-  Planning planning(v,v.size(),gui_msgs, BOT_ID);
-  planning.planSimple();
-  planning.plan(start.x*BS_TO_OMPL,start.y*BS_TO_OMPL,
-                target.x*BS_TO_OMPL,target.y*BS_TO_OMPL);
-  std::vector<krssg_ssl_msgs::point_2d> path_points;
-  path_points = planning.recordSolution();
-  for (int i = 0; i < path_points.size(); ++i)
-  {
-    point.x = path_points[i].x*OMPL_TO_BS;
-    point.y = path_points[i].y*OMPL_TO_BS;
-    res.path.push_back(point);
-    points.point_array.push_back(point);
+  if((fabs(start.x) <= HALF_FIELD_MAXX && fabs(start.y) <= HALF_FIELD_MAXY) &&
+      (fabs(target.x) <= HALF_FIELD_MAXX && fabs(target.y) <= HALF_FIELD_MAXY)){
+    Planning planning(v,v.size(),gui_msgs, BOT_ID);
+    planning.planSimple();
+    planning.plan(start.x*BS_TO_OMPL,start.y*BS_TO_OMPL,
+                  target.x*BS_TO_OMPL,target.y*BS_TO_OMPL);
+    std::vector<krssg_ssl_msgs::point_2d> path_points;
+    path_points = planning.recordSolution();
+    for (int i = 0; i < path_points.size(); ++i)
+    {
+      point.x = path_points[i].x*OMPL_TO_BS;
+      point.y = path_points[i].y*OMPL_TO_BS;
+      res.path.push_back(point);
+      points.point_array.push_back(point);
+    }
+  }
+  else{
+    ROS_INFO("Target out of field");
   }
   pub.publish(points);
   ROS_INFO("Sending Response");

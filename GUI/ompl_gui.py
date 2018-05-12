@@ -415,13 +415,15 @@ class MainWindow(QtGui.QMainWindow, Ui_MainWindow, QtGui.QWidget):
     def draw_path(self):
         # print("IN DRAW PATH__"*100)
         global vrtx_0, vrtx_1, vrtx_2, vrtx_3, vrtx_4, vrtx_5
-
-        self.draw_path_one(vrtx_0)
-        self.draw_path_one(vrtx_1)
-        self.draw_path_one(vrtx_2)
-        self.draw_path_one(vrtx_3)
-        self.draw_path_one(vrtx_4)
-        self.draw_path_one(vrtx_5)
+        try:
+            self.draw_path_one(vrtx_0)
+            self.draw_path_one(vrtx_1)
+            self.draw_path_one(vrtx_2)
+            self.draw_path_one(vrtx_3)
+            self.draw_path_one(vrtx_4)
+            self.draw_path_one(vrtx_5)
+        except:
+            pass
 
     def draw_path_one(self, vrtx):
         

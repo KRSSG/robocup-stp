@@ -38,10 +38,10 @@ namespace og = ompl::geometric;
 
 using namespace std;
 
-#define BS_TO_OMPL 0.1
-#define OMPL_TO_BS 10
-#define HALF_FIELD_MAXX 4000
-#define HALF_FIELD_MAXY 3000
+#define BS_TO_OMPL 0.07
+#define OMPL_TO_BS 14
+#define HALF_FIELD_MAXX 5500
+#define HALF_FIELD_MAXY 4000
 #define HALF_FIELD_MAXX_OMPL HALF_FIELD_MAXX*BS_TO_OMPL
 #define HALF_FIELD_MAXY_OMPL HALF_FIELD_MAXY*BS_TO_OMPL
 #define self_radius 270*BS_TO_OMPL
