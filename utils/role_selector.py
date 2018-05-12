@@ -57,7 +57,7 @@ def attacker_selector(state):
 		try:
 			strength = angle*weights[0] + bot_ball_dist*weights[1] + weights[2]/free_space
 		except:
-			strength = angle*weights[0] + bot_ball_dist*weights[1] + weights[2]/50000
+			strength = angle*weights[0] + bot_ball_dist*weights[1] + weights[2]/250000
 		# print "angle_strength = " , angle*weights[0]
 		# print "dist_strength = ", bot_ball_dist*weights[1]
 		# print "closest bots =" , closest_opp_bot , " " , second_closest_opp_bot
