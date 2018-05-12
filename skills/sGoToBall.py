@@ -80,21 +80,21 @@ def execute(param, state, bot_id, pub,dribller = False):
     start_time = float(os.environ.get('bot'+str(bot_id)))
     if param.GoToPointP.align == False:
         if distan < DRIBBLER_BALL_THRESH:
-            [vx, vy, vw, REPLANNED] = Get_Vel(start_time, t, bot_id, state.ballPos, state.homePos, state.awayPos,avoid_ball=False)    #vx, vy, vw, replanned
+            [vx, vy, vw, REPLANNED,maxDisToTurn] = Get_Vel(start_time, t, bot_id, state.ballPos, state.homePos, state.awayPos,avoid_ball=False)    #vx, vy, vw, replanned
             if distan < BOT_BALL_THRESH:
                 skill_node.send_command(pub, state.isteamyellow, bot_id, 0, 0, omega, 0,dribller)
               
             else:
                 skill_node.send_command(pub, state.isteamyellow, bot_id, vx, vy, omega, 0, dribller)
         else:
-            [vx, vy, vw, REPLANNED] = Get_Vel(start_time, t, bot_id, state.ballPos, state.homePos, state.awayPos,avoid_ball=True)    #vx, vy, vw, replanned
+            [vx, vy, vw, REPLANNED,maxDisToTurn] = Get_Vel(start_time, t, bot_id, state.ballPos, state.homePos, state.awayPos,avoid_ball=True)    #vx, vy, vw, replanned
             skill_node.send_command(pub, state.isteamyellow, bot_id, vx, vy, omega, 0, dribller)
     else:
         if distan > BOT_BALL_THRESH:
-            [vx, vy, vw, REPLANNED] = Get_Vel(start_time, t, bot_id, state.ballPos, state.homePos, state.awayPos,avoid_ball=True)    #vx, vy, vw, replanned
+            [vx, vy, vw, REPLANNED,maxDisToTurn] = Get_Vel(start_time, t, bot_id, state.ballPos, state.homePos, state.awayPos,avoid_ball=True)    #vx, vy, vw, replanned
             skill_node.send_command(pub, state.isteamyellow, bot_id, vx, vy, omega, 0, dribller)
         else:
-            [vx, vy, vw, REPLANNED] = Get_Vel(start_time, t, bot_id, state.ballPos, state.homePos, state.awayPos,avoid_ball=False)    #vx, vy, vw, replanned
+            [vx, vy, vw, REPLANNED,maxDisToTurn] = Get_Vel(start_time, t, bot_id, state.ballPos, state.homePos, state.awayPos,avoid_ball=False)    #vx, vy, vw, replanned
             skill_node.send_command(pub, state.isteamyellow, bot_id, 0, 0, omega, 0,dribller)
     
     if(REPLANNED):
