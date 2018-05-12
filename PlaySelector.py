@@ -27,7 +27,6 @@ goalie_tac = None
 LDefender_tac = None
 RDefender_tac = None
 cur_goalie = 0
-import memcache
 
 def select_play(state):
     global start_time,pub
