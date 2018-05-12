@@ -7,7 +7,9 @@ class StopP(Structure):
 	_fields_ = []
 
 class GoToBallP(Structure):
-	_fields_ = [("intercept", c_bool)]
+	_fields_ = [("intercept", c_bool),
+				("finalslope", c_float),
+				("align", c_bool)]
 
 class KickP(Structure):
 	_fields_ = [("power", c_float)]

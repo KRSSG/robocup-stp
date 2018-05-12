@@ -7,7 +7,7 @@ from navigation_py.wrapperpy import MergeSCurve, Vector_Obstacle
 from navigation_py.obstacle import Obstacle
 from utils.config import *
 from utils.geometry import Vector2D
-from math import pi
+from math import pi,sin,cos
 from velocity.run import *
 import rospy,sys
 from krssg_ssl_msgs.msg import point_2d
@@ -54,49 +54,54 @@ def execute(param, state, bot_id, pub,dribller = False):
  
 
     botPos = Vector2D(int(state.homePos[bot_id].x), int(state.homePos[bot_id].y))
-   
+    ballPos = Vector2D(state.ballPos)
+    oppGoal = Vector2D(HALF_FIELD_MAXX, 0)
     v = Vector2D()
-    distan = botPos.dist(pointPos)
-    maxDisToTurn = distan 
-    angleToTurn = v.normalizeAngle((param.GoToPointP.finalSlope)-(state.homePos[bot_id].theta))
+    targetPoint = Vector2D()
+    # maxDisToTurn = distan
+    if param.GoToBallP.align:
+        angle = param.GoToBallP.finalslope
+        angleToTurn = v.normalizeAngle(param.GoToBallP.finalslope - state.homePos[bot_id].theta)
+    else:
+        angle = ballPos.angle(oppGoal)
+        angleToTurn = v.normalizeAngle(ballPos.angle(oppGoal) - state.homePos[bot_id].theta)
+    # angleToTurn = v.normalizeAngle((param.GoToPointP.finalSlope)-(state.homePos[bot_id].theta))
 
-    minReachTime = maxDisToTurn / MAX_BOT_OMEGA
-    maxReachTime = maxDisToTurn / MIN_BOT_OMEGA
-
-    minTurnTime = angleToTurn / MAX_BOT_OMEGA
-    maxTurnTime = angleToTurn / MIN_BOT_OMEGA
-
-    # speed = 0.0
-    omega = 2*angleToTurn * MAX_BOT_OMEGA / (2 * math.pi)                 
-
-    if omega < MIN_BOT_OMEGA and omega > -MIN_BOT_OMEGA:
-        if omega < 0:
-            omega = -MIN_BOT_OMEGA
-        else:
-            omega = MIN_BOT_OMEGA
+    targetPoint.x = ballPos.x - 2*DRIBBLER_BALL_THRESH*cos(angle)
+    targetPoint.y = ballPos.y - 2*DRIBBLER_BALL_THRESH*sin(angle)
+    distan = botPos.dist(targetPoint)
 
     t = rospy.Time.now()
     t = t.secs + 1.0*t.nsecs/pow(10,9)
     start_time = float(os.environ.get('bot'+str(bot_id)))
-    if param.GoToPointP.align == False:
-        if distan < DRIBBLER_BALL_THRESH:
-            [vx, vy, vw, REPLANNED,maxDisToTurn] = Get_Vel(start_time, t, bot_id, state.ballPos, state.homePos, state.awayPos,avoid_ball=False)    #vx, vy, vw, replanned
-            if distan < BOT_BALL_THRESH:
-                skill_node.send_command(pub, state.isteamyellow, bot_id, 0, 0, omega, 0,dribller)
-              
+
+    if distan <= DRIBBLER_BALL_THRESH :
+        print("in DRIBBLER_BALL_THRESH")
+        [vx, vy, vw, REPLANNED,maxDisToTurn] = Get_Vel(start_time, t, bot_id, state.ballPos, state.homePos, state.awayPos,avoid_ball=False)    #vx, vy, vw, replanned
+        omega = 2*angleToTurn * MAX_BOT_OMEGA / (2 * math.pi)                 
+        if omega < MIN_BOT_OMEGA and omega > -MIN_BOT_OMEGA:
+            if omega < 0:
+                omega = -MIN_BOT_OMEGA
             else:
-                skill_node.send_command(pub, state.isteamyellow, bot_id, vx, vy, omega, 0, dribller)
+                omega = MIN_BOT_OMEGA
+        if fabs(angleToTurn) < SATISFIABLE_THETA_SHARP:
+            omega = 0
+        if distan < BOT_BALL_THRESH:
+            skill_node.send_command(pub, state.isteamyellow, bot_id, 0, 0, omega, 0,dribller)
         else:
-            [vx, vy, vw, REPLANNED,maxDisToTurn] = Get_Vel(start_time, t, bot_id, state.ballPos, state.homePos, state.awayPos,avoid_ball=True)    #vx, vy, vw, replanned
             skill_node.send_command(pub, state.isteamyellow, bot_id, vx, vy, omega, 0, dribller)
     else:
-        if distan > BOT_BALL_THRESH:
-            [vx, vy, vw, REPLANNED,maxDisToTurn] = Get_Vel(start_time, t, bot_id, state.ballPos, state.homePos, state.awayPos,avoid_ball=True)    #vx, vy, vw, replanned
-            skill_node.send_command(pub, state.isteamyellow, bot_id, vx, vy, omega, 0, dribller)
-        else:
-            [vx, vy, vw, REPLANNED,maxDisToTurn] = Get_Vel(start_time, t, bot_id, state.ballPos, state.homePos, state.awayPos,avoid_ball=False)    #vx, vy, vw, replanned
-            skill_node.send_command(pub, state.isteamyellow, bot_id, 0, 0, omega, 0,dribller)
-    
+        [vx, vy, vw, REPLANNED,maxDisToTurn] = Get_Vel(start_time, t, bot_id, targetPoint, state.homePos, state.awayPos,avoid_ball=True)    #vx, vy, vw, replanned
+        omega = 2*angleToTurn * MAX_BOT_OMEGA / (2 * math.pi)                 
+        if omega < MIN_BOT_OMEGA and omega > -MIN_BOT_OMEGA:
+            if omega < 0:
+                omega = -MIN_BOT_OMEGA
+            else:
+                omega = MIN_BOT_OMEGA
+        if fabs(angleToTurn) < SATISFIABLE_THETA_SHARP:
+            omega = 0
+        skill_node.send_command(pub, state.isteamyellow, bot_id, vx, vy, omega, 0, dribller)
+
     if(REPLANNED):
         reset(bot_id)
 
