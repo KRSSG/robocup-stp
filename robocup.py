@@ -2,14 +2,17 @@ import sys, os
 import rospy
 from krssg_ssl_msgs.msg import BeliefState
 from krssg_ssl_msgs.msg import Referee
+from krssg_ssl_msgs.msg import gr_Commands
+from plays.pSelect import pSelect
 
 bs_msg = BeliefState()
 
 def referee_callback(msg):
 	global bs_msg
+	print msg.command
 	bs_msg.ref_time_stamp = msg.packet_timestamp
 	bs_msg.ref_stage = msg.stage
-	bs_msg.stage_time_left = msg.stage_time_left
+	bs_msg.ref_stage_time_left = msg.stage_time_left
 	bs_msg.ref_command = msg.command
 	bs_msg.ref_command_counter = msg.command_counter
 	bs_msg.ref_command_timestamp = msg.command_timestamp
@@ -50,6 +53,7 @@ def referee_callback(msg):
 	bs_msg.blueTeamOnPositiveHalf = msg.blueTeamOnPositiveHalf
 
 def bs_callback(msg):
+	print "BS Callback"
 	global  bs_msg	
 	bs_msg.isteamyellow = msg.isteamyellow
 	bs_msg.frame_number = msg.frame_number
@@ -72,7 +76,13 @@ def bs_callback(msg):
 	bs_msg.ball_in_our_half = msg.ball_in_our_half
 	bs_msg.ball_in_our_possession = msg.ball_in_our_possession
 	bs_msg.ball_in_our_dbox = msg.ball_in_our_dbox
-	
+
+	playSelector = pSelect()
+	play = playSelector.selectPlay(bs_msg)
+	if play is not None:
+		play.publisher = pub
+		play.execute()
+		# pass
 
 
 
