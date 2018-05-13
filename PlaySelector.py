@@ -52,16 +52,17 @@ def select_play(state):
     # play_Defence.execute()
 
 def referee_callback(msg):
-    global pub, ref_command
-    if msg.command == 0:
-        ref_command = True
-        for i in xrange(6):     
-            os.environ['bot'+str(i)]=str(start_time)
-            skill_node.send_command(pub, isteamyellow, i, 0, 0, 0, 0, False)
-    else:
-        ref_command = False
-    print ("Received referee message",msg.command)
-    print ("packet_timestamp ",msg.packet_timestamp)
+    print "Time: {}, Stage: {}, Command: {}".format(msg.packet_timestamp, msg.stage, msg.command)
+    # global pub, ref_command
+    # if msg.command == 0:
+    #     ref_command = True
+    #     for i in xrange(6):     
+    #         os.environ['bot'+str(i)]=str(start_time)
+    #         skill_node.send_command(pub, isteamyellow, i, 0, 0, 0, 0, False)
+    # else:
+    #     ref_command = False
+    # print ("Received referee message",msg.command)
+    # print ("packet_timestamp ",msg.packet_timestamp)
     # global ref_play_id
     # ref_play_id = play_id
 
@@ -157,7 +158,7 @@ def main():
     # rospy.Subscriber('/belief_state', BeliefState, goalKeeper_callback, queue_size=1000)
     # rospy.Subscriber('/belief_state', BeliefState, debug_subscriber, queue_size=1000)
     # rospy.Subscriber('/belief_state', BeliefState, LDefender_callback, queue_size=1000)
-    rospy.Subscriber('/belief_state', BeliefState, planner_callback, queue_size=1000)
+    # rospy.Subscriber('/belief_state', BeliefState, planner_callback, queue_size=1000)
     # rospy.Subscriber('/belief_state', BeliefState, RDefender_callback, queue_size=1000)
     # rospy.Subscriber('/belief_state', BeliefState, attacker_callback, queue_size=1000)
     #rospy.Subscriber('/ref_play', Int8, ref_callback, queue_size=1000)

@@ -16,8 +16,6 @@ bool[] homeDetected
 bool[] awayDetected
 uint8   our_bot_closest_to_ball
 uint8   opp_bot_closest_to_ball
-uint8   our_goalie			#returns 10 for no goalie
-uint8   opp_goalie			#returns 10 for no goalie
 uint8   opp_bot_marking_our_attacker
 bool    ball_at_corners
 bool    ball_in_our_half
@@ -35,38 +33,31 @@ uint64 ref_time_stamp
 uint8 ref_stage
 int32 ref_stage_time_left
 uint8 ref_command
+uint32 ref_command_counter
+uint64 ref_command_timestamp
 
-# Score of blue team
-uint8 blue_score
-uint8 yellow_score
 
-# botID of goalie
-uint32 blue_goalie
-uint32 yellow_goalie
 
-# No. of bots which got red cards
-uint32 blue_redcards
-uint32 yellow_redcards
+
+string our_name
+uint8 our_score
+uint32 our_redcards
+uint32[] our_yellow_card_times
+uint32 our_yellow_cards
+uint32 our_timeouts
+uint32 our_timeout_time
+uint8   our_goalie			#returns 10 for no goalie
+
+string opp_name
+uint8 opp_score
+uint32 opp_redcards
+uint32[] opp_yellow_card_times
+uint32 opp_yellow_cards
+uint32 opp_timeouts
+uint32 opp_timeout_time
+uint8   opp_goalie			#returns 10 for no goalie
+
 
 # Point specified by referee for ball placement
 point_2d ref_ball_point
-
-string blue_name
-string yellow_name
-
-# Total no. of yellow cards issued from the beginning
-uint32 blue_yellow_cards
-uint32 yellow_yellow_cards
-
-# Time (microseconds) left for bots which recieved yellow card sorted from
-# smallest to largest. This array is empty if no yellow card is recieved.
-uint32[] blue_yellow_card_times
-uint32[] yellow_yellow_card_times
-
-# Number of timeouts left, if currently in a timeout, it's excluded
-uint32 blue_timeouts
-uint32 yellow_timeouts
-
-# Number of micro seconds of time the team can use for timeout
-uint32 blue_timeout_time
-uint32 yelow_timeout_time
+bool blueTeamOnPositiveHalf
