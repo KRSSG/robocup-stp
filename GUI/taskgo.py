@@ -2,6 +2,7 @@ from PyQt4 import QtCore,QtGui
 import sys
 import rospy
 import threading
+import PlaySelector
 from thread import start_new_thread
 import os
 import numpy as np
@@ -35,6 +36,7 @@ ballPos = [0,0]
 BState = None
 flag=0
 GUI_pub= rospy.Publisher('/gui_call', GUI_call, queue_size=1000)
+reset_pub=rospy.Publisher('/gui_call_reset', GUI_call, queue_size=1000)
 
 def BS_TO_GUI(x, y):
     #GUI -> 600X400
@@ -55,13 +57,25 @@ curr_vel = [10,0]
 VEL_UNIT = 5
 BOT_ID = 0
 
+resetValue=0
 
-class MainWindow(QtGui.QMainWindow, Ui_MainWindow, QtGui.QWidget, GUI_link):
+
+class MainWindow(QtGui.QMainWindow, Ui_MainWindow, QtGui.QWidget):
     def __init__(self,parent=None):
         super(MainWindow,self).__init__(parent)
-        GUI_link.__init__(self)
+        
         QtGui.QWidget.__init__(self)
         self.setupUi(self)
+
+        self.path = "RRT"
+        self.initialPosition = "Position 1"
+        self.team = "Team Yellow"
+        self.goalie = "0"
+        self.play = "Offensive"
+        self.skillchoice = "goToBall"
+        self.bot = "0"
+        self.ballx=0
+        self.bally=0
 
 
         self.scene = QtGui.QGraphicsScene()
@@ -100,7 +114,7 @@ class MainWindow(QtGui.QMainWindow, Ui_MainWindow, QtGui.QWidget, GUI_link):
         self.skillStartButton.clicked.connect(self.skill_start)
         self.playStartButton.clicked.connect(self.play_start)
         self.startPlaySelectorButton.clicked.connect(self.play_selector_start)
-        self.skillResetButton.clicked.connect(self.reset_all)
+        self.skillResetButton.clicked.connect(self.reset_skill)
         self.killPlaySelectorButton.clicked.connect(self.reset_all)
         #self.killPlaySelectorButton.clicked.connect(self.)
         #exitButton
@@ -122,7 +136,7 @@ class MainWindow(QtGui.QMainWindow, Ui_MainWindow, QtGui.QWidget, GUI_link):
             self.run_skill_selector.join()
             print "Inside IF"*20
         print "Inside End"
-
+    
     def pixelselect(self,event):
         self.ballx=event.x()
         self.bally=event.y()        
@@ -251,20 +265,21 @@ class MainWindow(QtGui.QMainWindow, Ui_MainWindow, QtGui.QWidget, GUI_link):
             i=i+1
             self.scene.addItem(io) 
     def play_selector_start(self):
-
-        self.end_all_process()
         self.run_play_selector = threading.Thread(target=self.play_selector_triggered)
         self.run_play_selector.start()
         # pass   
     def skill_start(self):
-
+        global resetValue
+        resetValue=0
         msg=GUI_call()
         msg.button = "skill_test"
         if (self.skillchoice == "goToBall"):
             msg.params = str(self.skillchoice) +" "+ str(self.bot) + " "
         else:
             msg.params = str(self.skillchoice)+" "+ str(self.bot) + " " + str(self.ballx) + " "+str(self.bally)
+        print "publishing ", msg.params, msg.button
         GUI_pub.publish(msg)
+        print "message has been published"
 
         #global flag
         #print "SKILL START"
@@ -273,7 +288,12 @@ class MainWindow(QtGui.QMainWindow, Ui_MainWindow, QtGui.QWidget, GUI_link):
         #self.run_skill_selector = threading.Thread(target=self.skill_triggered)
         #self.run_skill_selector.start()
         #flag=1
-
+    def reset_skill(self):
+        msg=GUI_call()
+        msg.resetFlag=0
+        reset_pub.publish(msg)
+    def play_selector_triggered(self):
+        PlaySelector.main()
         
     def play_start(self):
         self.play_triggered()
@@ -298,10 +318,25 @@ class MainWindow(QtGui.QMainWindow, Ui_MainWindow, QtGui.QWidget, GUI_link):
         global vrtx_0, vrtx_1, vrtx_2, vrtx_3, vrtx_4, vrtx_5
         try:
             self.draw_path_one(vrtx_0)
+        except:
+            pass
+        try:
             self.draw_path_one(vrtx_1)
+        except:
+            pass
+        try:
             self.draw_path_one(vrtx_2)
+        except:
+            pass
+        try:
             self.draw_path_one(vrtx_3)
+        except:
+            pass
+        try:
             self.draw_path_one(vrtx_4)
+        except:
+            pass
+        try:
             self.draw_path_one(vrtx_5)
         except:
             pass
@@ -336,32 +371,36 @@ def debug_path(msg):
     BOT_ID = msg.bot_id
     print("New Path Received: BOT_ID = ",BOT_ID)
     global path_received, VEL_ANGLE, vel_theta, vel_mag, vrtx_0, vrtx_1, vrtx_2, vrtx_3, vrtx_4, vrtx_5
+    
+    vrtx_0=[]
+    vrtx_1=[]
+    vrtx_2=[]
+    vrtx_3=[]
+    vrtx_4=[]
+    vrtx_5=[]
+
     if(BOT_ID==0):
-        vrtx_0=[]
         for v in msg.point_array:
             vrtx_0.append((BS_TO_GUI(v.x, v.y)))
     elif BOT_ID==1:
-        vrtx_1=[]
         for v in msg.point_array:
             vrtx_1.append((BS_TO_GUI(v.x, v.y)))
     elif BOT_ID==2:
-        vrtx_2=[]
         for v in msg.point_array:
             vrtx_2.append((BS_TO_GUI(v.x, v.y)))
     elif BOT_ID==3:
-        vrtx_3=[]
         for v in msg.point_array:
             vrtx_3.append((BS_TO_GUI(v.x, v.y)))
     elif BOT_ID==4:
-        vrtx_4=[]
         for v in msg.point_array:
             vrtx_4.append((BS_TO_GUI(v.x, v.y)))
     elif BOT_ID==5:
-        vrtx_5=[]
         for v in msg.point_array:
-            vrtx_5.append((BS_TO_GUI(v.x, v.y)))        
+            vrtx_5.append((BS_TO_GUI(v.x, v.y)))             
 
     path_received = 1
+
+
 
 # def Callback_VelProfile(msg):
 #     global curr_vel, vel_mag, vel_theta
@@ -398,15 +437,18 @@ def Callback_BS(msg):
 
 def main():
     rospy.init_node('display1', anonymous=False)
-    rospy.Subscriber("/belief_state", BeliefState , Callback_BS);
+    rospy.Subscriber("/belief_state", BeliefState , Callback_BS)
     # rospy.Subscriber("/grsim_data", gr_Commands , Callback_VelProfile);
     rospy.Subscriber("/path_planner_ompl", planner_path, debug_path)
-    
+
     w.show()
+
     app.exec_()
+
     import signal
     signal.signal(signal.SIGINT, signal.SIG_DFL)
     sys.exit(0)
+
 
 if __name__=='__main__':
     main()
