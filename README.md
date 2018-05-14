@@ -6,6 +6,7 @@
 ```bash
 $ cd src 
 $ ./kgpkubs_launch/scripts/ssl.sh 
-$ python plays_py/scripts/plays/Play_Selector.py
-$ python run_gui.py  
+$ python PlaySelector.py
+$ python run_gui.py 
+$ python taskcsgo.py 
 ```
