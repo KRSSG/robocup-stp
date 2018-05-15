@@ -8,7 +8,7 @@ class RefPlay(object):
                       "TMark": TMark.TMark,
                       "TPosition": TPosition.TPosition}
     def __init__(self, state, tactic, params, publisher):
-        self.active_robots = 2
+        self.active_robots = 6
         self.role_list = [['' for i in range(2)] for j \
             in range(self.active_robots)]
         self.instances = []
@@ -23,13 +23,13 @@ class RefPlay(object):
             self.instances.append(RefPlay.tactic_mapping[self.role_list[i][0]]( \
                 i, self.state, self.role_list[i][1]))
 
-    def execute(self):
+    def execute(self,gv):
         for i in range(self.active_robots):
             self.robots.append(thread(self.instances[i], self.state, \
-                self.publisher))
+                gv,self.publisher))
         # for i in range(self.active_robots):
             # self.instances[i].execute(self.state, self.publisher)
-        for i in range(self.active_robots):
+        for i in [0,1,2,3,4,5]:
             self.robots[i].start()
-        for robot in self.robots:
-            robot.join()
+        for i in [0,1,2,3,4,5]:
+            self.robots[i].join()
