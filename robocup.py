@@ -53,7 +53,7 @@ def referee_callback(msg):
 	bs_msg.blueTeamOnPositiveHalf = msg.blueTeamOnPositiveHalf
 
 def bs_callback(msg):
-	print "BS Callback"
+	# print "BS Callback"
 	global  bs_msg	
 	bs_msg.isteamyellow = msg.isteamyellow
 	bs_msg.frame_number = msg.frame_number

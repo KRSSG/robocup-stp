@@ -9,7 +9,7 @@ class RefereeStop(RefPlay):
 		positions = [[0, 0, 0, 0], [1000, 1000, 0, 0], [2000, 2000, 0, 0],
 					 [3000, 3000, 0, 0], [-1000, -1000, 0, 0], [-2000, -2000, 0, 0]]
 		parameters = dict()
-		for i in range(6):
+		for i in range(2):
 		  params = tactics_union.Param()
 		  params.PositionP.x = positions[i][0]
 		  params.PositionP.y = positions[i][1]

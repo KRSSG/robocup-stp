@@ -3,7 +3,8 @@ from plays.Referee.RefereeStop import RefereeStop
 
 class pSelect:
 	def selectPlay(self,data):
-		if data.ref_command == 1:
+		# print("Message {}".format(data.ref_command))
+		if data.ref_command == 0:
 			# STOP Command from Referee
 			return RefereeStop(data,None)
 

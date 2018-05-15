@@ -8,7 +8,7 @@ class RefPlay(object):
                       "TMark": TMark.TMark,
                       "TPosition": TPosition.TPosition}
     def __init__(self, state, tactic, params, publisher):
-        self.active_robots = 6
+        self.active_robots = 2
         self.role_list = [['' for i in range(2)] for j \
             in range(self.active_robots)]
         self.instances = []
@@ -27,6 +27,8 @@ class RefPlay(object):
         for i in range(self.active_robots):
             self.robots.append(thread(self.instances[i], self.state, \
                 self.publisher))
+        # for i in range(self.active_robots):
+            # self.instances[i].execute(self.state, self.publisher)
         for i in range(self.active_robots):
             self.robots[i].start()
         for robot in self.robots:

@@ -50,12 +50,15 @@ def Get_Vel(start, t, kub_id, target, homePos_, awayPos_,avoid_ball=False):
     curPos = Vector2D(int(homePos[kubid].x),int(homePos[kubid].y))
     distance = sqrt(pow(target.x - homePos[kubid].x,2) + pow(target.y - homePos[kubid].y,2))
     if(FIRST_CALL):
+        print("BOT id:{}, in first call, timeIntoLap: {}".format(kubid, t-start))
         startPt = point_2d()
         startPt.x = homePos[kubid].x
         startPt.y = homePos[kubid].y
         findPath(startPt, target, avoid_ball)
         FIRST_CALL = 0
 
+    else:
+        print("Bot id:{}, not first call, timeIntoLap: {}".format(kubid,t-start))
     if distance < 1.5*BOT_BALL_THRESH:
         return [0,0,0,0,0]
     # print("ex = ",expectedTraverseTime) 
@@ -158,6 +161,7 @@ def shouldReplan():
     return False
 
 def findPath(startPoint,end,avoid_ball=False):
+    print("Bot id: {}, calculating path".format(kubid))
     global FLAG_PATH_RECEIVED, REPLAN
     FLAG_PATH_RECEIVED = 1
     REPLAN = 1
@@ -173,9 +177,9 @@ def findPath(startPoint,end,avoid_ball=False):
     # print("Start Point ",startPt.x,startPt.y)
     # print("Target Point",target.x,target.y)
     # print("Waiting for service")
-    rospy.wait_for_service('planner')
+    rospy.wait_for_service('planner'+str(kubid))
 
-    planner = rospy.ServiceProxy('planner', path_plan)
+    planner = rospy.ServiceProxy('planner'+str(kubid), path_plan)
 
     message = planner(kubid,startPt,target,avoid_ball)
     path = []

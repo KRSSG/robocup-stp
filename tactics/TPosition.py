@@ -41,7 +41,9 @@ class TPosition(Tactic):
         self.sParam.GoToPointP.x = param.PositionP.x
         self.sParam.GoToPointP.y = param.PositionP.y
         self.sParam.GoToPointP.finalSlope = param.PositionP.finalSlope
+        # print "Bot id: {}, x:{}, y:{}, slope: {}".format(self.bot_id, self.sParam.GoToPointP.x, self.sParam.GoToPointP.y, self.sParam.GoToPointP.finalSlope)
         self.sParam.GoToPointP.finalVelocity = param.PositionP.finalVelocity
+        self.sParam.GoToPointP.align = True
         self.UPPER_HALF = Vector2D(-HALF_FIELD_MAXX,OUR_GOAL_MAXY)
         self.LOWER_HALF = Vector2D(-HALF_FIELD_MAXX, OUR_GOAL_MINY)
 

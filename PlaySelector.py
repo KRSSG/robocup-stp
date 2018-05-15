@@ -23,6 +23,7 @@ from plays import pStall
 from plays import DTP_Play
 from plays import pCordinatedPass
 from skills import skills_union
+from utils import tactics_union
 ref_play_id = 0
 cur_play = None
 start_time = 0
@@ -135,11 +136,28 @@ def bs_callback(state):
         # Basically corresponding TPosition except goalie
 
 def debug_subscriber(state):
-    print("New Call Back")
+    # print("New Call Back")
     global pub
     attacker_id = 0
-    cur_tactic = TTestIt.TTestIt(attacker_id,state)
+    params = tactics_union.Param()
+    params.PositionP.x = state.ballPos.x
+    params.PositionP.y = state.ballPos.y
+    cur_tactic = TPosition.TPosition(attacker_id+1,state,params)
     cur_tactic.execute(state,pub)
+
+def debug_subscriber2(state):
+    # print("New Call Back")
+    global pub
+    attacker_id = 0
+    params = tactics_union.Param()
+    params.PositionP.x = 3000
+    params.PositionP.y = 0
+    cur_tactic = TPosition.TPosition(attacker_id,state,params)
+    cur_tactic.execute(state,pub)
+
+
+    # cur_tactic = TTestIt.TTestIt(attacker_id,state)
+    # cur_tactic.execute(state,pub)
 def main():
     global pub
     print "Initializing the node "
@@ -153,10 +171,11 @@ def main():
         print os.environ.get('bot'+str(i))
 
     pub = rospy.Publisher('/grsim_data', gr_Commands, queue_size=1000)
-    rospy.Subscriber("/ref_data", Referee, referee_callback, queue_size=1000)
+    # rospy.Subscriber("/ref_data", Referee, referee_callback, queue_size=1000)
     # rospy.Subscriber('/belief_state', BeliefState, bs_callback, queue_size=1000)
     # rospy.Subscriber('/belief_state', BeliefState, goalKeeper_callback, queue_size=1000)
-    # rospy.Subscriber('/belief_state', BeliefState, debug_subscriber, queue_size=1000)
+    rospy.Subscriber('/belief_state', BeliefState, debug_subscriber2, queue_size=1000)
+    rospy.Subscriber('/belief_state', BeliefState, debug_subscriber, queue_size=1000)
     # rospy.Subscriber('/belief_state', BeliefState, LDefender_callback, queue_size=1000)
     # rospy.Subscriber('/belief_state', BeliefState, planner_callback, queue_size=1000)
     # rospy.Subscriber('/belief_state', BeliefState, RDefender_callback, queue_size=1000)

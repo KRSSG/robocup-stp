@@ -19,10 +19,10 @@ from utils.config import *
 
 POINTPREDICTIONFACTOR = 2
 
-def reset(bot_id):
-    start_time = rospy.Time.now()
-    start_time = 1.0*start_time.secs + 1.0*start_time.nsecs/pow(10,9)
-    os.environ['bot'+str(bot_id)]=str(start_time)
+# def reset(bot_id):
+#     start_time = rospy.Time.now()
+#     start_time = 1.0*start_time.secs + 1.0*start_time.nsecs/pow(10,9)
+#     os.environ['bot'+str(bot_id)]=str(start_time)
 
 
 
@@ -50,6 +50,7 @@ def debug(param, state, bot_id):
 	print '#'*50
 
 def execute(param, state, bot_id, pub, dribller=False):
+    # debug(param,state, bot_id)
     pointPos = Vector2D()
     pointPos.x = int(param.GoToPointP.x)
     pointPos.y = int(param.GoToPointP.y)
@@ -58,6 +59,7 @@ def execute(param, state, bot_id, pub, dribller=False):
     start_time = float(os.environ.get('bot'+str(bot_id)))
     [vx, vy, vw, REPLANNED, maxDisToTurn] = Get_Vel(start_time, t, bot_id, pointPos, state.homePos, state.awayPos)    #vx, vy, vw, replanned
     if(REPLANNED):
+        print("REPLANNED {}".format(bot_id))
         reset(bot_id)
     botPos = Vector2D(int(state.homePos[bot_id].x), int(state.homePos[bot_id].y))
     v = Vector2D()
@@ -88,6 +90,8 @@ def execute(param, state, bot_id, pub, dribller=False):
 
     if angleToTurn==0:
         omega=0
+
+    print("bot id{} vx: {}, vy:{}".format(bot_id,vx,vy))
 
     if param.GoToPointP.align == False:
         if distan < DRIBBLER_BALL_THRESH:
