@@ -32,7 +32,7 @@ int main(int argc, char **argv)
 
 	
 	GOOGLE_PROTOBUF_VERIFY_VERSION;
-	int port = use_grsim_vision? 10020: 10006;
+	int port = use_grsim_vision? 9020: 10006;
 	RoboCupSSLClient client(port);	
 	client.open(true);
 	printf("Connected to %s.\n", use_grsim_vision? "grSim vision" : "ssl-vision");

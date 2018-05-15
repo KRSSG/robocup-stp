@@ -47,12 +47,12 @@ class TPosition(Tactic):
         self.UPPER_HALF = Vector2D(-HALF_FIELD_MAXX,OUR_GOAL_MAXY)
         self.LOWER_HALF = Vector2D(-HALF_FIELD_MAXX, OUR_GOAL_MINY)
 
-    def execute(self, state, pub):
+    def execute(self, state, gv, pub):
         self.sParam.GoToPointP.x = self.param.PositionP.x
         self.sParam.GoToPointP.y = self.param.PositionP.y
         self.sParam.GoToPointP.finalSlope = self.param.PositionP.finalSlope
         self.sParam.GoToPointP.finalVelocity = self.param.PositionP.finalVelocity
-        sGoToPoint.execute(self.sParam, state, self.bot_id, pub)
+        sGoToPoint.execute(self.sParam, state, self.bot_id, gv, pub)
 
 
     def isComplete(self, state):

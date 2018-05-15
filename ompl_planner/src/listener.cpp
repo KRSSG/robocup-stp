@@ -160,12 +160,12 @@ int main(int argc, char **argv)
   ros::NodeHandle n;
   ros::Subscriber sub = n.subscribe("/belief_state", 1000, Callback);
   ros::Subscriber sub1 = n.subscribe("/gui_params", 1000, Callback_gui);
-  ros::ServiceServer service0 = n.advertiseService("planner0", path);
-  ros::ServiceServer service1 = n.advertiseService("planner1", path);
-  ros::ServiceServer service2 = n.advertiseService("planner2", path);
-  ros::ServiceServer service3 = n.advertiseService("planner3", path);
-  ros::ServiceServer service4 = n.advertiseService("planner4", path);
-  ros::ServiceServer service5 = n.advertiseService("planner5", path);
+  ros::ServiceServer service0 = n.advertiseService("planner", path);
+  // ros::ServiceServer service1 = n.advertiseService("planner1", path);
+  // ros::ServiceServer service2 = n.advertiseService("planner2", path);
+  // ros::ServiceServer service3 = n.advertiseService("planner3", path);
+  // ros::ServiceServer service4 = n.advertiseService("planner4", path);
+  // ros::ServiceServer service5 = n.advertiseService("planner5", path);
   pub = n.advertise<krssg_ssl_msgs::planner_path>("/path_planner_ompl", 1000);
   ros::spin();
   return 0;

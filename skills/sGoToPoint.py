@@ -7,7 +7,6 @@ import sys,os
 from utils.config import *
 from utils.geometry import Vector2D
 from math import pi
-from velocity.run import *
 import rospy,sys
 from krssg_ssl_msgs.msg import point_2d
 from krssg_ssl_msgs.msg import BeliefState
@@ -31,33 +30,35 @@ def reset(bot_id):
     start_time = rospy.Time.now()
     start_time = 1.0*start_time.secs + 1.0*start_time.nsecs/pow(10,9)
     os.environ['bot'+str(bot_id)]=str(start_time)
+    # os.environ['fc'+str(bot_id)]='1'
 
 def debug(param, state, bot_id):
-	botPos = Vector2D(state.homePos[bot_id].x, state.homePos[bot_id].y)
-	destination = Vector2D(param.GoToPointP.x, param.GoToPointP.y)
-	align = param.GoToPointP.align
-	finalSlope = param.GoToPointP.finalSlope
-	dist = botPos.dist(destination)
-	print '#'*50
-	print 'In sGoToPoint'
-	print 'Current bot pos: {}, {}'.format(state.homePos[bot_id].x, state.homePos[bot_id].y)
-	print 'Target pos: {}, {}'.format(destination.x, destination.y)
-	print 'Align: {}'.format(align)
-	if align:
-		print 'Finalslope: {}'.format(finalSlope)
-		print 'Bot Orientation {}'.format(state.homePos[bot_id].theta)
-	print 'Distance: {}'.format(dist)
-	print '#'*50
+    botPos = Vector2D(state.homePos[bot_id].x, state.homePos[bot_id].y)
+    destination = Vector2D(param.GoToPointP.x, param.GoToPointP.y)
+    align = param.GoToPointP.align
+    finalSlope = param.GoToPointP.finalSlope
+    dist = botPos.dist(destination)
+    print '#'*50
+    print 'In sGoToPoint'
+    print 'Current bot pos: {}, {}'.format(state.homePos[bot_id].x, state.homePos[bot_id].y)
+    print 'Target pos: {}, {}'.format(destination.x, destination.y)
+    print 'Align: {}'.format(align)
+    if align:
+        print 'Finalslope: {}'.format(finalSlope)
+        print 'Bot Orientation {}'.format(state.homePos[bot_id].theta)
+    print 'Distance: {}'.format(dist)
+    print '#'*50
 
-def execute(param, state, bot_id, pub, dribller=False):
+def execute(param, state, bot_id, gv, pub, dribller=False):
     # debug(param,state, bot_id)
     pointPos = Vector2D()
     pointPos.x = int(param.GoToPointP.x)
     pointPos.y = int(param.GoToPointP.y)
+    
     t = rospy.Time.now()
     t = t.secs + 1.0*t.nsecs/pow(10,9)
-    start_time = float(os.environ.get('bot'+str(bot_id)))
-    [vx, vy, vw, REPLANNED, maxDisToTurn] = Get_Vel(start_time, t, bot_id, pointPos, state.homePos, state.awayPos)    #vx, vy, vw, replanned
+
+    [vx, vy, vw, REPLANNED, maxDisToTurn] = gv[bot_id].execute(t, bot_id, pointPos, state.homePos, state.awayPos)    #vx, vy, vw, replanned
     if(REPLANNED):
         print("REPLANNED {}".format(bot_id))
         reset(bot_id)

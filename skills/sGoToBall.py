@@ -8,7 +8,7 @@ from navigation_py.obstacle import Obstacle
 from utils.config import *
 from utils.geometry import Vector2D
 from math import pi,sin,cos
-from velocity.run import *
+# from velocity.run import *
 import rospy,sys
 from krssg_ssl_msgs.msg import point_2d
 from krssg_ssl_msgs.msg import BeliefState
