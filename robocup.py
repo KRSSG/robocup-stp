@@ -79,9 +79,8 @@ def bs_callback(msg):
     bs_msg.ball_in_our_dbox = msg.ball_in_our_dbox
 
     playSelector = pSelect()
-    play = playSelector.selectPlay(bs_msg)
+    play = playSelector.selectPlay(bs_msg, pub)
     if play is not None:
-        play.publisher = pub
         play.execute(gv)
         # pass
 
