@@ -171,14 +171,15 @@ def main():
 
     for i in xrange(6):
         os.environ['bot'+str(i)]=str(start_time)
-        os.environ['fc'+str(i)]='1'
+        gv.append(GetVelocity(start_time = start_time,kubs_id = i))
+        #os.environ['fc'+str(i)]='1'
     for i in xrange(6):
         print os.environ.get('bot'+str(i))
 
     gv = []
-    for i in xrange(6):
-        start_time = float(os.environ.get('bot'+str(i)))
-        gv.append(GetVelocity(start_time = start_time,kubs_id = i))
+    #for i in xrange(6):
+    #    start_time = float(os.environ.get('bot'+str(i)))
+     #   gv.append(GetVelocity(start_time = start_time,kubs_id = i))
 
     pub = rospy.Publisher('/grsim_data', gr_Commands, queue_size=1000)
     # rospy.Subscriber("/ref_data", Referee, referee_callback, queue_size=1000)
