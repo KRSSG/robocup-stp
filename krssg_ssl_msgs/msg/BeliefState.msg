@@ -37,6 +37,17 @@ uint32 ref_command_counter
 uint64 ref_command_timestamp
 
 
+bool our_kickoff
+bool our_penalty
+bool our_direct_free_kick
+bool our_indirect_free_kick
+
+
+bool opp_kickoff
+bool opp_penalty
+bool opp_direct_free_kick
+bool opp_indirect_free_kick
+
 
 
 string our_name

@@ -26,13 +26,31 @@ def referee_callback(msg):
         bs_msg.opp_timeouts = msg.blue.timeouts
         bs_msg.opp_goalie = msg.blue.goalie
 
-        bs_msg.our_name = msg.blue.name
-        bs_msg.our_score = msg.blue.score
-        bs_msg.our_redcards = msg.blue.red_cards
-        bs_msg.our_yellow_card_times = msg.blue.yellow_card_times
-        bs_msg.our_yellow_cards = msg.blue.yellow_cards
-        bs_msg.our_timeouts = msg.blue.timeouts
-        bs_msg.our_goalie = msg.blue.goalie
+        bs_msg.our_name = msg.yellow.name
+        bs_msg.our_score = msg.yellow.score
+        bs_msg.our_redcards = msg.yellow.red_cards
+        bs_msg.our_yellow_card_times = msg.yellow.yellow_card_times
+        bs_msg.our_yellow_cards = msg.yellow.yellow_cards
+        bs_msg.our_timeouts = msg.yellow.timeouts
+        bs_msg.our_goalie = msg.yellow.goalie
+
+        if msg.command==4:
+            bs_msg.our_kickoff = 1
+        if msg.command == 5:
+            bs_msg.opp_kickoff = 1
+        if msg.command == 6:
+            bs_msg.our_penalty = 1
+        if msg.command == 7:
+            bs_msg.opp_penalty = 1
+        if msg.command == 8:
+            bs_msg.our_direct_free_kick = 1
+        if msg.command == 9:
+            bs_msg.opp_direct_free_kick = 1
+        if msg.command == 10:
+            bs_msg.our_indirect_free_kick = 1
+        if msg.command == 11:
+            bs_msg.opp_indirect_free_kick = 1
+
 
     else:
         bs_msg.our_name = msg.blue.name
@@ -43,13 +61,30 @@ def referee_callback(msg):
         bs_msg.our_timeouts = msg.blue.timeouts
         bs_msg.our_goalie = msg.blue.goalie
 
-        bs_msg.opp_name = msg.blue.name
-        bs_msg.opp_score = msg.blue.score
-        bs_msg.opp_redcards = msg.blue.red_cards
-        bs_msg.opp_yellow_card_times = msg.blue.yellow_card_times
-        bs_msg.opp_yellow_cards = msg.blue.yellow_cards
-        bs_msg.opp_timeouts = msg.blue.timeouts
-        bs_msg.opp_goalie = msg.blue.goalie
+        bs_msg.opp_name = msg.yellow.name
+        bs_msg.opp_score = msg.yellow.score
+        bs_msg.opp_redcards = msg.yellow.red_cards
+        bs_msg.opp_yellow_card_times = msg.yellow.yellow_card_times
+        bs_msg.opp_yellow_cards = msg.yellow.yellow_cards
+        bs_msg.opp_timeouts = msg.yellow.timeouts
+        bs_msg.opp_goalie = msg.yellow.goalie
+
+        if msg.command==4:
+            bs_msg.opp_kickoff = 1
+        if msg.command == 5:
+            bs_msg.our_kickoff = 1
+        if msg.command == 6:
+            bs_msg.opp_penalty = 1
+        if msg.command == 7:
+            bs_msg.our_penalty = 1
+        if msg.command == 8:
+            bs_msg.opp_direct_free_kick = 1
+        if msg.command == 9:
+            bs_msg.our_direct_free_kick = 1
+        if msg.command == 10:
+            bs_msg.opp_indirect_free_kick = 1
+        if msg.command == 11:
+            bs_msg.our_indirect_free_kick = 1
     
     bs_msg.blueTeamOnPositiveHalf = msg.blueTeamOnPositiveHalf
 
