@@ -33,6 +33,7 @@ class GetVelocity(object):
         self.homePos = None
         self.awayPos = None
         self.prev_target = None
+        self.FIRST_CALL = 1
 
 
     def execute(self, t, kub_id, target, homePos_, awayPos_,avoid_ball=False):
@@ -44,7 +45,7 @@ class GetVelocity(object):
         self.homePos = homePos_
         self.awayPos = awayPos_
         self.kubid = kub_id
-        self.FIRST_CALL = int(os.environ.get('fc'+str(self.kubid)))
+        #self.FIRST_CALL = int(os.environ.get('fc'+str(self.kubid)))
         print(self.FIRST_CALL)
         # if not self.prev_target==None:
         if isinstance(self.prev_target, Vector2D):
@@ -61,7 +62,7 @@ class GetVelocity(object):
             startPt.x = self.homePos[self.kubid].x
             startPt.y = self.homePos[self.kubid].y
             self.findPath(startPt, self.target, avoid_ball)
-            os.environ['fc'+str(self.kubid)]='0'
+            #os.environ['fc'+str(self.kubid)]='0'
             self.FIRST_CALL = 0
 
         else:
