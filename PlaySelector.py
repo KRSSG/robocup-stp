@@ -169,6 +169,7 @@ def main():
     start_time = rospy.Time.now()
     start_time = 1.0*start_time.secs + 1.0*start_time.nsecs/pow(10,9)
 
+    gv = []
     for i in xrange(6):
         os.environ['bot'+str(i)]=str(start_time)
         gv.append(GetVelocity(start_time = start_time,kubs_id = i))
@@ -176,7 +177,6 @@ def main():
     for i in xrange(6):
         print os.environ.get('bot'+str(i))
 
-    gv = []
     #for i in xrange(6):
     #    start_time = float(os.environ.get('bot'+str(i)))
      #   gv.append(GetVelocity(start_time = start_time,kubs_id = i))

@@ -11,28 +11,28 @@ bs_msg = BeliefState()
 def referee_callback(msg):
     global bs_msg
     print msg.command
-    bs_msg.ref_time_stamp = msg.packet_timestamp
-    bs_msg.ref_stage = msg.stage
-    bs_msg.ref_stage_time_left = msg.stage_time_left
-    bs_msg.ref_command = msg.command
-    bs_msg.ref_command_counter = msg.command_counter
+    bs_msg.ref_time_stamp        = msg.packet_timestamp
+    bs_msg.ref_stage             = msg.stage
+    bs_msg.ref_stage_time_left   = msg.stage_time_left
+    bs_msg.ref_command           = msg.command
+    bs_msg.ref_command_counter   = msg.command_counter
     bs_msg.ref_command_timestamp = msg.command_timestamp
     if bs_msg.isteamyellow:
-        bs_msg.opp_name = msg.blue.name
-        bs_msg.opp_score = msg.blue.score
-        bs_msg.opp_redcards = msg.blue.red_cards
+        bs_msg.opp_name              = msg.blue.name
+        bs_msg.opp_score             = msg.blue.score
+        bs_msg.opp_redcards          = msg.blue.red_cards
         bs_msg.opp_yellow_card_times = msg.blue.yellow_card_times
-        bs_msg.opp_yellow_cards = msg.blue.yellow_cards
-        bs_msg.opp_timeouts = msg.blue.timeouts
-        bs_msg.opp_goalie = msg.blue.goalie
-
-        bs_msg.our_name = msg.yellow.name
-        bs_msg.our_score = msg.yellow.score
-        bs_msg.our_redcards = msg.yellow.red_cards
+        bs_msg.opp_yellow_cards      = msg.blue.yellow_cards
+        bs_msg.opp_timeouts          = msg.blue.timeouts
+        bs_msg.opp_goalie            = msg.blue.goalie
+        
+        bs_msg.our_name              = msg.yellow.name
+        bs_msg.our_score             = msg.yellow.score
+        bs_msg.our_redcards          = msg.yellow.red_cards
         bs_msg.our_yellow_card_times = msg.yellow.yellow_card_times
-        bs_msg.our_yellow_cards = msg.yellow.yellow_cards
-        bs_msg.our_timeouts = msg.yellow.timeouts
-        bs_msg.our_goalie = msg.yellow.goalie
+        bs_msg.our_yellow_cards      = msg.yellow.yellow_cards
+        bs_msg.our_timeouts          = msg.yellow.timeouts
+        bs_msg.our_goalie            = msg.yellow.goalie
 
         if msg.command==4:
             bs_msg.our_kickoff = 1
@@ -53,21 +53,21 @@ def referee_callback(msg):
 
 
     else:
-        bs_msg.our_name = msg.blue.name
-        bs_msg.our_score = msg.blue.score
-        bs_msg.our_redcards = msg.blue.red_cards
+        bs_msg.our_name              = msg.blue.name
+        bs_msg.our_score             = msg.blue.score
+        bs_msg.our_redcards          = msg.blue.red_cards
         bs_msg.our_yellow_card_times = msg.blue.yellow_card_times
-        bs_msg.our_yellow_cards = msg.blue.yellow_cards
-        bs_msg.our_timeouts = msg.blue.timeouts
-        bs_msg.our_goalie = msg.blue.goalie
-
-        bs_msg.opp_name = msg.yellow.name
-        bs_msg.opp_score = msg.yellow.score
-        bs_msg.opp_redcards = msg.yellow.red_cards
+        bs_msg.our_yellow_cards      = msg.blue.yellow_cards
+        bs_msg.our_timeouts          = msg.blue.timeouts
+        bs_msg.our_goalie            = msg.blue.goalie
+        
+        bs_msg.opp_name              = msg.yellow.name
+        bs_msg.opp_score             = msg.yellow.score
+        bs_msg.opp_redcards          = msg.yellow.red_cards
         bs_msg.opp_yellow_card_times = msg.yellow.yellow_card_times
-        bs_msg.opp_yellow_cards = msg.yellow.yellow_cards
-        bs_msg.opp_timeouts = msg.yellow.timeouts
-        bs_msg.opp_goalie = msg.yellow.goalie
+        bs_msg.opp_yellow_cards      = msg.yellow.yellow_cards
+        bs_msg.opp_timeouts          = msg.yellow.timeouts
+        bs_msg.opp_goalie            = msg.yellow.goalie
 
         if msg.command==4:
             bs_msg.opp_kickoff = 1
@@ -91,27 +91,27 @@ def referee_callback(msg):
 def bs_callback(msg):
     # print "BS Callback"
     global  bs_msg  
-    bs_msg.isteamyellow = msg.isteamyellow
-    bs_msg.frame_number = msg.frame_number
-    bs_msg.camera_id = msg.camera_id
-    bs_msg.t_capture = msg.t_capture
-    bs_msg.t_sent = msg.t_sent
-    bs_msg.ballPos = msg.ballPos
-    bs_msg.ballVel = msg.ballVel
-    bs_msg.awayPos = msg.awayPos
-    bs_msg.homePos = msg.homePos
-    bs_msg.awayVel = msg.awayVel
-    bs_msg.homeVel = msg.homeVel
-    bs_msg.ballDetected = msg.ballDetected
-    bs_msg.homeDetected = msg.homeDetected
-    bs_msg.awayDetected = msg.awayDetected
-    bs_msg.our_bot_closest_to_ball = msg.our_bot_closest_to_ball
-    bs_msg.opp_bot_closest_to_ball = msg.opp_bot_closest_to_ball
+    bs_msg.isteamyellow                 = msg.isteamyellow
+    bs_msg.frame_number                 = msg.frame_number
+    bs_msg.camera_id                    = msg.camera_id
+    bs_msg.t_capture                    = msg.t_capture
+    bs_msg.t_sent                       = msg.t_sent
+    bs_msg.ballPos                      = msg.ballPos
+    bs_msg.ballVel                      = msg.ballVel
+    bs_msg.awayPos                      = msg.awayPos
+    bs_msg.homePos                      = msg.homePos
+    bs_msg.awayVel                      = msg.awayVel
+    bs_msg.homeVel                      = msg.homeVel
+    bs_msg.ballDetected                 = msg.ballDetected
+    bs_msg.homeDetected                 = msg.homeDetected
+    bs_msg.awayDetected                 = msg.awayDetected
+    bs_msg.our_bot_closest_to_ball      = msg.our_bot_closest_to_ball
+    bs_msg.opp_bot_closest_to_ball      = msg.opp_bot_closest_to_ball
     bs_msg.opp_bot_marking_our_attacker = msg.opp_bot_marking_our_attacker
-    bs_msg.ball_at_corners = msg.ball_at_corners
-    bs_msg.ball_in_our_half = msg.ball_in_our_half
-    bs_msg.ball_in_our_possession = msg.ball_in_our_possession
-    bs_msg.ball_in_our_dbox = msg.ball_in_our_dbox
+    bs_msg.ball_at_corners              = msg.ball_at_corners
+    bs_msg.ball_in_our_half             = msg.ball_in_our_half
+    bs_msg.ball_in_our_possession       = msg.ball_in_our_possession
+    bs_msg.ball_in_our_dbox             = msg.ball_in_our_dbox
 
     playSelector = pSelect()
     play = playSelector.selectPlay(bs_msg, pub)
