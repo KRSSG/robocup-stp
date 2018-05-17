@@ -38,9 +38,9 @@ class TestTac(Tactic):
         
         self.sParams.GoToPointP.x = ballPos.x
         self.sParams.GoToPointP.y = ballPos.y
-        self.sParams.GoToBallP.finalslope = 3*pi/4.0
-        self.sParams.GoToBallP.align = 3*pi/4.0
-        sGoToBall.execute(self.sParams, state, self.bot_id, pub)
+        # self.sParams.GoToBallP.finalslope = 3*pi/4.0
+        # self.sParams.GoToBallP.align = 3*pi/4.0
+        sGoToPoint.execute(self.sParams, state, self.bot_id, pub)
 
        
 

@@ -2,7 +2,8 @@
 # Start SSL functionality in screen sessions
 killall -15 screen
 #killall screen
-
+# /home/ssl/robocup_stp_ws/src/vision_comm/src/vision_node.cpp
+# change port from 9020 to 10020 in ^^
 
 DIR="$( cd "$( dirname "${BASH_SOURCE[0]}" )" && pwd )"
 function launcher {

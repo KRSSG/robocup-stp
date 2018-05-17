@@ -14,8 +14,8 @@ class TStop(Tactic):
 		self.vel_x_threshold = 0.0
 		self.vel_y_threshold = 0.0
 
-	def execute(self, state, pub):
-		sStop.execute(self.sParam, state, self.bot_id, pub)
+	def execute(self, state, gv, pub):
+		sStop.execute(self.sParam, state, self.bot_id, gv,pub)
 
 	def isComplete(self, state):
 		if state.homeVel[self.bot_id].x <= self.vel_x_threshold and state.homeVel[self.bot_id].y <= self.vel_y_threshold:

@@ -1,3 +1,4 @@
+
 import sys, os
 import rospy
 from krssg_ssl_msgs.msg import BeliefState
@@ -25,6 +26,9 @@ from plays import pStall
 from plays import DTP_Play
 from plays import pCordinatedPass
 from skills import skills_union
+from utils import tactics_union
+from velocity.getVel import GetVelocity
+
 ref_play_id = 0
 cur_play = None
 start_time = 0
@@ -32,7 +36,15 @@ goalie_tac = None
 LDefender_tac = None
 RDefender_tac = None
 cur_goalie = 0
+
 prev_attacker = 3
+
+
+
+isteamyellow = False
+ref_command = False
+
+gv = None 
 
 def select_play(state):
     global start_time,pub
@@ -124,27 +136,54 @@ def bs_callback(state):
         # Basically corresponding TPosition except goalie
 
 def debug_subscriber(state):
-    print("New Call Back")
+    # print("New Call Back")
     global pub
     attacker_id = 0
-    cur_tactic = TTestIt.TTestIt(attacker_id,state)
-    cur_tactic.execute(state,pub)
-def main():
+    params = tactics_union.Param()
+    params.PositionP.x = state.ballPos.x
+    params.PositionP.y = state.ballPos.y
+    cur_tactic = TPosition.TPosition(attacker_id+1,state,params)
+    cur_tactic.execute(state,gv,pub)
+
+def debug_subscriber2(state):
+    # print("New Call Back")
     global pub
+    attacker_id = 0
+    params = tactics_union.Param()
+    params.PositionP.x = state.homePos[1].x -200
+    params.PositionP.y = state.homePos[1].y + 200
+    cur_tactic = TPosition.TPosition(attacker_id,state,params)
+    cur_tactic.execute(state,gv,pub)
+
+
+    # cur_tactic = TTestIt.TTestIt(attacker_id,state)
+    # cur_tactic.execute(state,pub)
+def main():
+    global pub, gv
     print "Initializing the node "
     # rospy.init_node('play_py_node',anonymous=False)
     start_time = rospy.Time.now()
     start_time = 1.0*start_time.secs + 1.0*start_time.nsecs/pow(10,9)
 
+    gv = []
     for i in xrange(6):
         os.environ['bot'+str(i)]=str(start_time)
+        gv.append(GetVelocity(start_time = start_time,kubs_id = i))
+        #os.environ['fc'+str(i)]='1'
     for i in xrange(6):
         print os.environ.get('bot'+str(i))
 
+    #for i in xrange(6):
+    #    start_time = float(os.environ.get('bot'+str(i)))
+     #   gv.append(GetVelocity(start_time = start_time,kubs_id = i))
+
     pub = rospy.Publisher('/grsim_data', gr_Commands, queue_size=1000)
+
+    # rospy.Subscriber("/ref_data", Referee, referee_callback, queue_size=1000)
     # rospy.Subscriber('/belief_state', BeliefState, bs_callback, queue_size=1000)
     # rospy.Subscriber('/belief_state', BeliefState, goalKeeper_callback, queue_size=1000)
-    # rospy.Subscriber('/belief_state', BeliefState, debug_subscriber, queue_size=1000)
+    rospy.Subscriber('/belief_state', BeliefState, debug_subscriber2, queue_size=1000)
+    rospy.Subscriber('/belief_state', BeliefState, debug_subscriber, queue_size=1000)
     # rospy.Subscriber('/belief_state', BeliefState, LDefender_callback, queue_size=1000)
     # rospy.Subscriber('/belief_state', BeliefState, planner_callback, queue_size=1000)
     # rospy.Subscriber('/belief_state', BeliefState, RDefender_callback, queue_size=1000)

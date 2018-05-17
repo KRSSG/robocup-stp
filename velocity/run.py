@@ -14,7 +14,9 @@ from error import Error
 
 v = None
 kubid = None
-expectedTraverseTime = None
+expectedTraverseTime = {}
+for i in range(6):
+    expectedTraverseTime[i] = None
 pso = None
 # pso = PSO(5,20,1000,2,1,0.5)
 errorInfo = Error()
@@ -44,26 +46,32 @@ def Get_Vel(start, t, kub_id, target, homePos_, awayPos_,avoid_ball=False):
     if isinstance(prev_target, Vector2D):
         dist = distance_(target, prev_target)
         if(dist>DESTINATION_THRESH):
-            REPLAN = 1
+            # REPLAN = 1
+            print("Replan"*80,kubid)
     prev_target = target        
     # print("in getVelocity, FIRST_CALL = ",FIRST_CALL)
     curPos = Vector2D(int(homePos[kubid].x),int(homePos[kubid].y))
     distance = sqrt(pow(target.x - homePos[kubid].x,2) + pow(target.y - homePos[kubid].y,2))
     if(FIRST_CALL):
+        print("BOT id:{}, in first call, timeIntoLap: {}".format(kubid, t-start))
         startPt = point_2d()
         startPt.x = homePos[kubid].x
         startPt.y = homePos[kubid].y
         findPath(startPt, target, avoid_ball)
         FIRST_CALL = 0
 
+    else:
+        pass
+        # print("Bot id:{}, not first call, timeIntoLap: {}".format(kubid,t-start))
     if distance < 1.5*BOT_BALL_THRESH:
         return [0,0,0,0,0]
     # print("ex = ",expectedTraverseTime) 
     # print("t = ",t," start = ",start)
     remainingDistance = 0
-    # print("ex = ",expectedTraverseTime) 
+    # print("ex = ",expectedTraverseTime[kubid],kubid) 
+    # print("t = ",t-start)
     # print("t = ",t," start = ",start)
-    if (t - start< expectedTraverseTime):
+    if (t - start< expectedTraverseTime[kubid]):
         if v.trapezoid(t - start,curPos):
             index = v.GetExpectedPositionIndex()
             if index == -1:
@@ -76,7 +84,7 @@ def Get_Vel(start, t, kub_id, target, homePos_, awayPos_,avoid_ball=False):
 
         else:
             # print(t-start, expectedTraverseTime)
-            if expectedTraverseTime == 'REPLAN':
+            if expectedTraverseTime[kubid] == 'REPLAN':
                 REPLAN = 1
             # print("Motion Not Possible")
             vX,vY,eX,eY = 0,0,0,0
@@ -99,7 +107,9 @@ def Get_Vel(start, t, kub_id, target, homePos_, awayPos_,avoid_ball=False):
     if(should_replan == True):
         v.velocity = 0
         # print("v.velocity now = ",v.velocity)
-    # print("entering if, should_replan = ", should_replan)
+    print("entering if, should_replan = ", should_replan)
+    print(errorMag,distance,1.5*BOT_BALL_THRESH,kubid,REPLAN)
+    print
     if  should_replan or \
         (errorMag > 350 and distance > 1.5* BOT_BALL_THRESH) or \
         REPLAN == 1:
@@ -158,6 +168,7 @@ def shouldReplan():
     return False
 
 def findPath(startPoint,end,avoid_ball=False):
+    print("Bot id: {}, calculating path".format(kubid))
     global FLAG_PATH_RECEIVED, REPLAN
     FLAG_PATH_RECEIVED = 1
     REPLAN = 1
@@ -185,9 +196,9 @@ def findPath(startPoint,end,avoid_ball=False):
     start = 1.0*start.secs + 1.0*start.nsecs/pow(10,9)
     v = Velocity(path,start,startPt)
     v.updateAngle()
-    expectedTraverseTime = v.getTime(v.GetPathLength())
+    expectedTraverseTime[kubid] = v.getTime(v.GetPathLength())
     global time_cal
-    time_cal = expectedTraverseTime
+    time_cal = expectedTraverseTime[kubid]
     # pso = PSO(5,20,1000,1,1,0.5)
     errorInfo = Error()
     # print("Path Planned")

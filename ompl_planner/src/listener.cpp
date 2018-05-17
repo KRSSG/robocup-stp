@@ -119,6 +119,7 @@ bool path(krssg_ssl_msgs::path_plan::Request &req,
   BOT_ID = req.bot_id;
   points.bot_id = BOT_ID;
 
+  ROS_INFO("BOT_ID (%d) ",BOT_ID);
   ROS_INFO("Start (%f %f)  target (%f %f) ",start.x,start.y,target.x,target.y);
   ROS_INFO("Distance = %f, threshold = %f",distance_(start.x, start.y, target.x, target.y)*BS_TO_OMPL, self_radius);
   ROS_INFO("Planning");
@@ -159,7 +160,12 @@ int main(int argc, char **argv)
   ros::NodeHandle n;
   ros::Subscriber sub = n.subscribe("/belief_state", 1000, Callback);
   ros::Subscriber sub1 = n.subscribe("/gui_params", 1000, Callback_gui);
-  ros::ServiceServer service = n.advertiseService("planner", path);
+  ros::ServiceServer service0 = n.advertiseService("planner", path);
+  // ros::ServiceServer service1 = n.advertiseService("planner1", path);
+  // ros::ServiceServer service2 = n.advertiseService("planner2", path);
+  // ros::ServiceServer service3 = n.advertiseService("planner3", path);
+  // ros::ServiceServer service4 = n.advertiseService("planner4", path);
+  // ros::ServiceServer service5 = n.advertiseService("planner5", path);
   pub = n.advertise<krssg_ssl_msgs::planner_path>("/path_planner_ompl", 1000);
   ros::spin();
   return 0;
